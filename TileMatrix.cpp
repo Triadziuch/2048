@@ -28,6 +28,38 @@ sf::Vector2f TileMatrix::calculateTilePos(int x_, int y_)
 	return tilePos;
 }
 
+int TileMatrix::findFreeLeft(int x_, int y_)
+{
+	for (int i = 0; i < x_; ++i)
+		if (this->matrix[i][y_] == NULL)
+			return i;
+	return x_;
+}
+
+int TileMatrix::findFreeRight(int x_, int y_)
+{
+	for (int i = this->matrix_width; i > x_; --i)
+		if (this->matrix[i][y_] == NULL)
+			return i;
+	return x_;
+}
+
+int TileMatrix::findFreeTop(int x_, int y_)
+{
+	for (int i = 0; i < y_; ++i)
+		if (this->matrix[x_][i] == NULL)
+			return i;
+	return y_;
+}
+
+int TileMatrix::findFreeBottom(int x_, int y_)
+{
+	for (int i = this->matrix_height; i > y_; --i)
+		if (this->matrix[x_][i] == NULL)
+			return i;
+	return y_;
+}
+
 TileMatrix::TileMatrix(float* scale_, float* outer_, float* inner_, float* tile_width_, sf::Vector2f playground_pos_)
 {
 	for (int i = 0; i < this->matrix_height; ++i)
