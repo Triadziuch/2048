@@ -39,8 +39,10 @@ void Game::run()
 void Game::update() {
 	dt = dt_clock.restart().asSeconds();
 
-	this->updatePollEvents();
+	
 	if (!this->isEnd) {
+		this->updatePollEvents();
+		this->playground->update(dt);
 	}
 }
 
@@ -57,7 +59,17 @@ void Game::updatePollEvents()
 				
 		if (!this->isEnd) {
 			if (ev.type == sf::Event::KeyPressed) {
-
+				if (!this->playground->getIsMoving()) {
+					if (ev.Event::key.code == sf::Keyboard::Up || ev.Event::key.code == sf::Keyboard::W) 
+						this->playground->move('U');
+					else if (ev.Event::key.code == sf::Keyboard::Down || ev.Event::key.code == sf::Keyboard::S)
+						this->playground->move('D');
+					else if (ev.Event::key.code == sf::Keyboard::Left || ev.Event::key.code == sf::Keyboard::A)
+						this->playground->move('L');
+					else if (ev.Event::key.code == sf::Keyboard::Right || ev.Event::key.code == sf::Keyboard::D)
+						this->playground->move('R');
+				}
+				
 			}
 		}
 	}

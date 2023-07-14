@@ -21,11 +21,15 @@ public:
 	Playground(sf::Vector2f window_size_);
 	virtual ~Playground();
 
+	void update(float dt);
+	void move(char direction_);
+
 	// Accessors
 	const float& getOuterEdgeWidth() const { return this->outer_edge_width; }
 	const float& getInnerEdgeWidth() const { return this->inner_edge_width; }
 	const float& getTileWidth()		 const { return this->tile_width; }
 	const float& getScale()			 const { return this->scale; }
+	bool& getIsMoving()					   { return this->matrix->getIsMoving(); }
 
 	// Rendering playground
 	void render (sf::RenderTarget& target);

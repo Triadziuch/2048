@@ -26,15 +26,32 @@ Playground::Playground(sf::Vector2f window_size_)
 	this->matrix->addTile(0, 0, 2);
 	this->matrix->addTile(1, 1, 4);
 	this->matrix->addTile(2, 2, 8);
+	this->matrix->addTile(3, 1, 4);
+	this->matrix->addTile(1, 2, 16);
 	this->matrix->addTile(0, 3, 2);
 	this->matrix->addTile(3, 3, 16);
-
-	this->matrix->moveDown();
 }
 
 Playground::~Playground()
 {
 	this->texture_playground.~Texture();
+}
+
+void Playground::update(float dt)
+{
+	this->matrix->update(dt);
+}
+
+void Playground::move(char direction_)
+{
+	if (direction_ == 'U')
+		this->matrix->moveUp();
+	else if (direction_ == 'D')
+		this->matrix->moveDown();
+	else if (direction_ == 'L')
+		this->matrix->moveLeft();
+	else if (direction_ == 'R')
+		this->matrix->moveRight();
 }
 
 void Playground::render(sf::RenderTarget& target)

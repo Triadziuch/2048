@@ -22,6 +22,9 @@ public:
 	Tile(int type_, sf::Texture* texture_tile_, float *scale_);
 	virtual ~Tile() {};
 
+	// Functions
+	void move(sf::Vector2f value_)			{ this->sprite_tile.move(value_); }
+
 	// Mutators
 	void setScale(float scale_)				{ this->sprite_tile.setScale(scale_, scale_); }
 	void setTexture(sf::Texture* texture_)  { this->sprite_tile.setTexture(*texture_); this->center_origin(); }
