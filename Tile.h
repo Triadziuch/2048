@@ -14,6 +14,7 @@ struct Tile {
 private:
 	sf::Sprite		sprite_tile;
 	int				type			= 2;
+	bool			moving			= false;
 
 	void center_origin();
 public:
@@ -30,9 +31,11 @@ public:
 	void setTexture(sf::Texture* texture_)  { this->sprite_tile.setTexture(*texture_); this->center_origin(); }
 	void setPosition(sf::Vector2f pos_)		{ this->sprite_tile.setPosition(pos_); }
 	void setType(int type_)					{ this->type = type_; }
+	void setIsMoving(bool value_)			{ this->moving = value_; }
 
 	// Accessors
-	const int& getType() const { return this->type; }
+	const int& getType()			const { return this->type; }
+	const bool& getIsMoving()		const { return this->moving; }
 
 	// Rendering tile
 	void render(sf::RenderTarget& target);

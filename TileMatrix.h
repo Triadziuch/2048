@@ -1,29 +1,35 @@
 #include "Tile.h"
 
 struct MoveTile {
-	bool move = false;
 	int distance;
-	float pixel_distance;
-	sf::Vector2i new_pos;
-	float move_speed;
+	sf::Vector2i new_pos, old_pos;
+	float pixel_distance, move_speed;
+
+	MoveTile(int distance_, float pixel_distance_, float move_speed_, sf::Vector2i new_pos_, sf::Vector2i old_pos_) {
+		this->distance = distance_;
+		this->pixel_distance = pixel_distance_;
+		this->move_speed = move_speed_;
+		this->new_pos = new_pos_;
+		this->old_pos = old_pos_;
+	}
 };
 
 class TileMatrix {
 private:
 	// Variables
-	const int		max_type		 = 16;
-	const int		matrix_width	 = 4;
-	const int		matrix_height	 = 4;
-	float*			scale;
-	float*			outer_edge;
-	float*			inner_edge;
-	float*			tile_width;
-	sf::Vector2f	playground_pos;
-	Tile*			matrix[4][4];
-	sf::Texture		textures[4];
-	int				frames_to_move = 15;
-	int				current_moved_frames = 0;
-	MoveTile		moveTile[4][4];
+	const int			max_type		 = 16;
+	const int			matrix_width	 = 4;
+	const int			matrix_height	 = 4;
+	float*				scale;
+	float*				outer_edge;
+	float*				inner_edge;
+	float*				tile_width;
+	sf::Vector2f		playground_pos;
+	Tile*				matrix[4][4];
+	sf::Texture			textures[4];
+	int					frames_to_move = 10;
+	int					current_moved_frames = 0;
+	vector <MoveTile*>	moveTile;
 	bool			do_move;
 
 	// Initialize textures
