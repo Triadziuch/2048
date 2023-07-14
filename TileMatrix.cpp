@@ -38,7 +38,7 @@ int TileMatrix::findFreeLeft(int x_, int y_)
 
 int TileMatrix::findFreeRight(int x_, int y_)
 {
-	for (int i = this->matrix_width; i > x_; --i)
+	for (int i = this->matrix_width - 1; i > x_; --i)
 		if (this->matrix[i][y_] == NULL)
 			return i;
 	return x_;
@@ -54,7 +54,7 @@ int TileMatrix::findFreeUp(int x_, int y_)
 
 int TileMatrix::findFreeDown(int x_, int y_)
 {
-	for (int i = this->matrix_height; i > y_; --i)
+	for (int i = this->matrix_height - 1; i > y_; --i)
 		if (this->matrix[x_][i] == NULL)
 			return i;
 	return y_;
@@ -105,6 +105,21 @@ void TileMatrix::moveLeft()
 			if (this->matrix[i][j] != NULL) {
 				sf::Vector2i new_pos = { this->findFreeLeft(i, j), j };
 				int distance = i - new_pos.x;
+
+				cout << "Tile: " << this->matrix[i][j]->getType() << endl;
+				cout << "Old position: (" << i << ", " << j << ")" << endl;
+				cout << "New position: (" << new_pos.x << ", " << new_pos.y << ")" << endl;
+				cout << "Distance: " << distance << endl << endl;
+			}
+}
+
+void TileMatrix::moveRight()
+{
+	for (int i = this->matrix_width - 1; i >= 0; --i)
+		for (int j = 0; j < this->matrix_height; ++j)
+			if (this->matrix[i][j] != NULL) {
+				sf::Vector2i new_pos = { this->findFreeRight(i, j), j };
+				int distance = new_pos.x - i;
 
 				cout << "Tile: " << this->matrix[i][j]->getType() << endl;
 				cout << "Old position: (" << i << ", " << j << ")" << endl;
