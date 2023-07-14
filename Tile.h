@@ -8,6 +8,8 @@
 #include <Windows.h>
 #include <utility>
 
+using namespace std;
+
 struct Tile {
 private:
 	sf::Sprite		sprite_tile;

@@ -100,6 +100,17 @@ void TileMatrix::addTile(int x_, int y_, int type_)
 
 void TileMatrix::moveLeft()
 {
+	for (int i = 0; i < this->matrix_width; ++i)
+		for (int j = 0; j < this->matrix_height; ++j) 
+			if (this->matrix[i][j] != NULL) {
+				sf::Vector2i new_pos = { this->findFreeLeft(i, j), j };
+				int distance = i - new_pos.x;
+
+				cout << "Tile: " << this->matrix[i][j]->getType() << endl;
+				cout << "Old position: (" << i << ", " << j << ")" << endl;
+				cout << "New position: (" << new_pos.x << ", " << new_pos.y << ")" << endl;
+				cout << "Distance: " << distance << endl << endl;
+			}
 }
 
 void TileMatrix::render(sf::RenderTarget& target)

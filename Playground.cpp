@@ -26,7 +26,10 @@ Playground::Playground(sf::Vector2f window_size_)
 	this->matrix->addTile(0, 0, 2);
 	this->matrix->addTile(1, 1, 4);
 	this->matrix->addTile(2, 2, 8);
+	this->matrix->addTile(0, 3, 2);
 	this->matrix->addTile(3, 3, 16);
+
+	//this->matrix->moveLeft();
 }
 
 Playground::~Playground()
