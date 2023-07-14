@@ -143,6 +143,21 @@ void TileMatrix::moveUp()
 			}
 }
 
+void TileMatrix::moveDown()
+{
+	for (int j = this->matrix_height - 1; j >= 0; --j)
+		for (int i = 0; i < this->matrix_width; ++i)
+			if (this->matrix[i][j] != NULL) {
+				sf::Vector2i new_pos = { i, this->findFreeDown(i, j) };
+				int distance = new_pos.y - j;
+
+				cout << "Tile: " << this->matrix[i][j]->getType() << endl;
+				cout << "Old position: (" << i << ", " << j << ")" << endl;
+				cout << "New position: (" << new_pos.x << ", " << new_pos.y << ")" << endl;
+				cout << "Distance: " << distance << endl << endl;
+			}
+}
+
 void TileMatrix::render(sf::RenderTarget& target)
 {
 	for (int i = 0; i < this->matrix_height; ++i)
