@@ -18,6 +18,15 @@ Playground::Playground(sf::Vector2f window_size_)
 	cout << "Inner edge width: " << this->inner_edge_width << endl;
 	cout << "Outer edge width: " << this->outer_edge_width << endl;
 	cout << "Tile width: " << this->tile_width << endl;
+
+	sf::Vector2f playground_pos = this->sprite_playground.getPosition();
+	playground_pos.x -= this->sprite_playground.getLocalBounds().width / 4.f;
+	playground_pos.y -= this->sprite_playground.getLocalBounds().height / 4.f;
+	this->matrix = new TileMatrix(&this->scale, &this->outer_edge_width, &this->inner_edge_width, &this->tile_width, playground_pos);
+	this->matrix->addTile(0, 0, 2);
+	this->matrix->addTile(1, 1, 4);
+	this->matrix->addTile(2, 2, 8);
+	this->matrix->addTile(3, 3, 16);
 }
 
 Playground::~Playground()
@@ -29,4 +38,5 @@ void Playground::render(sf::RenderTarget& target)
 {
 	target.clear(this->color_background);
 	target.draw(this->sprite_playground);
+	this->matrix->render(target);
 }

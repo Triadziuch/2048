@@ -13,6 +13,9 @@
     <ClCompile Include="Tile.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="TileMatrix.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -22,6 +25,9 @@
       <Filter>Pliki nagłówków</Filter>
     </ClInclude>
     <ClInclude Include="Tile.h">
+      <Filter>Pliki nagłówków</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMatrix.h">
       <Filter>Pliki nagłówków</Filter>
     </ClInclude>
   </ItemGroup>

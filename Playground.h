@@ -1,11 +1,4 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-#include <vector>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <Windows.h>
+#include "TileMatrix.h"
 
 using namespace std;
 
@@ -20,6 +13,8 @@ private:
 	float			inner_edge_width				= 36.f;
 	float			tile_width						= 215.f;
 	float			scale;
+
+	TileMatrix *matrix;
 
 public:
 	// Constructors / Destructors

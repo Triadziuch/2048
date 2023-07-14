@@ -6,6 +6,7 @@
 #include <sstream>
 #include <string>
 #include <Windows.h>
+#include <utility>
 
 struct Tile {
 private:
@@ -16,7 +17,7 @@ private:
 public:
 	// Constructors / Destructors
 	Tile() {}
-	Tile(int type_, sf::Texture* texture_tile_, float scale_);
+	Tile(int type_, sf::Texture* texture_tile_, float *scale_);
 	virtual ~Tile() {};
 
 	// Mutators
