@@ -44,7 +44,7 @@ int TileMatrix::findFreeRight(int x_, int y_)
 	return x_;
 }
 
-int TileMatrix::findFreeTop(int x_, int y_)
+int TileMatrix::findFreeUp(int x_, int y_)
 {
 	for (int i = 0; i < y_; ++i)
 		if (this->matrix[x_][i] == NULL)
@@ -52,7 +52,7 @@ int TileMatrix::findFreeTop(int x_, int y_)
 	return y_;
 }
 
-int TileMatrix::findFreeBottom(int x_, int y_)
+int TileMatrix::findFreeDown(int x_, int y_)
 {
 	for (int i = this->matrix_height; i > y_; --i)
 		if (this->matrix[x_][i] == NULL)

@@ -20,8 +20,8 @@ private:
 	sf::Vector2f calculateTilePos(int x_, int y_);
 	int findFreeLeft(int x_, int y_);
 	int findFreeRight(int x_, int y_);
-	int findFreeTop(int x_, int y_);
-	int findFreeBottom(int x_, int y_);
+	int findFreeUp(int x_, int y_);
+	int findFreeDown(int x_, int y_);
 public:
 	// Constructors / Destructors
 	TileMatrix(float *scale_, float *outer_, float *inner_, float *tile_width_, sf::Vector2f playground_pos_);
@@ -30,6 +30,9 @@ public:
 	// Functions
 	void addTile(int x_, int y_, int type_ = 2);
 	void moveLeft();
+	void moveRight();
+	void moveUp();
+	void moveDown();
 
 	// Rendering tiles
 	void render(sf::RenderTarget& target);
