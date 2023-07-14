@@ -19,8 +19,10 @@ private:
 	float			outer_edge_width				= 37.f;
 	float			inner_edge_width				= 36.f;
 	float			tile_width						= 215.f;
+	float			scale;
 
 public:
+	// Constructors / Destructors
 	Playground(sf::Vector2f window_size_);
 	virtual ~Playground();
 
@@ -28,6 +30,8 @@ public:
 	const float& getOuterEdgeWidth() const { return this->outer_edge_width; }
 	const float& getInnerEdgeWidth() const { return this->inner_edge_width; }
 	const float& getTileWidth()		 const { return this->tile_width; }
+	const float& getScale()			 const { return this->scale; }
 
+	// Rendering playground
 	void render (sf::RenderTarget& target);
 };
