@@ -154,10 +154,12 @@
     <ClCompile Include="Playground.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="SFMLC.cpp" />
+    <ClCompile Include="Tile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Playground.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
