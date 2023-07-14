@@ -1,4 +1,4 @@
-#include "Background.h"
+#include "Playground.h"
 
 class Game 
 {
@@ -13,7 +13,7 @@ private:
 
 	// Other variables
 	bool				isEnd			= false;
-	Background*			background;
+	Playground*			playground;
 
 	// Clock variables
 	sf::Clock dt_clock;

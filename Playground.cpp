@@ -1,6 +1,6 @@
-#include "Background.h"
+#include "Playground.h"
 
-Background::Background(sf::Vector2f window_size_)
+Playground::Playground(sf::Vector2f window_size_)
 {
 	// Playground initialization
 	this->texture_playground.loadFromFile("Textures/playground.png");
@@ -10,14 +10,22 @@ Background::Background(sf::Vector2f window_size_)
 	this->sprite_playground.setPosition(window_size_ / 2.f);
 	const float scale = (window_size_.y - this->playground_top_bottom_space * 2) / this->sprite_playground.getGlobalBounds().height;
 	this->sprite_playground.setScale(scale, scale);
+
+	this->inner_edge_width	*= scale;
+	this->outer_edge_width	*= scale;
+	this->tile_width		*= scale;
+
+	cout << "Inner edge width: " << this->inner_edge_width << endl;
+	cout << "Outer edge width: " << this->outer_edge_width << endl;
+	cout << "Tile width: " << this->tile_width << endl;
 }
 
-Background::~Background()
+Playground::~Playground()
 {
 	this->texture_playground.~Texture();
 }
 
-void Background::render(sf::RenderTarget& target)
+void Playground::render(sf::RenderTarget& target)
 {
 	target.clear(this->color_background);
 	target.draw(this->sprite_playground);

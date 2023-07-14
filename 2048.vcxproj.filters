@@ -7,7 +7,7 @@
     <ClCompile Include="SFMLC.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Background.cpp">
+    <ClCompile Include="Playground.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
@@ -15,7 +15,7 @@
     <ClInclude Include="Game.h">
       <Filter>Pliki nagłówków</Filter>
     </ClInclude>
-    <ClInclude Include="Background.h">
+    <ClInclude Include="Playground.h">
       <Filter>Pliki nagłówków</Filter>
     </ClInclude>
   </ItemGroup>

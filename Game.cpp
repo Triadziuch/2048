@@ -11,7 +11,7 @@ void Game::initWindow()
 void Game::initVariables()
 {
 	srand(static_cast<unsigned>(time(nullptr)));
-	this->background = new Background({ static_cast<float>(this->WINDOW_WIDTH), static_cast<float>(this->WINDOW_HEIGHT) });
+	this->playground = new Playground({ static_cast<float>(this->WINDOW_WIDTH), static_cast<float>(this->WINDOW_HEIGHT) });
 }
 
 // Constructors / Destructors
@@ -66,7 +66,7 @@ void Game::updatePollEvents()
 // Render functions
 void Game::render() {
 	// Drawing background
-	this->background->render(*this->window);
+	this->playground->render(*this->window);
 
 	// Displaying frame
 	this->window->display();
