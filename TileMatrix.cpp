@@ -128,6 +128,21 @@ void TileMatrix::moveRight()
 			}
 }
 
+void TileMatrix::moveUp()
+{
+	for (int j = 0; j < this->matrix_height; ++j)
+		for (int i = 0; i < this->matrix_width; ++i)
+			if (this->matrix[i][j] != NULL) {
+				sf::Vector2i new_pos = { i, this->findFreeUp(i, j) };
+				int distance = j - new_pos.y;
+
+				cout << "Tile: " << this->matrix[i][j]->getType() << endl;
+				cout << "Old position: (" << i << ", " << j << ")" << endl;
+				cout << "New position: (" << new_pos.x << ", " << new_pos.y << ")" << endl;
+				cout << "Distance: " << distance << endl << endl;
+			}
+}
+
 void TileMatrix::render(sf::RenderTarget& target)
 {
 	for (int i = 0; i < this->matrix_height; ++i)
