@@ -3,17 +3,15 @@
 // Initialization functions 
 void Game::initWindow()
 {
-	this->window = new sf::RenderWindow(sf::VideoMode(1280, 720), "2048", sf::Style::Titlebar | sf::Style::Close);
-	this->window->setFramerateLimit(60);
-	this->window->setVerticalSyncEnabled(false);
+	this->window = new sf::RenderWindow(sf::VideoMode(this->WINDOW_WIDTH, this->WINDOW_HEIGHT), this->WINDOW_TITLE, sf::Style::Titlebar | sf::Style::Close);
+	this->window->setFramerateLimit(this->FRAMERATE);
+	this->window->setVerticalSyncEnabled(this->VERTICAL_SYNC);
 }
 
 void Game::initVariables()
 {
 	srand(static_cast<unsigned>(time(nullptr)));
-	this->isEnd = false;
-	this->color_background = sf::Color(250, 248, 239);
-
+	this->background = new Background({ static_cast<float>(this->WINDOW_WIDTH), static_cast<float>(this->WINDOW_HEIGHT) });
 }
 
 // Constructors / Destructors
@@ -67,8 +65,8 @@ void Game::updatePollEvents()
 
 // Render functions
 void Game::render() {
-
-	this->window->clear(this->color_background);
+	// Drawing background
+	this->background->render(*this->window);
 
 	// Displaying frame
 	this->window->display();

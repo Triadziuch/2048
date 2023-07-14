@@ -4,17 +4,20 @@ class Game
 {
 private:
 	// Window variables
-	sf::RenderWindow* window;
+	const string			WINDOW_TITLE		= "2048";
+	const unsigned int		WINDOW_WIDTH		= 1280;
+	const unsigned int		WINDOW_HEIGHT		= 720;
+	const unsigned int		FRAMERATE			= 60;
+	const bool				VERTICAL_SYNC		= true;
+	sf::RenderWindow*		window;
 
-	// is variables
-	bool isEnd;
+	// Other variables
+	bool				isEnd			= false;
+	Background*			background;
 
 	// Clock variables
 	sf::Clock dt_clock;
 	float dt;
-
-	// Background color
-	sf::Color color_background;
 
 	// Initialization functions 
 	void initWindow();
