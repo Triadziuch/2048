@@ -41,10 +41,15 @@ private:
 	sf::Vector2f calculateTilePos(int x_, int y_);
 
 	int findFreeLeft(int x_, int y_);
-	int mergeLeft(int x_, int y_);
 	int findFreeRight(int x_, int y_);
 	int findFreeUp(int x_, int y_);
 	int findFreeDown(int x_, int y_);
+
+	int mergeLeft(int x_, int y_);
+	int mergeRight(int x_, int y_);
+	int mergeUp(int x_, int y_);
+	int mergeDown(int x_, int y_);
+
 	bool willBeOccupied(int x_, int y_);
 
 public:
