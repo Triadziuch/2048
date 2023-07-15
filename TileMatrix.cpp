@@ -60,10 +60,68 @@ int TileMatrix::findFreeDown(int x_, int y_)
 	return y_;
 }
 
+void TileMatrix::moveLeft()
+{
+	this->do_move = true;
+	for (int j = 0; j < this->matrix_height; ++j)
+		for (int i = 0; i < this->matrix_width; ++i)
+			if (this->matrix[i][j] != NULL) {
+				sf::Vector2i new_pos = { this->findFreeLeft(i, j), j };
+				int distance = i - new_pos.x;
+				this->addMoveInstructions(new_pos, { i, j }, distance);
+			}
+}
+
+void TileMatrix::moveRight()
+{
+	this->do_move = true;
+	for (int j = 0; j < this->matrix_height; ++j)
+		for (int i = this->matrix_width - 1; i >= 0; --i)
+			if (this->matrix[i][j] != NULL) {
+				sf::Vector2i new_pos = { this->findFreeRight(i, j), j };
+				int distance = new_pos.x - i;
+				this->addMoveInstructions(new_pos, { i, j }, distance);
+			}
+}
+
+void TileMatrix::moveUp()
+{
+	this->do_move = true;
+	for (int i = 0; i < this->matrix_width; ++i)
+		for (int j = 0; j < this->matrix_height; ++j)
+			if (this->matrix[i][j] != NULL) {
+				sf::Vector2i new_pos = { i, this->findFreeUp(i, j) };
+				int distance = j - new_pos.y;
+				this->addMoveInstructions(new_pos, { i, j }, distance);
+			}
+}
+
+void TileMatrix::moveDown()
+{
+	this->do_move = true;
+	for (int i = 0; i < this->matrix_width; ++i)
+		for (int j = this->matrix_height - 1; j >= 0; --j)
+			if (this->matrix[i][j] != NULL) {
+				sf::Vector2i new_pos = { i, this->findFreeDown(i, j) };
+				int distance = new_pos.y - j;
+				this->addMoveInstructions(new_pos, { i, j }, distance);
+			}
+}
+
+void TileMatrix::addMoveInstructions(sf::Vector2i new_pos_, sf::Vector2i old_pos_, int distance_)
+{
+	if (distance_ > 0) {
+		float pixel_distance = static_cast<float>(distance_) * (*this->inner_edge + *this->tile_width);
+		float move_speed = pixel_distance / static_cast<float>(this->frames_to_move);
+		this->matrix[old_pos_.x][old_pos_.y]->setIsMoving(true);
+		this->move_tile_instructions.push_back(new MoveTile(distance_, pixel_distance, move_speed, new_pos_, old_pos_));
+	}
+}
+
 bool TileMatrix::willBeOccupied(int x_, int y_)
 {
-	for (int i = this->moveTile.size() - 1; i >= 0; --i)
-		if (this->moveTile[i]->new_pos.x == x_ && this->moveTile[i]->new_pos.y == y_)
+	for (int i = this->move_tile_instructions.size() - 1; i >= 0; --i)
+		if (this->move_tile_instructions[i]->new_pos.x == x_ && this->move_tile_instructions[i]->new_pos.y == y_)
 				return true;
 	return false;
 }
@@ -115,7 +173,7 @@ void TileMatrix::addTile(int x_, int y_, int type_)
 void TileMatrix::updateMove()
 {
 	if (this->current_moved_frames < this->frames_to_move) {
-		for (auto& moveInstructions : this->moveTile) {
+		for (auto& moveInstructions : this->move_tile_instructions) {
 			sf::Vector2i new_pos = moveInstructions->new_pos;
 			sf::Vector2i old_pos = moveInstructions->old_pos;
 			// Moving left
@@ -138,14 +196,14 @@ void TileMatrix::updateMove()
 		this->do_move = false;
 		this->current_moved_frames = 0;
 
-		cout << "MoveTile size: " << this->moveTile.size() << endl;
-		for (size_t i = 0; i < this->moveTile.size(); ){
-			sf::Vector2i new_pos = this->moveTile[i]->new_pos;
-			sf::Vector2i old_pos = this->moveTile[i]->old_pos;
+		cout << "MoveTile size: " << this->move_tile_instructions.size() << endl;
+		for (size_t i = 0; i < this->move_tile_instructions.size(); ){
+			sf::Vector2i new_pos = this->move_tile_instructions[i]->new_pos;
+			sf::Vector2i old_pos = this->move_tile_instructions[i]->old_pos;
 			this->matrix[new_pos.x][new_pos.y] = this->matrix[old_pos.x][old_pos.y];
 			this->matrix[new_pos.x][new_pos.y]->setIsMoving(false);
 			this->matrix[old_pos.x][old_pos.y] = NULL;
-			this->moveTile.erase(this->moveTile.begin());
+			this->move_tile_instructions.erase(this->move_tile_instructions.begin());
 		}
 
 		for (int i = 0; i < 4; ++i) {
@@ -163,74 +221,6 @@ void TileMatrix::updateMove()
 		}
 		cout << endl << endl;
 	}
-}
-
-void TileMatrix::moveLeft()
-{
-	this->do_move = true;
-	for (int j = 0; j < this->matrix_height; ++j)
-		for (int i = 0; i < this->matrix_width; ++i)
-			if (this->matrix[i][j] != NULL) {
-				sf::Vector2i new_pos = { this->findFreeLeft(i, j), j };
-				int distance = i - new_pos.x;
-
-				if (distance > 0) {
-					this->matrix[i][j]->setIsMoving(true);
-					float pixel_distance = static_cast<float>(distance) * (*this->inner_edge + *this->tile_width);
-					this->moveTile.push_back(new MoveTile(distance, pixel_distance, pixel_distance / this->frames_to_move, new_pos, { i, j }));
-				}									    
-			}
-}
-
-void TileMatrix::moveRight()
-{
-	this->do_move = true;
-	for (int j = 0; j < this->matrix_height; ++j)
-		for (int i = this->matrix_width - 1; i >= 0; --i)
-			if (this->matrix[i][j] != NULL) {
-				sf::Vector2i new_pos = { this->findFreeRight(i, j), j };
-				int distance = new_pos.x - i;
-
-				if (distance > 0) {
-					this->matrix[i][j]->setIsMoving(true);
-					float pixel_distance = static_cast<float>(distance) * (*this->inner_edge + *this->tile_width);
-					this->moveTile.push_back(new MoveTile(distance, pixel_distance, pixel_distance / this->frames_to_move, new_pos, { i, j }));
-				}								  
-			}
-}
-
-void TileMatrix::moveUp()
-{
-	this->do_move = true;
-	for (int i = 0; i < this->matrix_width; ++i)
-		for (int j = 0; j < this->matrix_height; ++j)
-			if (this->matrix[i][j] != NULL) {
-				sf::Vector2i new_pos = { i, this->findFreeUp(i, j) };
-				int distance = j - new_pos.y;
-
-				if (distance > 0) {
-					this->matrix[i][j]->setIsMoving(true);
-					float pixel_distance = static_cast<float>(distance) * (*this->inner_edge + *this->tile_width);
-					this->moveTile.push_back(new MoveTile(distance, pixel_distance, pixel_distance / this->frames_to_move, new_pos, { i, j }));
-				}
-			}
-}
-
-void TileMatrix::moveDown()
-{
-	this->do_move = true;
-	for (int i = 0; i < this->matrix_width; ++i)
-		for (int j = this->matrix_height - 1; j >= 0; --j)
-			if (this->matrix[i][j] != NULL) {
-				sf::Vector2i new_pos = { i, this->findFreeDown(i, j) };
-				int distance = new_pos.y - j;
-
-				if (distance > 0) {
-					this->matrix[i][j]->setIsMoving(true);
-					float pixel_distance = static_cast<float>(distance) * (*this->inner_edge + *this->tile_width);
-					this->moveTile.push_back(new MoveTile(distance, pixel_distance, pixel_distance / this->frames_to_move, new_pos, { i, j }));
-				}
-			}
 }
 
 void TileMatrix::render(sf::RenderTarget& target)

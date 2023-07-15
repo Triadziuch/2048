@@ -17,7 +17,7 @@ struct MoveTile {
 class TileMatrix {
 private:
 	// Variables
-	const int			max_type		 = 16;
+	const int			max_type		 = 4996;
 	const int			matrix_width	 = 4;
 	const int			matrix_height	 = 4;
 	float*				scale;
@@ -29,18 +29,20 @@ private:
 	sf::Texture			textures[4];
 	int					frames_to_move = 10;
 	int					current_moved_frames = 0;
-	vector <MoveTile*>	moveTile;
-	bool			do_move;
+	vector <MoveTile*>	move_tile_instructions;
+	bool				do_move;
 
 	// Initialize textures
 	void initTextures();
 	int findID(int type_);
 	sf::Vector2f calculateTilePos(int x_, int y_);
+
 	int findFreeLeft(int x_, int y_);
 	int findFreeRight(int x_, int y_);
 	int findFreeUp(int x_, int y_);
 	int findFreeDown(int x_, int y_);
 	bool willBeOccupied(int x_, int y_);
+
 public:
 	// Constructors / Destructors
 	TileMatrix(float *scale_, float *outer_, float *inner_, float *tile_width_, sf::Vector2f playground_pos_);
@@ -51,6 +53,7 @@ public:
 
 	// Functions
 	void addTile(int x_, int y_, int type_ = 2);
+	void addMoveInstructions(sf::Vector2i new_pos_, sf::Vector2i old_pos_, int distance_);
 	void moveLeft();
 	void moveRight();
 	void moveUp();
