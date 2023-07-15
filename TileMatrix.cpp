@@ -30,10 +30,29 @@ sf::Vector2f TileMatrix::calculateTilePos(int x_, int y_)
 
 int TileMatrix::findFreeLeft(int x_, int y_)
 {
-	for (int i = 0; i < x_; ++i)
-		if ((this->matrix[i][y_] == NULL || this->matrix[i][y_]->getIsMoving()) && !this->willBeOccupied(i, y_))
-			return i;
-	return x_;
+	int new_x = this->mergeLeft(x_, y_);
+	if (new_x != -1)
+		return new_x;
+	else {
+		for (int i = 0; i < x_; ++i)
+			if ((this->matrix[i][y_] == NULL || this->matrix[i][y_]->getIsMoving()) && !this->willBeOccupied(i, y_))
+				return i;
+		return x_;
+	}
+		
+}
+
+int TileMatrix::mergeLeft(int x_, int y_)
+{
+	if (this->move_tile_instructions.size() != 0 && this->move_tile_instructions.back()->old_pos.y == y_ && this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getType() == this->matrix[x_][y_]->getType()) {
+		//printf("Pos1: (%d, %d), Type: %d\n", this->move_tile_instructions.back()->old_pos.x, this->move_tile_instructions.back()->old_pos.y, this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getType());
+		//printf("Pos2: (%d, %d), Type: %d\n\n", x_, y_, this->matrix[x_][y_]->getType());
+		//cout << "MERGE" << endl;
+		this->MERGE_FLAG = true;
+		return this->move_tile_instructions.back()->new_pos.x;
+	}
+	this->MERGE_FLAG = false;
+	return -1;
 }
 
 int TileMatrix::findFreeRight(int x_, int y_)
@@ -114,7 +133,8 @@ void TileMatrix::addMoveInstructions(sf::Vector2i new_pos_, sf::Vector2i old_pos
 		float pixel_distance = static_cast<float>(distance_) * (*this->inner_edge + *this->tile_width);
 		float move_speed = pixel_distance / static_cast<float>(this->frames_to_move);
 		this->matrix[old_pos_.x][old_pos_.y]->setIsMoving(true);
-		this->move_tile_instructions.push_back(new MoveTile(distance_, pixel_distance, move_speed, new_pos_, old_pos_));
+		this->move_tile_instructions.push_back(new MoveTile(distance_, pixel_distance, move_speed, new_pos_, old_pos_, this->MERGE_FLAG));
+		this->MERGE_FLAG = false;
 	}
 }
 
@@ -196,15 +216,26 @@ void TileMatrix::updateMove()
 		this->do_move = false;
 		this->current_moved_frames = 0;
 
-		cout << "MoveTile size: " << this->move_tile_instructions.size() << endl;
-		for (size_t i = 0; i < this->move_tile_instructions.size(); ){
-			sf::Vector2i new_pos = this->move_tile_instructions[i]->new_pos;
-			sf::Vector2i old_pos = this->move_tile_instructions[i]->old_pos;
-			this->matrix[new_pos.x][new_pos.y] = this->matrix[old_pos.x][old_pos.y];
-			this->matrix[new_pos.x][new_pos.y]->setIsMoving(false);
-			this->matrix[old_pos.x][old_pos.y] = NULL;
-			this->move_tile_instructions.erase(this->move_tile_instructions.begin());
+		cout << "MoveTile size przed: " << this->move_tile_instructions.size() << endl;
+		for (size_t i = 0; i < this->move_tile_instructions.size(); ++i ){
+			if (this->move_tile_instructions[i]->merge) {
+				// TODO: Dodaæ zwiêkszenie siê wyniku po po³¹czeniu dwóch takich samych bloków
+				sf::Vector2i new_pos = this->move_tile_instructions[i]->new_pos;
+				sf::Vector2i old_pos = this->move_tile_instructions[i]->old_pos;
+				this->matrix[old_pos.x][old_pos.y]->~Tile();
+				this->matrix[old_pos.x][old_pos.y] = NULL;
+				this->matrix[new_pos.x][new_pos.y]->increaseType();
+				this->matrix[new_pos.x][new_pos.y]->setTexture(&this->textures[this->findID(this->matrix[new_pos.x][new_pos.y]->getType())]);
+			}
+			else {
+				sf::Vector2i new_pos = this->move_tile_instructions[i]->new_pos;
+				sf::Vector2i old_pos = this->move_tile_instructions[i]->old_pos;
+				this->matrix[new_pos.x][new_pos.y] = this->matrix[old_pos.x][old_pos.y];
+				this->matrix[new_pos.x][new_pos.y]->setIsMoving(false);
+				this->matrix[old_pos.x][old_pos.y] = NULL;
+			}
 		}
+		this->move_tile_instructions.clear();
 
 		for (int i = 0; i < 4; ++i) {
 			int t1 = 0, t2 = 0, t3 = 0, t4 = 0;
@@ -219,7 +250,9 @@ void TileMatrix::updateMove()
 
 			printf("[%d]\t[%d]\t[%d]\t[%d]\n", t1, t2, t3, t4);
 		}
+		cout << "MoveTile size po: " << this->move_tile_instructions.size() << endl;
 		cout << endl << endl;
+
 	}
 }
 
