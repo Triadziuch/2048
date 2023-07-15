@@ -13,8 +13,8 @@ private:
 	float			inner_edge_width				= 36.f;
 	float			tile_width						= 215.f;
 	float			scale;
-
-	TileMatrix *matrix;
+	int				score							= 0;
+	TileMatrix*		matrix;
 
 public:
 	// Constructors / Destructors
@@ -22,6 +22,7 @@ public:
 	virtual ~Playground();
 
 	void update(float dt);
+	void updateScore();
 	void move(char direction_);
 
 	// Accessors

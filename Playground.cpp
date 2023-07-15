@@ -15,10 +15,6 @@ Playground::Playground(sf::Vector2f window_size_)
 	this->outer_edge_width	*= this->scale;
 	this->tile_width		*= this->scale;
 
-	cout << "Inner edge width: " << this->inner_edge_width << endl;
-	cout << "Outer edge width: " << this->outer_edge_width << endl;
-	cout << "Tile width: " << this->tile_width << endl;
-
 	sf::Vector2f playground_pos = this->sprite_playground.getPosition();
 	playground_pos.x -= this->sprite_playground.getLocalBounds().width / 4.f;
 	playground_pos.y -= this->sprite_playground.getLocalBounds().height / 4.f;
@@ -40,6 +36,18 @@ Playground::~Playground()
 void Playground::update(float dt)
 {
 	this->matrix->update(dt);
+	this->updateScore();
+}
+
+void Playground::updateScore()
+{
+	int added_score = this->matrix->getAddedScore();
+	this->matrix->setAddedScore(0);
+
+	if (added_score != 0) {
+		this->score += added_score;
+		cout << "Score: " << this->score << endl;
+	}
 }
 
 void Playground::move(char direction_)

@@ -34,6 +34,7 @@ private:
 	vector <MoveTile*>	move_tile_instructions;
 	bool				do_move;
 	bool				MERGE_FLAG;
+	int					added_score = 0;
 
 	// Initialize textures
 	void initTextures();
@@ -69,7 +70,12 @@ public:
 	void moveDown();
 
 	// Accessors
-	bool& getIsMoving() { return this->do_move; }
+	bool& getIsMoving()				{ return this->do_move; }
+	int getAddedScore()				{ return this->added_score; }
+
+	// Mutators
+	void setAddedScore(int value_)  { this->added_score = value_; }
+
 
 	// Rendering tiles
 	void render(sf::RenderTarget& target);

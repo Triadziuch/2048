@@ -307,17 +307,20 @@ void TileMatrix::updateMove()
 	else {
 		this->do_move = false;
 		this->current_moved_frames = 0;
+		this->added_score = 0;
 
 		cout << "MoveTile size przed: " << this->move_tile_instructions.size() << endl;
 		for (size_t i = 0; i < this->move_tile_instructions.size(); ++i ){
 			if (this->move_tile_instructions[i]->merge) {
-				// TODO: Dodaæ zwiêkszenie siê wyniku po po³¹czeniu dwóch takich samych bloków
 				sf::Vector2i new_pos = this->move_tile_instructions[i]->new_pos;
 				sf::Vector2i old_pos = this->move_tile_instructions[i]->old_pos;
 				this->matrix[old_pos.x][old_pos.y]->~Tile();
 				this->matrix[old_pos.x][old_pos.y] = NULL;
 				this->matrix[new_pos.x][new_pos.y]->increaseType();
 				this->matrix[new_pos.x][new_pos.y]->setTexture(&this->textures[this->findID(this->matrix[new_pos.x][new_pos.y]->getType())]);
+				
+				// Updating score
+				this->added_score += this->matrix[new_pos.x][new_pos.y]->getType();
 			}
 			else {
 				sf::Vector2i new_pos = this->move_tile_instructions[i]->new_pos;
