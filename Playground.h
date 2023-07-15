@@ -1,4 +1,5 @@
 #include "TileMatrix.h"
+#include "GUI.h"
 
 using namespace std;
 
@@ -15,6 +16,7 @@ private:
 	float			scale;
 	int				score							= 0;
 	TileMatrix*		matrix;
+	GUI*			gui;
 
 public:
 	// Constructors / Destructors

@@ -270,6 +270,18 @@ void TileMatrix::update(float dt)
 		this->updateMove();
 }
 
+void TileMatrix::spawn()
+{
+	int x_ = rand() % 4, y_ = rand() % 4;
+
+	while (this->matrix[x_][y_] != NULL) {
+		x_ = rand() % 4;
+		y_ = rand() % 4;
+	}
+
+	this->addTile(x_, y_);
+}
+
 void TileMatrix::addTile(int x_, int y_, int type_)
 {
 	if (x_ > 3 || y_ > 3) {
@@ -309,7 +321,6 @@ void TileMatrix::updateMove()
 		this->current_moved_frames = 0;
 		this->added_score = 0;
 
-		cout << "MoveTile size przed: " << this->move_tile_instructions.size() << endl;
 		for (size_t i = 0; i < this->move_tile_instructions.size(); ++i ){
 			if (this->move_tile_instructions[i]->merge) {
 				sf::Vector2i new_pos = this->move_tile_instructions[i]->new_pos;
@@ -332,22 +343,7 @@ void TileMatrix::updateMove()
 		}
 		this->move_tile_instructions.clear();
 
-		for (int i = 0; i < 4; ++i) {
-			int t1 = 0, t2 = 0, t3 = 0, t4 = 0;
-			if (this->matrix[0][i] != NULL)
-				t1 = this->matrix[0][i]->getType();
-			if (this->matrix[1][i] != NULL)
-				t2 = this->matrix[1][i]->getType();
-			if (this->matrix[2][i] != NULL)
-				t3 = this->matrix[2][i]->getType();
-			if (this->matrix[3][i] != NULL)
-				t4 = this->matrix[3][i]->getType();
-
-			printf("[%d]\t[%d]\t[%d]\t[%d]\n", t1, t2, t3, t4);
-		}
-		cout << "MoveTile size po: " << this->move_tile_instructions.size() << endl;
-		cout << endl << endl;
-
+		this->spawn();
 	}
 }
 

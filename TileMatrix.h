@@ -53,6 +53,8 @@ private:
 
 	bool willBeOccupied(int x_, int y_);
 
+	void spawn();
+
 public:
 	// Constructors / Destructors
 	TileMatrix(float *scale_, float *outer_, float *inner_, float *tile_width_, sf::Vector2f playground_pos_);
@@ -75,7 +77,6 @@ public:
 
 	// Mutators
 	void setAddedScore(int value_)  { this->added_score = value_; }
-
 
 	// Rendering tiles
 	void render(sf::RenderTarget& target);

@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Playground.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="SFMLC.cpp" />
@@ -158,6 +159,7 @@
     <ClCompile Include="TileMatrix.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GUI.h" />
     <ClInclude Include="Playground.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Tile.h" />

@@ -69,7 +69,6 @@ void Game::updatePollEvents()
 					else if (ev.Event::key.code == sf::Keyboard::Right || ev.Event::key.code == sf::Keyboard::D)
 						this->playground->move('R');
 				}
-				
 			}
 		}
 	}

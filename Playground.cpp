@@ -26,6 +26,8 @@ Playground::Playground(sf::Vector2f window_size_)
 	this->matrix->addTile(1, 2, 16);
 	this->matrix->addTile(0, 3, 2);
 	this->matrix->addTile(3, 3, 16);
+
+	this->gui = new GUI(window_size_, this->sprite_playground.getGlobalBounds());
 }
 
 Playground::~Playground()
@@ -46,7 +48,7 @@ void Playground::updateScore()
 
 	if (added_score != 0) {
 		this->score += added_score;
-		cout << "Score: " << this->score << endl;
+		this->gui->addScore(added_score);
 	}
 }
 
@@ -67,4 +69,5 @@ void Playground::render(sf::RenderTarget& target)
 	target.clear(this->color_background);
 	target.draw(this->sprite_playground);
 	this->matrix->render(target);
+	this->gui->render(target);
 }
