@@ -31,15 +31,19 @@ sf::Vector2f TileMatrix::calculateTilePos(int x_, int y_)
 int TileMatrix::mergeLeft(int x_, int y_)
 {
 	// Merge if both are moving
-	if (this->move_tile_instructions.size() != 0 && this->move_tile_instructions.back()->old_pos.y == y_ && this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getType() == this->matrix[x_][y_]->getType()) {
+	if (this->move_tile_instructions.size() != 0 && this->move_tile_instructions.back()->old_pos.y == y_ && this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getType() == this->matrix[x_][y_]->getType() && !this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getMerging() && !this->matrix[x_][y_]->getMerging()) {
 		this->MERGE_FLAG = true;
+		this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->setMerging(true);
+		this->matrix[x_][y_]->setMerging(true);
 		return this->move_tile_instructions.back()->new_pos.x;
 	}
 	// Merge if only one is moving
 	for (int i = x_ - 1; i >= 0; --i)
 		if (this->matrix[i][y_] != NULL) {
-			if (this->matrix[i][y_]->getType() == this->matrix[x_][y_]->getType()) {
+			if (this->matrix[i][y_]->getType() == this->matrix[x_][y_]->getType() && !this->matrix[i][y_]->getMerging() && !this->matrix[x_][y_]->getMerging()) {
 				this->MERGE_FLAG = true;
+				this->matrix[i][y_]->setMerging(true);
+				this->matrix[x_][y_]->setMerging(true);
 				return i;
 			}
 			else
@@ -53,15 +57,19 @@ int TileMatrix::mergeLeft(int x_, int y_)
 int TileMatrix::mergeRight(int x_, int y_)
 {
 	// Merge if both are moving
-	if (this->move_tile_instructions.size() != 0 && this->move_tile_instructions.back()->old_pos.y == y_ && this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getType() == this->matrix[x_][y_]->getType()) {
+	if (this->move_tile_instructions.size() != 0 && this->move_tile_instructions.back()->old_pos.y == y_ && this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getType() == this->matrix[x_][y_]->getType() && !this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getMerging() && !this->matrix[x_][y_]->getMerging()) {
 		this->MERGE_FLAG = true;
+		this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->setMerging(true);
+		this->matrix[x_][y_]->setMerging(true);
 		return this->move_tile_instructions.back()->new_pos.x;
 	}
 	// Merge if only one is moving
 	for (int i = x_ + 1; i < this->matrix_width; ++i)
 		if (this->matrix[i][y_] != NULL) {
-			if (this->matrix[i][y_]->getType() == this->matrix[x_][y_]->getType()) {
+			if (this->matrix[i][y_]->getType() == this->matrix[x_][y_]->getType() && !this->matrix[i][y_]->getMerging() && !this->matrix[x_][y_]->getMerging()) {
 				this->MERGE_FLAG = true;
+				this->matrix[i][y_]->setMerging(true);
+				this->matrix[x_][y_]->setMerging(true);
 				return i;
 			}
 			else
@@ -75,15 +83,19 @@ int TileMatrix::mergeRight(int x_, int y_)
 int TileMatrix::mergeUp(int x_, int y_)
 {
 	// Merge if both are moving
-	if (this->move_tile_instructions.size() != 0 && this->move_tile_instructions.back()->old_pos.x == x_ && this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getType() == this->matrix[x_][y_]->getType()) {
+	if (this->move_tile_instructions.size() != 0 && this->move_tile_instructions.back()->old_pos.x == x_ && this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getType() == this->matrix[x_][y_]->getType() && !this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getMerging() && !this->matrix[x_][y_]->getMerging()) {
 		this->MERGE_FLAG = true;
+		this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->setMerging(true);
+		this->matrix[x_][y_]->setMerging(true);
 		return this->move_tile_instructions.back()->new_pos.y;
 	}
 	// Merge if only one is moving
 	for (int i = y_ - 1; i >= 0; --i)
 		if (this->matrix[x_][i] != NULL) {
-			if (this->matrix[x_][i]->getType() == this->matrix[x_][y_]->getType()) {
+			if (this->matrix[x_][i]->getType() == this->matrix[x_][y_]->getType() && !this->matrix[x_][i]->getMerging() && !this->matrix[x_][y_]->getMerging()) {
 				this->MERGE_FLAG = true;
+				this->matrix[x_][i]->setMerging(true);
+				this->matrix[x_][y_]->setMerging(true);
 				return i;
 			}
 			else
@@ -97,15 +109,19 @@ int TileMatrix::mergeUp(int x_, int y_)
 int TileMatrix::mergeDown(int x_, int y_)
 {
 	// Merge if both are moving
-	if (this->move_tile_instructions.size() != 0 && this->move_tile_instructions.back()->old_pos.x == x_ && this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getType() == this->matrix[x_][y_]->getType()) {
+	if (this->move_tile_instructions.size() != 0 && this->move_tile_instructions.back()->old_pos.x == x_ && this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getType() == this->matrix[x_][y_]->getType() && !this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->getMerging() && !this->matrix[x_][y_]->getMerging()) {
 		this->MERGE_FLAG = true;
+		this->matrix[this->move_tile_instructions.back()->old_pos.x][this->move_tile_instructions.back()->old_pos.y]->setMerging(true);
+		this->matrix[x_][y_]->setMerging(true);
 		return this->move_tile_instructions.back()->new_pos.y;
 	}
 	// Merge if only one is moving
 	for (int i = y_ + 1; i < this->matrix_height; ++i)
 		if (this->matrix[x_][i] != NULL) {
-			if (this->matrix[x_][i]->getType() == this->matrix[x_][y_]->getType()) {
+			if (this->matrix[x_][i]->getType() == this->matrix[x_][y_]->getType() && !this->matrix[x_][i]->getMerging() && !this->matrix[x_][y_]->getMerging()) {
 				this->MERGE_FLAG = true;
+				this->matrix[x_][i]->setMerging(true);
+				this->matrix[x_][y_]->setMerging(true);
 				return i;
 			}
 			else
@@ -127,7 +143,6 @@ int TileMatrix::findFreeLeft(int x_, int y_)
 				return i;
 		return x_;
 	}
-		
 }
 
 int TileMatrix::findFreeRight(int x_, int y_)
@@ -329,7 +344,8 @@ void TileMatrix::updateMove()
 				this->matrix[old_pos.x][old_pos.y] = NULL;
 				this->matrix[new_pos.x][new_pos.y]->increaseType();
 				this->matrix[new_pos.x][new_pos.y]->setTexture(&this->textures[this->findID(this->matrix[new_pos.x][new_pos.y]->getType())]);
-				
+				this->matrix[new_pos.x][new_pos.y]->setMerging(false);
+
 				// Updating score
 				this->added_score += this->matrix[new_pos.x][new_pos.y]->getType();
 			}
@@ -339,6 +355,7 @@ void TileMatrix::updateMove()
 				this->matrix[new_pos.x][new_pos.y] = this->matrix[old_pos.x][old_pos.y];
 				this->matrix[new_pos.x][new_pos.y]->setIsMoving(false);
 				this->matrix[old_pos.x][old_pos.y] = NULL;
+				this->matrix[new_pos.x][new_pos.y]->setMerging(false);
 			}
 		}
 		this->move_tile_instructions.clear();

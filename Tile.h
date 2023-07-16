@@ -15,6 +15,7 @@ private:
 	sf::Sprite		sprite_tile;
 	int				type			= 2;
 	bool			moving			= false;
+	bool			merging			= false;
 
 	void center_origin();
 public:
@@ -33,10 +34,12 @@ public:
 	void setPosition(sf::Vector2f pos_)		{ this->sprite_tile.setPosition(pos_); }
 	void setType(int type_)					{ this->type = type_; }
 	void setIsMoving(bool value_)			{ this->moving = value_; }
+	void setMerging(bool value_)			{ this->merging = value_; }
 
 	// Accessors
 	int getType()						  { return this->type; }
 	const bool& getIsMoving()		const { return this->moving; }
+	const bool& getMerging()		const { return this->merging; }
 
 	// Rendering tile
 	void render(sf::RenderTarget& target);
