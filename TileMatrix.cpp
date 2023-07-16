@@ -234,6 +234,23 @@ void TileMatrix::moveDown()
 			}
 }
 
+void TileMatrix::clearBoard()
+{
+	this->move_tile_instructions.clear();
+	
+	for (int i = 0; i < this->matrix_height; ++i)
+		for (int j = 0; j < this->matrix_width; ++j) {
+			if (this->matrix[i][j] != NULL)
+				this->matrix[i][j]->~Tile();
+				this->matrix[i][j] = NULL;
+			}
+
+	this->added_score = 0;
+	this->current_moved_frames = 0;
+	this->MOVE_FLAG = false;
+	this->MERGE_FLAG = false;
+}
+
 void TileMatrix::addMoveInstructions(sf::Vector2i new_pos_, sf::Vector2i old_pos_, int distance_)
 {
 	if (distance_ > 0) {

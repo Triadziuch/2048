@@ -66,6 +66,14 @@ void Playground::move(char direction_)
 		this->matrix->moveRight();
 }
 
+void Playground::clearBoard()
+{
+	this->gui->saveBestScore();
+	this->gui->setScore(0);
+	this->matrix->clearBoard();
+	this->matrix->spawn();
+}
+
 void Playground::render(sf::RenderTarget& target)
 {
 	target.clear(this->color_background);

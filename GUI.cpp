@@ -8,18 +8,17 @@ void GUI::center_origin(sf::Sprite& sprite)
 
 void GUI::justifyHorizontal(sf::FloatRect button, sf::Text& text)
 {
+	text.setOrigin(0.f, 0.f);
 	text.setPosition(button.left + (button.width - text.getGlobalBounds().width) / 2.f, text.getPosition().y);
 }
 
 void GUI::saveBestScore()
 {
-	if (this->best_score >= this->score) {
-		ofstream file;
-		file.open(this->best_score_filename, ios::out);
+	ofstream file;
+	file.open(this->best_score_filename, ios::out);
 
-		if (file.good()) 
-			file << to_string(this->best_score);
-	}
+	if (file.good())
+		file << to_string(this->best_score);
 }
 
 void GUI::loadBestScore()
@@ -46,6 +45,28 @@ GUI::GUI(sf::Vector2f window_size_, sf::FloatRect shape_playground_)
 	this->loadBestScore();
 	this->initSprites();
 	this->initText();
+}
+
+void GUI::setScore(int value_)
+{
+	this->score = value_;
+
+	float old_width = this->text_score.getGlobalBounds().width;
+	this->text_score.setString(to_string(this->score));
+	float new_width = this->text_score.getGlobalBounds().width;
+
+	if (old_width != new_width)
+		this->text_score.move((old_width - new_width) / 2.f, 0.f);
+
+	if (this->best_score < this->score) {
+		sf::Vector2f old_pos = this->text_best_score.getPosition();
+		this->best_score = this->score;
+		this->text_best_score = this->text_score;
+		this->text_best_score.setPosition(old_pos);
+
+		if (old_width != new_width)
+			this->text_best_score.move((old_width - new_width) / 2.f, 0.f);
+	}
 }
 
 GUI::~GUI()
@@ -140,15 +161,11 @@ void GUI::addScore(int value_) {
 		this->text_score.move((old_width - new_width) / 2.f, 0.f);
 
 	if (this->best_score < this->score) {
-		sf::Vector2f old_pos = this->text_best_score.getPosition();
 		this->best_score = this->score;
-		this->text_best_score = this->text_score;
-		this->text_best_score.setPosition(old_pos);
-
-		if (old_width != new_width)
-			this->text_best_score.move((old_width - new_width) / 2.f, 0.f);
+		this->text_best_score.setString(to_string(this->best_score));
+		this->justifyHorizontal(this->button_best_score.getGlobalBounds(), this->text_best_score);
+		this->text_best_score.setPosition(this->text_best_score.getPosition().x, this->text_score.getPosition().y - this->text_score.getOrigin().y);
 	}
-		
 }
 
 void GUI::render(sf::RenderTarget& target)

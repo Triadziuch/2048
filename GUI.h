@@ -47,16 +47,21 @@ private:
 	void center_origin(sf::Sprite &sprite);
 	void justifyHorizontal(sf::FloatRect button, sf::Text& text);
 
-	void loadBestScore();
-	void saveBestScore();
-
 public:
 	// Constructors / Destructors
 	GUI(sf::Vector2f window_size_, sf::FloatRect shape_playground_);
 	virtual ~GUI();
 
+	// Functions
+	void loadBestScore();
+	void saveBestScore();
+	
 	// Mutators
+	void setScore(int value_);
 	void addScore(int value_);
+
+	// Accessors
+	sf::FloatRect getNewGameButton() { return this->button_new_game.getGlobalBounds(); }
 
 	// Render GUI
 	void render(sf::RenderTarget& target);

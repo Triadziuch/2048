@@ -19,7 +19,7 @@ struct MoveTile {
 class TileMatrix {
 private:
 	// Variables
-	const int			max_type		 = 4996;
+	const int			max_type		 = 4096;
 	const int			matrix_width	 = 4;
 	const int			matrix_height	 = 4;
 	float*				scale;
@@ -54,7 +54,7 @@ private:
 
 	bool willBeOccupied(int x_, int y_);
 
-	void spawn();
+	
 
 public:
 	// Constructors / Destructors
@@ -65,12 +65,15 @@ public:
 	void updateMove();
 
 	// Functions
+	void spawn();
 	void addTile(int x_, int y_, int type_ = 2);
 	void addMoveInstructions(sf::Vector2i new_pos_, sf::Vector2i old_pos_, int distance_);
 	void moveLeft();
 	void moveRight();
 	void moveUp();
 	void moveDown();
+
+	void clearBoard();
 
 	// Accessors
 	bool& getIsMoving()				{ return this->do_move; }

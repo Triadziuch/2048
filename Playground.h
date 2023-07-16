@@ -25,7 +25,9 @@ public:
 
 	void update(float dt);
 	void updateScore();
+
 	void move(char direction_);
+	void clearBoard();
 
 	// Accessors
 	const float& getOuterEdgeWidth() const { return this->outer_edge_width; }
@@ -33,6 +35,7 @@ public:
 	const float& getTileWidth()		 const { return this->tile_width; }
 	const float& getScale()			 const { return this->scale; }
 	bool& getIsMoving()					   { return this->matrix->getIsMoving(); }
+	sf::FloatRect getNewGameButton()	   { return this->gui->getNewGameButton(); }
 
 	// Rendering playground
 	void render (sf::RenderTarget& target);

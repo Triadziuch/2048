@@ -42,9 +42,16 @@ void Game::update() {
 
 	
 	if (!this->isEnd) {
+		this->updateMousePositions();
 		this->updatePollEvents();
 		this->playground->update(dt);
 	}
+}
+
+void Game::updateMousePositions()
+{
+	this->mouse_pos_window = sf::Mouse::getPosition(*this->window);
+	this->mouse_pos_view = this->window->mapPixelToCoords(this->mouse_pos_window);
 }
 
 void Game::updatePollEvents()
@@ -71,6 +78,13 @@ void Game::updatePollEvents()
 						this->playground->move('R');
 				}
 			}
+
+			if (this->playground->getNewGameButton().contains(this->mouse_pos_view)) {
+				if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
+					this->playground->clearBoard();
+				}
+			}
+			
 		}
 	}
 }
