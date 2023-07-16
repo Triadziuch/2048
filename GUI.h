@@ -4,8 +4,9 @@
 #include <SFML/System.hpp>
 #include <vector>
 #include <iostream>
-#include <sstream>
 #include <string>
+#include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ private:
 	string				str_best_score		 = "BEST";
 	string				str_score			 = "SCORE";
 	string				str_title			 = "2048";
+	string				best_score_filename = "bestscore.txt";
 	sf::Font			font;
 	sf::Text			text_new_game;
 	sf::Text			text_best_score_header;
@@ -44,6 +46,9 @@ private:
 	void initSprites();
 	void center_origin(sf::Sprite &sprite);
 	void justifyHorizontal(sf::FloatRect button, sf::Text& text);
+
+	void loadBestScore();
+	void saveBestScore();
 
 public:
 	// Constructors / Destructors

@@ -237,6 +237,7 @@ void TileMatrix::moveDown()
 void TileMatrix::addMoveInstructions(sf::Vector2i new_pos_, sf::Vector2i old_pos_, int distance_)
 {
 	if (distance_ > 0) {
+		this->MOVE_FLAG = true;
 		float pixel_distance = static_cast<float>(distance_) * (*this->inner_edge + *this->tile_width);
 		float move_speed = pixel_distance / static_cast<float>(this->frames_to_move);
 		this->matrix[old_pos_.x][old_pos_.y]->setIsMoving(true);
@@ -274,9 +275,6 @@ TileMatrix::~TileMatrix()
 		for (int j = 0; j < this->matrix_width; ++j)
 			if (this->matrix[i][j] != NULL)
 				this->matrix[i][j]->~Tile();
-
-	delete[]this->matrix;
-	delete this->matrix;
 }
 
 void TileMatrix::update(float dt)
@@ -360,7 +358,9 @@ void TileMatrix::updateMove()
 		}
 		this->move_tile_instructions.clear();
 
-		this->spawn();
+		if (this->MOVE_FLAG)
+			this->spawn();
+		this->MOVE_FLAG = false;
 	}
 }
 

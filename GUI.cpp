@@ -11,18 +11,46 @@ void GUI::justifyHorizontal(sf::FloatRect button, sf::Text& text)
 	text.setPosition(button.left + (button.width - text.getGlobalBounds().width) / 2.f, text.getPosition().y);
 }
 
+void GUI::saveBestScore()
+{
+	if (this->best_score >= this->score) {
+		ofstream file;
+		file.open(this->best_score_filename, ios::out);
+
+		if (file.good()) 
+			file << to_string(this->best_score);
+	}
+}
+
+void GUI::loadBestScore()
+{
+	fstream file;
+	file.open(this->best_score_filename);
+
+	if (file.good()) {
+		string str_best_score;
+		stringstream ss_best_score;
+		int int_best_score;
+		file >> str_best_score;
+		ss_best_score << str_best_score;
+		ss_best_score >> int_best_score;
+		this->best_score = int_best_score;
+	}
+}
+
 GUI::GUI(sf::Vector2f window_size_, sf::FloatRect shape_playground_)
 {
 	this->window_size = window_size_;
 	this->shape_playground = shape_playground_;
 
+	this->loadBestScore();
 	this->initSprites();
 	this->initText();
 }
 
 GUI::~GUI()
 {
-
+	this->saveBestScore();
 }
 
 void GUI::initText()
@@ -113,6 +141,7 @@ void GUI::addScore(int value_) {
 
 	if (this->best_score < this->score) {
 		sf::Vector2f old_pos = this->text_best_score.getPosition();
+		this->best_score = this->score;
 		this->text_best_score = this->text_score;
 		this->text_best_score.setPosition(old_pos);
 

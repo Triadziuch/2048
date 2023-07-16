@@ -23,6 +23,7 @@ Game::Game()
 
 Game::~Game()
 {
+	this->playground->~Playground();
 	delete this->window;
 }
 

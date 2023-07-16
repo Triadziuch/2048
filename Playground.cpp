@@ -33,6 +33,8 @@ Playground::Playground(sf::Vector2f window_size_)
 Playground::~Playground()
 {
 	this->texture_playground.~Texture();
+	this->gui->~GUI();
+	this->matrix->~TileMatrix();
 }
 
 void Playground::update(float dt)

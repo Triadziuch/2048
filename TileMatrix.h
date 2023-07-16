@@ -34,6 +34,7 @@ private:
 	vector <MoveTile*>	move_tile_instructions;
 	bool				do_move;
 	bool				MERGE_FLAG;
+	bool				MOVE_FLAG;
 	int					added_score = 0;
 
 	// Initialize textures
