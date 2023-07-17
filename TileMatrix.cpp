@@ -249,6 +249,37 @@ void TileMatrix::clearBoard()
 	this->current_moved_frames = 0;
 	this->MOVE_FLAG = false;
 	this->MERGE_FLAG = false;
+	this->GAMEOVER_FLAG = false;
+	this->tiles = 0;
+}
+
+bool TileMatrix::isGameOver()
+{
+	cout << "Tiles: " << this->tiles << endl;
+
+	if (this->tiles != 16)
+		return false;
+	else {
+		for (int i = 1; i < this->matrix_height - 1; ++i)
+			for (int j = 1; j < this->matrix_width - 1; ++j)
+				if (this->matrix[j][i]->getType() == this->matrix[j - 1][i]->getType() ||
+					this->matrix[j][i]->getType() == this->matrix[j + 1][i]->getType() ||
+					this->matrix[j][i]->getType() == this->matrix[j][i - 1]->getType() ||
+					this->matrix[j][i]->getType() == this->matrix[j][i + 1]->getType())
+					return false;
+
+		for (int i = 0; i < this->matrix_width - 1; ++i)
+			if (this->matrix[i][0]->getType() == this->matrix[i + 1][0]->getType() || this->matrix[i][this->matrix_height - 1]->getType() == this->matrix[i + 1][this->matrix_height - 1]->getType())
+				return false;
+
+		for (int i = 0; i < this->matrix_height - 1; ++i)
+			if (this->matrix[0][i]->getType() == this->matrix[0][i + 1]->getType() || this->matrix[this->matrix_width - 1][i]->getType() == this->matrix[this->matrix_width - 1][i + 1]->getType())
+				return false;
+
+		return true;
+	}
+
+	return false;
 }
 
 void TileMatrix::addMoveInstructions(sf::Vector2i new_pos_, sf::Vector2i old_pos_, int distance_)
@@ -300,27 +331,30 @@ void TileMatrix::update(float dt)
 		this->updateMove();
 }
 
-void TileMatrix::spawn()
+void TileMatrix::spawn(unsigned amount_)
 {
-	int x_ = rand() % 4, y_ = rand() % 4;
+	for (unsigned i = 0; i < amount_; ++i) {
+		sf::Vector2i pos = { rand() % 4, rand() % 4 };
 
-	while (this->matrix[x_][y_] != NULL) {
-		x_ = rand() % 4;
-		y_ = rand() % 4;
+		while (this->matrix[pos.x][pos.y] != NULL) {
+			pos = { rand() % 4, rand() % 4 };
+		}
+
+		this->addTile(pos);
 	}
-
-	this->addTile(x_, y_);
+	
 }
 
-void TileMatrix::addTile(int x_, int y_, int type_)
+void TileMatrix::addTile(sf::Vector2i pos_, int type_)
 {
-	if (x_ > 3 || y_ > 3) {
+	if (pos_.x > this->matrix_width - 1 || pos_.y > this->matrix_height - 1) {
 		std::cout << "Invalid tile spawning position" << std::endl;
 		system("pause");
 	}
 	else {
-		this->matrix[x_][y_] = new Tile(type_, &this->textures[this->findID(type_)], this->scale);
-		this->matrix[x_][y_]->setPosition(this->calculateTilePos(x_, y_));
+		this->matrix[pos_.x][pos_.y] = new Tile(type_, &this->textures[this->findID(type_)], this->scale);
+		this->matrix[pos_.x][pos_.y]->setPosition(this->calculateTilePos(pos_.x, pos_.y));
+		++this->tiles;
 	}
 }
 
@@ -360,6 +394,7 @@ void TileMatrix::updateMove()
 				this->matrix[new_pos.x][new_pos.y]->increaseType();
 				this->matrix[new_pos.x][new_pos.y]->setTexture(&this->textures[this->findID(this->matrix[new_pos.x][new_pos.y]->getType())]);
 				this->matrix[new_pos.x][new_pos.y]->setMerging(false);
+				--this->tiles;
 
 				// Updating score
 				this->added_score += this->matrix[new_pos.x][new_pos.y]->getType();
@@ -378,6 +413,8 @@ void TileMatrix::updateMove()
 		if (this->MOVE_FLAG)
 			this->spawn();
 		this->MOVE_FLAG = false;
+
+		this->GAMEOVER_FLAG = this->isGameOver();
 	}
 }
 

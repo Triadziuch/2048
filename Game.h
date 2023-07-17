@@ -15,6 +15,7 @@ private:
 
 	// Other variables
 	bool				isEnd			= false;
+	bool				isGameOver		= false;
 	Playground*			playground;
 
 	// Clock variables
@@ -37,6 +38,7 @@ public:
 	void update();
 	void updateMousePositions();
 	void updatePollEvents();
+	void updateGameOver();
 
 	// Rendering the game
 	void render();

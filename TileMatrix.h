@@ -33,9 +33,8 @@ private:
 	int					current_moved_frames = 0;
 	vector <MoveTile*>	move_tile_instructions;
 	bool				do_move;
-	bool				MERGE_FLAG;
-	bool				MOVE_FLAG;
 	int					added_score = 0;
+	unsigned			tiles = 0;
 
 	// Initialize textures
 	void initTextures();
@@ -57,23 +56,30 @@ private:
 	
 
 public:
+	bool				GAMEOVER_FLAG = false;
+	bool				MERGE_FLAG;
+	bool				MOVE_FLAG;
+
 	// Constructors / Destructors
 	TileMatrix(float *scale_, float *outer_, float *inner_, float *tile_width_, sf::Vector2f playground_pos_);
 	virtual ~TileMatrix();
 
+	// Update functions
 	void update(float dt);
 	void updateMove();
 
-	// Functions
-	void spawn();
-	void addTile(int x_, int y_, int type_ = 2);
-	void addMoveInstructions(sf::Vector2i new_pos_, sf::Vector2i old_pos_, int distance_);
+	// Move functions
 	void moveLeft();
 	void moveRight();
 	void moveUp();
 	void moveDown();
+	void addMoveInstructions(sf::Vector2i new_pos_, sf::Vector2i old_pos_, int distance_);
 
+	// Tile manipulation functions
+	void spawn(unsigned amount_ = 1);
+	void addTile(sf::Vector2i pos_, int type_ = 2);
 	void clearBoard();
+	bool isGameOver();
 
 	// Accessors
 	bool& getIsMoving()				{ return this->do_move; }

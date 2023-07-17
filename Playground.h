@@ -17,6 +17,9 @@ private:
 	int				score							= 0;
 	TileMatrix*		matrix;
 	GUI*			gui;
+	bool			GAMEOVER_FLAG = false;
+
+	void game_over();
 
 public:
 	// Constructors / Destructors
@@ -36,6 +39,7 @@ public:
 	const float& getScale()			 const { return this->scale; }
 	bool& getIsMoving()					   { return this->matrix->getIsMoving(); }
 	sf::FloatRect getNewGameButton()	   { return this->gui->getNewGameButton(); }
+	bool getIsGameOver()				   { return this->matrix->GAMEOVER_FLAG; }
 
 	// Rendering playground
 	void render (sf::RenderTarget& target);

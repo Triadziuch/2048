@@ -42,9 +42,16 @@ void Game::update() {
 
 	
 	if (!this->isEnd) {
-		this->updateMousePositions();
-		this->updatePollEvents();
-		this->playground->update(dt);
+		if (!this->isGameOver) {
+			this->updateMousePositions();
+			this->updatePollEvents();
+			this->playground->update(dt);
+			this->updateGameOver();
+		}
+		else {
+			this->updateMousePositions();
+			this->updatePollEvents();
+		}
 	}
 }
 
@@ -66,27 +73,35 @@ void Game::updatePollEvents()
 		}
 				
 		if (!this->isEnd) {
-			if (ev.type == sf::Event::KeyPressed) {
-				if (!this->playground->getIsMoving()) {
-					if (ev.Event::key.code == sf::Keyboard::Up || ev.Event::key.code == sf::Keyboard::W) 
-						this->playground->move('U');
-					else if (ev.Event::key.code == sf::Keyboard::Down || ev.Event::key.code == sf::Keyboard::S)
-						this->playground->move('D');
-					else if (ev.Event::key.code == sf::Keyboard::Left || ev.Event::key.code == sf::Keyboard::A)
-						this->playground->move('L');
-					else if (ev.Event::key.code == sf::Keyboard::Right || ev.Event::key.code == sf::Keyboard::D)
-						this->playground->move('R');
+			if (!this->isGameOver) {
+				if (ev.type == sf::Event::KeyPressed) {
+					if (!this->playground->getIsMoving()) {
+						if (ev.Event::key.code == sf::Keyboard::Up || ev.Event::key.code == sf::Keyboard::W)
+							this->playground->move('U');
+						else if (ev.Event::key.code == sf::Keyboard::Down || ev.Event::key.code == sf::Keyboard::S)
+							this->playground->move('D');
+						else if (ev.Event::key.code == sf::Keyboard::Left || ev.Event::key.code == sf::Keyboard::A)
+							this->playground->move('L');
+						else if (ev.Event::key.code == sf::Keyboard::Right || ev.Event::key.code == sf::Keyboard::D)
+							this->playground->move('R');
+					}
 				}
 			}
-
+			
 			if (this->playground->getNewGameButton().contains(this->mouse_pos_view)) {
 				if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
 					this->playground->clearBoard();
+					this->isGameOver = false;
 				}
 			}
 			
 		}
 	}
+}
+
+void Game::updateGameOver()
+{
+	this->isGameOver = this->playground->getIsGameOver();
 }
 
 // Render functions

@@ -1,5 +1,10 @@
 #include "Playground.h"
 
+void Playground::game_over()
+{
+
+}
+
 Playground::Playground(sf::Vector2f window_size_)
 {
 	// Playground initialization
@@ -19,14 +24,7 @@ Playground::Playground(sf::Vector2f window_size_)
 	playground_pos.x -= this->sprite_playground.getLocalBounds().width / 4.f;
 	playground_pos.y -= this->sprite_playground.getLocalBounds().height / 4.f;
 	this->matrix = new TileMatrix(&this->scale, &this->outer_edge_width, &this->inner_edge_width, &this->tile_width, playground_pos);
-	this->matrix->addTile(0, 0, 2);
-	this->matrix->addTile(1, 1, 4);
-	this->matrix->addTile(2, 2, 8);
-	this->matrix->addTile(3, 1, 4);
-	this->matrix->addTile(1, 2, 16);
-	this->matrix->addTile(0, 3, 2);
-	this->matrix->addTile(3, 3, 16);
-
+	this->matrix->spawn(2u);
 	this->gui = new GUI(window_size_, this->sprite_playground.getGlobalBounds());
 }
 
