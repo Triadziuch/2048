@@ -27,6 +27,7 @@ public:
 	// Functions
 	void move(sf::Vector2f value_)			{ this->sprite_tile.move(value_); }
 	void increaseType()						{ this->type *= 2; }
+	void gameOver();
 
 	// Mutators
 	void setScale(float scale_)				{ this->sprite_tile.setScale(scale_, scale_); }
@@ -35,6 +36,7 @@ public:
 	void setType(int type_)					{ this->type = type_; }
 	void setIsMoving(bool value_)			{ this->moving = value_; }
 	void setMerging(bool value_)			{ this->merging = value_; }
+	
 
 	// Accessors
 	int getType()						  { return this->type; }

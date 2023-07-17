@@ -83,32 +83,40 @@ void GUI::initText()
 	this->text_best_score_header.setFont(this->font);
 	this->text_score_header.setFont(this->font);
 	this->text_title.setFont(this->font);
+	this->text_game_over.setFont(this->font);
 
 	this->text_new_game.setCharacterSize(this->size_new_game);
 	this->text_best_score_header.setCharacterSize(this->size_best_score);
 	this->text_score_header.setCharacterSize(this->size_score);
 	this->text_title.setCharacterSize(this->size_title);
+	this->text_game_over.setCharacterSize(this->size_game_over);
 
 	this->text_new_game.setFillColor(sf::Color::White);
 	this->text_best_score_header.setFillColor(this->color_score);
 	this->text_score_header.setFillColor(this->color_score);
 	this->text_title.setFillColor(this->color_title);
+	this->text_game_over.setFillColor(this->color_game_over);
 
 	this->text_new_game.setString(this->str_new_game);
 	this->text_best_score_header.setString(this->str_best_score);
 	this->text_score_header.setString(this->str_score);
 	this->text_title.setString(this->str_title);
+	this->text_game_over.setString(this->str_game_over);
+
+	this->text_game_over.setOutlineThickness(1.f);
+	
+	this->text_game_over.setOutlineColor(this->color_title);
 
 	this->text_new_game.setOrigin(this->text_new_game.getLocalBounds().left + this->text_new_game.getGlobalBounds().width / 2.f, this->text_new_game.getLocalBounds().top + this->text_new_game.getGlobalBounds().height / 2.f);
 	this->text_best_score_header.setOrigin(this->text_best_score_header.getLocalBounds().left + this->text_best_score_header.getGlobalBounds().width / 2.f, this->text_best_score_header.getLocalBounds().top + this->text_best_score_header.getGlobalBounds().height / 2.f);
 	this->text_score_header.setOrigin(this->text_score_header.getLocalBounds().left + this->text_score_header.getGlobalBounds().width / 2.f, this->text_score_header.getLocalBounds().top + this->text_score_header.getGlobalBounds().height / 2.f);
+	this->text_game_over.setOrigin(this->text_game_over.getLocalBounds().left + this->text_game_over.getGlobalBounds().width / 2.f, this->text_game_over.getLocalBounds().top + this->text_game_over.getGlobalBounds().height / 2.f);
 
 	this->text_new_game.setPosition(this->button_new_game.getGlobalBounds().left + this->button_new_game.getGlobalBounds().width / 2.f, this->button_new_game.getGlobalBounds().top + this->button_new_game.getGlobalBounds().height / 2.f);
 	this->text_best_score_header.setPosition(this->button_best_score.getGlobalBounds().left + this->button_best_score.getGlobalBounds().width / 2.f, this->button_best_score.getGlobalBounds().top + this->text_best_score_header.getGlobalBounds().height * 2);
 	this->text_score_header.setPosition(this->button_score.getGlobalBounds().left + this->button_score.getGlobalBounds().width / 2.f, this->button_score.getGlobalBounds().top + this->text_score_header.getGlobalBounds().height * 2);
 	this->text_title.setPosition(this->shape_playground.left, this->shape_playground.top - this->text_title.getGlobalBounds().height * 1.75f);
-
-
+	this->text_game_over.setPosition(this->shape_playground.left + this->shape_playground.width / 2.f, this->shape_playground.top + this->shape_playground.height / 2.f);
 
 	this->text_score.setFont(this->font);
 	this->text_best_score.setFont(this->font);
@@ -168,7 +176,7 @@ void GUI::addScore(int value_) {
 	}
 }
 
-void GUI::render(sf::RenderTarget& target)
+void GUI::render(sf::RenderTarget& target, bool is_game_over)
 {
 	// Drawing buttons
 	target.draw(this->button_new_game);
@@ -184,4 +192,8 @@ void GUI::render(sf::RenderTarget& target)
 	// Drawing score
 	target.draw(this->text_best_score);
 	target.draw(this->text_score);
+
+	// Drawing game over
+	if (is_game_over)
+		target.draw(this->text_game_over);
 }

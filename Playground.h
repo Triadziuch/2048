@@ -19,8 +19,6 @@ private:
 	GUI*			gui;
 	bool			GAMEOVER_FLAG = false;
 
-	void game_over();
-
 public:
 	// Constructors / Destructors
 	Playground(sf::Vector2f window_size_);

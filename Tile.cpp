@@ -14,6 +14,11 @@ Tile::Tile(int type_, sf::Texture* texture_tile_, float* scale_)
 	this->sprite_tile.setScale(*scale_, *scale_);
 }
 
+void Tile::gameOver()
+{
+	this->sprite_tile.setColor(sf::Color(250, 248, 239, 160));
+}
+
 void Tile::render(sf::RenderTarget& target)
 {
 	target.draw(this->sprite_tile);

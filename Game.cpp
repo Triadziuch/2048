@@ -89,12 +89,24 @@ void Game::updatePollEvents()
 			}
 			
 			if (this->playground->getNewGameButton().contains(this->mouse_pos_view)) {
+				if (this->cursor_type != sf::StandardCursor::HAND) {
+					this->cursor_type = sf::StandardCursor::HAND;
+					sf::StandardCursor Cursor(sf::StandardCursor::HAND);
+					Cursor.set(this->window->getSystemHandle());
+				}
+				
 				if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
 					this->playground->clearBoard();
 					this->isGameOver = false;
 				}
 			}
-			
+			else {
+				if (this->cursor_type != sf::StandardCursor::NORMAL) {
+					this->cursor_type = sf::StandardCursor::NORMAL;
+					sf::StandardCursor Cursor(sf::StandardCursor::NORMAL);
+					Cursor.set(this->window->getSystemHandle());
+				}
+			}
 		}
 	}
 }

@@ -276,6 +276,10 @@ bool TileMatrix::isGameOver()
 			if (this->matrix[0][i]->getType() == this->matrix[0][i + 1]->getType() || this->matrix[this->matrix_width - 1][i]->getType() == this->matrix[this->matrix_width - 1][i + 1]->getType())
 				return false;
 
+		for (int i = 0; i < this->matrix_height; ++i)
+			for (int j = 0; j < this->matrix_width; ++j)
+				this->matrix[i][j]->gameOver();
+
 		return true;
 	}
 

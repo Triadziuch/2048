@@ -19,6 +19,9 @@
     <ClCompile Include="GUI.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="StandardCursor.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -34,6 +37,9 @@
       <Filter>Pliki nagłówków</Filter>
     </ClInclude>
     <ClInclude Include="GUI.h">
+      <Filter>Pliki nagłówków</Filter>
+    </ClInclude>
+    <ClInclude Include="StandardCursor.h">
       <Filter>Pliki nagłówków</Filter>
     </ClInclude>
   </ItemGroup>

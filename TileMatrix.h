@@ -56,9 +56,9 @@ private:
 	
 
 public:
-	bool				GAMEOVER_FLAG = false;
-	bool				MERGE_FLAG;
-	bool				MOVE_FLAG;
+	bool				GAMEOVER_FLAG	= false;
+	bool				MERGE_FLAG		= false;
+	bool				MOVE_FLAG		= false;
 
 	// Constructors / Destructors
 	TileMatrix(float *scale_, float *outer_, float *inner_, float *tile_width_, sf::Vector2f playground_pos_);
