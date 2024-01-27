@@ -9,9 +9,28 @@ void Tile::center_origin()
 Tile::Tile(int type_, sf::Texture* texture_tile_, float* scale_)
 {
 	this->type = type_;
+	this->scale = scale_;
 	this->sprite_tile.setTexture(*texture_tile_);
 	this->center_origin();
-	this->sprite_tile.setScale(*scale_, *scale_);
+	this->sprite_tile.setScale(*this->scale, *this->scale);
+}
+
+void Tile::update(const float& dt)
+{
+	if (this->spawning){
+		this->spawning_time += dt;
+		if (this->spawning_time >= this->spawning_time_max){
+			this->spawning = false;
+			this->spawning_time = this->spawning_time_max;
+			this->sprite_tile.setScale(*this->scale, *this->scale);
+			this->sprite_tile.setColor(sf::Color(255, 255, 255, 255));
+		}
+		else{
+			this->sprite_tile.setScale(*this->scale * this->spawning_time / this->spawning_time_max, *this->scale * this->spawning_time / this->spawning_time_max);
+			this->sprite_tile.setColor(sf::Color(255, 255, 255, 255 * this->spawning_time / this->spawning_time_max));
+			//this->sprite_tile.setColor(sf::Color(250, 248, 239, 160 * this->spawning_time / this->spawning_time_max));
+		}
+	}
 }
 
 void Tile::gameOver()

@@ -13,9 +13,14 @@ using namespace std;
 struct Tile {
 private:
 	sf::Sprite		sprite_tile;
+	float* scale;
 	int				type			= 2;
 	bool			moving			= false;
 	bool			merging			= false;
+
+	bool			spawning		= true;
+	float			spawning_time	= 0.f;
+	float			spawning_time_max	= 0.1f;
 
 	void center_origin();
 public:
@@ -23,6 +28,9 @@ public:
 	Tile() {}
 	Tile(int type_, sf::Texture* texture_tile_, float *scale_);
 	virtual ~Tile() {};
+
+	// Update functions
+	void update(const float& dt);
 
 	// Functions
 	void move(sf::Vector2f value_)			{ this->sprite_tile.move(value_); }
@@ -42,6 +50,7 @@ public:
 	int getType()						  { return this->type; }
 	const bool& getIsMoving()		const { return this->moving; }
 	const bool& getMerging()		const { return this->merging; }
+	const bool& getSpawning()		const { return this->spawning; }
 
 	// Rendering tile
 	void render(sf::RenderTarget& target);

@@ -28,6 +28,7 @@ private:
 	float*				tile_width;
 	sf::Vector2f		playground_pos;
 	Tile*				matrix[4][4];
+	vector <Tile*>		spawning_tiles;
 	sf::Texture			textures[12];
 	int					frames_to_move = 10;
 	int					current_moved_frames = 0;
