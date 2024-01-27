@@ -8,7 +8,7 @@ private:
 	const string				WINDOW_TITLE		= "2048";
 	const unsigned int			WINDOW_WIDTH		= 1280;
 	const unsigned int			WINDOW_HEIGHT		= 720;
-	const unsigned int			FRAMERATE			= 60;
+	const unsigned int			FRAMERATE			= 120;
 	const bool					VERTICAL_SYNC		= true;
 	sf::StandardCursor::TYPE	cursor_type = sf::StandardCursor::NORMAL;
 	sf::Vector2i				mouse_pos_window;
