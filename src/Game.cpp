@@ -5,7 +5,7 @@ void Game::initWindow()
 {
 	this->window = new sf::RenderWindow(sf::VideoMode(this->WINDOW_WIDTH, this->WINDOW_HEIGHT), this->WINDOW_TITLE, sf::Style::Titlebar | sf::Style::Close);
 	//this->window->setFramerateLimit(this->FRAMERATE);
-	this->window->setVerticalSyncEnabled(this->VERTICAL_SYNC);
+	//this->window->setVerticalSyncEnabled(this->VERTICAL_SYNC);
 }
 
 void Game::initVariables()
