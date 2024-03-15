@@ -339,12 +339,9 @@ void TileMatrix::update(float dt)
 	if (this->do_move)
 		this->updateMove();
 
-	// Zmieniæ tak aby tylko te które pojawi³y siê by³y animowane
-	for (size_t i = 0; i < this->spawning_tiles.size(); ++i)
-		if (this->spawning_tiles[i]->getSpawning())
-			this->spawning_tiles[i]->update(dt);
-		else
-			this->spawning_tiles.erase(this->spawning_tiles.begin() + i);
+	for (auto& tile : spawning_tiles)
+		if (tile->updateOpacity(dt) == false)
+			spawning_tiles.erase(std::remove(spawning_tiles.begin(), spawning_tiles.end(), tile), spawning_tiles.end());
 
 	movement_manager->update(dt);
 }
@@ -372,11 +369,9 @@ void TileMatrix::addTile(sf::Vector2i pos_, int type_)
 	else {
 		this->matrix[pos_.x][pos_.y] = new Tile(type_, this->textures[this->findID(type_)], this->scale);
 		this->matrix[pos_.x][pos_.y]->setPosition(this->calculateTilePos(pos_.x, pos_.y));
-
-		
 		movement_manager->linkScalingRoutine(*this->matrix[pos_.x][pos_.y]->getSprite(), "TILE_SPAWNING");
 		movement_manager->startScalingRoutine(*this->matrix[pos_.x][pos_.y]->getSprite(), "TILE_SPAWNING");
-		//this->spawning_tiles.push_back(this->matrix[pos_.x][pos_.y]);
+		spawning_tiles.push_back(this->matrix[pos_.x][pos_.y]);
 		++this->tiles;
 	}
 }

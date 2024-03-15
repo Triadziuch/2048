@@ -20,7 +20,7 @@ private:
 
 	bool			spawning		= true;
 	float			spawning_time	= 0.f;
-	float			spawning_time_max	= 0.1f;
+	float			spawning_time_max	= 0.2f;
 
 	void center_origin();
 public:
@@ -30,7 +30,7 @@ public:
 	virtual ~Tile() {};
 
 	// Update functions
-	void update(const float& dt);
+	bool updateOpacity(const float& dt);
 
 	// Functions
 	void move(sf::Vector2f value_)			{ this->sprite_tile.move(value_); }
