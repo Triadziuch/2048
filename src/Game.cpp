@@ -4,7 +4,7 @@
 void Game::initWindow()
 {
 	this->window = new sf::RenderWindow(sf::VideoMode(this->WINDOW_WIDTH, this->WINDOW_HEIGHT), this->WINDOW_TITLE, sf::Style::Titlebar | sf::Style::Close);
-	this->window->setFramerateLimit(this->FRAMERATE);
+	//this->window->setFramerateLimit(this->FRAMERATE);
 	this->window->setVerticalSyncEnabled(this->VERTICAL_SYNC);
 }
 
@@ -14,11 +14,21 @@ void Game::initVariables()
 	this->playground = new Playground({ static_cast<float>(this->WINDOW_WIDTH), static_cast<float>(this->WINDOW_HEIGHT) });
 }
 
+void Game::initAssets()
+{
+	for(int i = 1; i < 13; i++)
+		AssetManager::GetTexture("Textures/" + to_string(static_cast<int>(pow(2, i))) + ".png");
+	AssetManager::GetTexture("Textures/button_newgame.png");
+	AssetManager::GetTexture("Textures/button_score.png");
+	AssetManager::GetTexture("Textures/tiles.png");
+}
+
 // Constructors / Destructors
 Game::Game()
 {
 	this->initWindow();
 	this->initVariables();
+	this->initAssets();
 }
 
 Game::~Game()

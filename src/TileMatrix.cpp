@@ -2,8 +2,9 @@
 
 void TileMatrix::initTextures()
 {
-	for (int i = 2, k = 0; i <= this->max_type; i *= 2, ++k) 
-		this->textures[k].loadFromFile("Textures/" + std::to_string(i) + ".png");
+	for (int i = 1, k = 0; i < 13; i++, ++k) 
+		this->textures[k] = &AssetManager::GetTexture("Textures/" + std::to_string(static_cast<int>(pow(2.f, static_cast<double>(i)))) + ".png");
+		//this->textures[k].loadFromFile("Textures/" + std::to_string(i) + ".png");
 }
 
 int TileMatrix::findID(int type_)
@@ -318,6 +319,10 @@ TileMatrix::TileMatrix(float* scale_, float* outer_, float* inner_, float* tile_
 	this->tile_width = tile_width_;
 	this->playground_pos = playground_pos_;
 
+	movement_manager = MovementManager::getInstance();
+	scaling_routine = movement_manager->createScalingRoutine("TILE_SPAWNING");
+	scaling_routine->addScaling(new scalingInfo(sf::Vector2f(0.1f, 0.1f) * *this->scale, sf::Vector2f(1.f, 1.f) * *this->scale, 0.2f, easeFunctions::getFunction(easeFunctions::OUT_QUAD), false, 0.f, 0.f));
+
 	this->initTextures();
 }
 
@@ -340,6 +345,8 @@ void TileMatrix::update(float dt)
 			this->spawning_tiles[i]->update(dt);
 		else
 			this->spawning_tiles.erase(this->spawning_tiles.begin() + i);
+
+	movement_manager->update(dt);
 }
 
 void TileMatrix::spawn(unsigned amount_)
@@ -363,9 +370,13 @@ void TileMatrix::addTile(sf::Vector2i pos_, int type_)
 		system("pause");
 	}
 	else {
-		this->matrix[pos_.x][pos_.y] = new Tile(type_, &this->textures[this->findID(type_)], this->scale);
+		this->matrix[pos_.x][pos_.y] = new Tile(type_, this->textures[this->findID(type_)], this->scale);
 		this->matrix[pos_.x][pos_.y]->setPosition(this->calculateTilePos(pos_.x, pos_.y));
-		this->spawning_tiles.push_back(this->matrix[pos_.x][pos_.y]);
+
+		
+		movement_manager->linkScalingRoutine(*this->matrix[pos_.x][pos_.y]->getSprite(), "TILE_SPAWNING");
+		movement_manager->startScalingRoutine(*this->matrix[pos_.x][pos_.y]->getSprite(), "TILE_SPAWNING");
+		//this->spawning_tiles.push_back(this->matrix[pos_.x][pos_.y]);
 		++this->tiles;
 	}
 }
@@ -374,6 +385,8 @@ void TileMatrix::updateMove()
 {
 	if (this->current_moved_frames < this->frames_to_move) {
 		for (auto& moveInstructions : this->move_tile_instructions) {
+
+			// Tutaj trzeba dodaæ dt
 			sf::Vector2i new_pos = moveInstructions->new_pos;
 			sf::Vector2i old_pos = moveInstructions->old_pos;
 			// Moving left
@@ -404,7 +417,7 @@ void TileMatrix::updateMove()
 				this->matrix[old_pos.x][old_pos.y]->~Tile();
 				this->matrix[old_pos.x][old_pos.y] = NULL;
 				this->matrix[new_pos.x][new_pos.y]->increaseType();
-				this->matrix[new_pos.x][new_pos.y]->setTexture(&this->textures[this->findID(this->matrix[new_pos.x][new_pos.y]->getType())]);
+				this->matrix[new_pos.x][new_pos.y]->setTexture(this->textures[this->findID(this->matrix[new_pos.x][new_pos.y]->getType())]);
 				this->matrix[new_pos.x][new_pos.y]->setMerging(false);
 				--this->tiles;
 

@@ -1,4 +1,6 @@
 #include "Tile.h"
+#include "MovementManager/MovementManager.h"
+#include "AssetManager.h"
 
 struct MoveTile {
 	int distance;
@@ -29,13 +31,18 @@ private:
 	sf::Vector2f		playground_pos;
 	Tile*				matrix[4][4];
 	vector <Tile*>		spawning_tiles;
-	sf::Texture			textures[12];
+	sf::Texture*		textures[12];
 	int					frames_to_move = 10;
 	int					current_moved_frames = 0;
 	vector <MoveTile*>	move_tile_instructions;
 	bool				do_move;
 	int					added_score = 0;
 	unsigned			tiles = 0;
+
+	ScalingRoutine* scaling_routine;
+
+	// Movement manager
+	MovementManager* movement_manager;
 
 	// Initialize textures
 	void initTextures();
@@ -53,8 +60,6 @@ private:
 	int mergeDown(int x_, int y_);
 
 	bool willBeOccupied(int x_, int y_);
-
-	
 
 public:
 	bool				GAMEOVER_FLAG	= false;

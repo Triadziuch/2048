@@ -19,17 +19,33 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GUI.h" />
+    <ClInclude Include="src\MovementManager\easeFunctions.h" />
+    <ClInclude Include="src\MovementManager\MovementContainer.h" />
+    <ClInclude Include="src\MovementManager\MovementManager.h" />
+    <ClInclude Include="src\MovementManager\RoutineContainer.h" />
+    <ClInclude Include="src\MovementManager\transformationInfo.h" />
+    <ClInclude Include="src\MovementManager\TransformationRoutine.h" />
+    <ClInclude Include="src\MovementManager\VertexArray2.h" />
     <ClInclude Include="src\Playground.h" />
     <ClInclude Include="src\StandardCursor.h" />
     <ClInclude Include="src\Tile.h" />
     <ClInclude Include="src\TileMatrix.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MovementManager\easeFunctions.cpp" />
+    <ClCompile Include="src\MovementManager\MovementContainer.cpp" />
+    <ClCompile Include="src\MovementManager\MovementManager.cpp" />
+    <ClCompile Include="src\MovementManager\RoutineContainer.cpp" />
+    <ClCompile Include="src\MovementManager\transformationInfo.cpp" />
+    <ClCompile Include="src\MovementManager\TransformationRoutine.cpp" />
+    <ClCompile Include="src\MovementManager\VertexArray2.cpp" />
     <ClCompile Include="src\Playground.cpp" />
     <ClCompile Include="src\StandardCursor.cpp" />
     <ClCompile Include="src\Tile.cpp" />

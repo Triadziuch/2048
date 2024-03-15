@@ -51,6 +51,7 @@ public:
 	const bool& getIsMoving()		const { return this->moving; }
 	const bool& getMerging()		const { return this->merging; }
 	const bool& getSpawning()		const { return this->spawning; }
+	sf::Sprite* getSprite()				{ return &this->sprite_tile; }
 
 	// Rendering tile
 	void render(sf::RenderTarget& target);

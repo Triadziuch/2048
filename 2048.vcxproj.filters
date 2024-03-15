@@ -7,6 +7,12 @@
     <Filter Include="Pliki źródłowe">
       <UniqueIdentifier>{c4b7141e-3ff2-485f-a981-b66e049ac5d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pliki nagłówków\MovementManager">
+      <UniqueIdentifier>{b4208698-f28c-47c9-86b6-68356f780c90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe\MovementManager">
+      <UniqueIdentifier>{1cc876b3-1d9e-4613-8b26-8a786c6cd0ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -26,6 +32,30 @@
     </ClInclude>
     <ClInclude Include="src\TileMatrix.h">
       <Filter>Pliki nagłówków</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AssetManager.h">
+      <Filter>Pliki nagłówków</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MovementManager\TransformationRoutine.h">
+      <Filter>Pliki nagłówków\MovementManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MovementManager\easeFunctions.h">
+      <Filter>Pliki nagłówków\MovementManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MovementManager\MovementContainer.h">
+      <Filter>Pliki nagłówków\MovementManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MovementManager\MovementManager.h">
+      <Filter>Pliki nagłówków\MovementManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MovementManager\RoutineContainer.h">
+      <Filter>Pliki nagłówków\MovementManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MovementManager\transformationInfo.h">
+      <Filter>Pliki nagłówków\MovementManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MovementManager\VertexArray2.h">
+      <Filter>Pliki nagłówków\MovementManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -49,6 +79,30 @@
     </ClCompile>
     <ClCompile Include="src\TileMatrix.cpp">
       <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AssetManager.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovementManager\TransformationRoutine.cpp">
+      <Filter>Pliki źródłowe\MovementManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovementManager\easeFunctions.cpp">
+      <Filter>Pliki źródłowe\MovementManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovementManager\MovementContainer.cpp">
+      <Filter>Pliki źródłowe\MovementManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovementManager\MovementManager.cpp">
+      <Filter>Pliki źródłowe\MovementManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovementManager\RoutineContainer.cpp">
+      <Filter>Pliki źródłowe\MovementManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovementManager\transformationInfo.cpp">
+      <Filter>Pliki źródłowe\MovementManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MovementManager\VertexArray2.cpp">
+      <Filter>Pliki źródłowe\MovementManager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
