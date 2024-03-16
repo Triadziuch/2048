@@ -8,50 +8,51 @@
 #include <Windows.h>
 #include <utility>
 
-using namespace std;
-
-struct Tile {
+class Tile {
 private:
-	sf::Sprite		sprite_tile;
-	float* scale;
-	int				type			= 2;
-	bool			moving			= false;
-	bool			merging			= false;
+	// Private variables
+	sf::Sprite m_sprite;
+	float* m_scale;
+	int	m_type = 2;
 
-	bool			spawning		= true;
-	float			spawning_time	= 0.f;
-	float			spawning_time_max	= 0.2f;
+	bool m_isMoving   = false;
+	bool m_isMerging  = false;
+	bool m_isSpawning = true;
 
+	float m_spawningTime = 0.f;
+	float m_spawningTimeMax	= 0.2f;
+
+	// Private functions
 	void center_origin();
 public:
 	// Constructors / Destructors
 	Tile() {}
-	Tile(int type_, sf::Texture* texture_tile_, float *scale_);
+	Tile(int type, sf::Texture* texture, float *scale);
 	virtual ~Tile() {};
 
 	// Update functions
 	bool updateOpacity(const float& dt);
 
 	// Functions
-	void move(sf::Vector2f value_)			{ this->sprite_tile.move(value_); }
-	void increaseType()						{ this->type *= 2; }
+	void move(sf::Vector2f offset)			{ m_sprite.move(offset); }
+	void increaseType()						{ m_type *= 2; }
 	void gameOver();
 
 	// Mutators
-	void setScale(float scale_)				{ this->sprite_tile.setScale(scale_, scale_); }
-	void setTexture(sf::Texture* texture_)  { this->sprite_tile.setTexture(*texture_); }
-	void setPosition(sf::Vector2f pos_)		{ this->sprite_tile.setPosition(pos_); }
-	void setType(int type_)					{ this->type = type_; }
-	void setIsMoving(bool value_)			{ this->moving = value_; }
-	void setMerging(bool value_)			{ this->merging = value_; }
+	void setScale(float scale)				{ m_sprite.setScale(scale, scale); }
+	void setTexture(sf::Texture* texture)   { m_sprite.setTexture(*texture); }
+	void setPosition(sf::Vector2f pos)		{ m_sprite.setPosition(pos); }
+	void setType(int type)					{ m_type = type; }
+	void setIsMoving(bool value)			{ m_isMoving = value; }
+	void setMerging(bool value)				{ m_isMerging = value; }
 	
 
 	// Accessors
-	int getType()						  { return this->type; }
-	const bool& getIsMoving()		const { return this->moving; }
-	const bool& getMerging()		const { return this->merging; }
-	const bool& getSpawning()		const { return this->spawning; }
-	sf::Sprite* getSprite()				{ return &this->sprite_tile; }
+	const int getType()      const { return m_type; }
+	const bool getIsMoving() const { return m_isMoving; }
+	const bool getMerging()  const { return m_isMerging; }
+	const bool getSpawning() const { return m_isSpawning; }
+	sf::Sprite* getSprite()		   { return &m_sprite; }
 
 	// Rendering tile
 	void render(sf::RenderTarget& target);

@@ -24,14 +24,14 @@ private:
 	float*				tile_width;
 	sf::Vector2f		playground_pos;
 	Tile*				matrix[4][4];
-	vector <Tile*>		spawning_tiles;
+	std::vector <Tile*>		spawning_tiles;
 	sf::Texture*		textures[12];
 	float				time_to_move = 0.2f;
 	float				current_move_time = 0.f;
 	float				time_to_merge = 0.25f;
 	float				current_merge_time = 0.f;
-	vector <MoveTile*>	move_tile_instructions;
-	vector <Tile*>	    merge_tile_instructions;
+	std::vector <MoveTile*>	move_tile_instructions;
+	std::vector <Tile*>	    merge_tile_instructions;
 	bool				do_move, m_isMerging{};
 	int					added_score = 0;
 	unsigned			tiles = 0;

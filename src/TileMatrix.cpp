@@ -280,8 +280,6 @@ void TileMatrix::clearBoard()
 
 bool TileMatrix::isGameOver()
 {
-	cout << "Tiles: " << this->tiles << endl;
-
 	if (this->tiles != 16)
 		return false;
 	else {
