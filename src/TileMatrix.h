@@ -1,5 +1,7 @@
-#include "Tile.h"
+#pragma once
+#include <iostream>
 #include "MovementManager/MovementManager.h"
+#include "Tile.h"
 #include "AssetManager.h"
 
 struct MoveTile {
@@ -8,8 +10,8 @@ struct MoveTile {
 
 	MoveTile(sf::Vector2i new_pos, sf::Vector2i old_pos, bool merge = false): m_newPos{ new_pos }, m_oldPos{ old_pos }, m_merge{ merge } {}
 
-	const sf::Vector2i& getNewPos() const { return this->m_newPos; }
-	const sf::Vector2i& getOldPos() const { return this->m_oldPos; }
+	const sf::Vector2i& getNewPos() const { return m_newPos; }
+	const sf::Vector2i& getOldPos() const { return m_oldPos; }
 };
 
 class TileMatrix {
@@ -89,11 +91,11 @@ public:
 	bool isGameOver();
 
 	// Accessors
-	bool& getIsMoving()				{ return this->do_move; }
-	int getAddedScore()				{ return this->added_score; }
+	bool& getIsMoving()				{ return do_move; }
+	int getAddedScore()				{ return added_score; }
 
 	// Mutators
-	void setAddedScore(int value_)  { this->added_score = value_; }
+	void setAddedScore(int value_)  { added_score = value_; }
 
 	// Rendering tiles
 	void render(sf::RenderTarget& target);

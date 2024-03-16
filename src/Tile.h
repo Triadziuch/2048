@@ -1,42 +1,38 @@
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-#include <vector>
-#include <iostream>
-#include <sstream>
-#include <string>
-#include <Windows.h>
-#include <utility>
+#pragma once
+#include "MovementManager/MovementManager.h"
 
 class Tile {
 private:
+	MovementContainer* m_movementContainer;
+	MovementManager*   m_movementManager;
+
 	// Private variables
 	sf::Sprite m_sprite;
-	float* m_scale;
+	const float* m_scale;
 	int	m_type = 2;
 
 	bool m_isMoving   = false;
 	bool m_isMerging  = false;
-	bool m_isSpawning = true;
+	bool m_isSpawning = false;
 
 	float m_spawningTime = 0.f;
 	float m_spawningTimeMax	= 0.2f;
 
-	// Private functions
-	void center_origin();
 public:
 	// Constructors / Destructors
-	Tile() {}
-	Tile(int type, sf::Texture* texture, float *scale);
-	virtual ~Tile() {};
+	Tile(const int type, const sf::Texture* texture, const float *scale, const sf::Vector2f& position);
+	~Tile();
 
 	// Update functions
-	bool updateOpacity(const float& dt);
+	void update(const float dt);
 
 	// Functions
 	void move(sf::Vector2f offset)			{ m_sprite.move(offset); }
 	void increaseType()						{ m_type *= 2; }
 	void gameOver();
+
+	void startSpawning();
+	void startMerging();
 
 	// Mutators
 	void setScale(float scale)				{ m_sprite.setScale(scale, scale); }
@@ -48,12 +44,12 @@ public:
 	
 
 	// Accessors
-	const int getType()      const { return m_type; }
-	const bool getIsMoving() const { return m_isMoving; }
-	const bool getMerging()  const { return m_isMerging; }
-	const bool getSpawning() const { return m_isSpawning; }
-	sf::Sprite* getSprite()		   { return &m_sprite; }
+	const int getType() const;
+	const bool getIsMoving() const;
+	const bool getMerging() const;
+	const bool getSpawning() const;
+	sf::Sprite* getSprite();
 
-	// Rendering tile
+	// Rendering functions
 	void render(sf::RenderTarget& target);
 };
