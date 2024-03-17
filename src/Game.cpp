@@ -78,25 +78,14 @@ void Game::updatePollEvents()
 	if (this->window->pollEvent(ev)) {
 
 		// Zamykanie okna
-		if ((ev.Event::type == sf::Event::Closed) || (ev.Event::KeyPressed && ev.Event::key.code == sf::Keyboard::Escape)) {
+		if ((ev.Event::type == sf::Event::Closed) || (ev.Event::KeyPressed && ev.Event::key.code == sf::Keyboard::Escape)) 
 			this->window->close();
-		}
 				
 		if (!this->isEnd) {
-			if (!this->isGameOver) {
-				if (ev.type == sf::Event::KeyPressed) {
-					if (!this->playground->getIsMoving()) {
-						if (ev.Event::key.code == sf::Keyboard::Up || ev.Event::key.code == sf::Keyboard::W)
-							this->playground->move('U');
-						else if (ev.Event::key.code == sf::Keyboard::Down || ev.Event::key.code == sf::Keyboard::S)
-							this->playground->move('D');
-						else if (ev.Event::key.code == sf::Keyboard::Left || ev.Event::key.code == sf::Keyboard::A)
-							this->playground->move('L');
-						else if (ev.Event::key.code == sf::Keyboard::Right || ev.Event::key.code == sf::Keyboard::D)
-							this->playground->move('R');
-					}
-				}
-			}
+			if (!this->isGameOver) 
+				if (ev.type == sf::Event::KeyPressed) 
+					this->playground->move(ev.key.code);
+
 			
 			if (this->playground->getNewGameButton().contains(this->mouse_pos_view)) {
 				if (this->cursor_type != sf::StandardCursor::HAND) {

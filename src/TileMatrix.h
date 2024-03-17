@@ -4,11 +4,11 @@
 #include "Tile.h"
 #include "AssetManager.h"
 
-struct MoveTile {
+struct MoveInstructions {
 	sf::Vector2i m_newPos, m_oldPos;
 	bool m_merge;
 
-	MoveTile(sf::Vector2i new_pos, sf::Vector2i old_pos, bool merge = false): m_newPos{ new_pos }, m_oldPos{ old_pos }, m_merge{ merge } {}
+	MoveInstructions(sf::Vector2i new_pos, sf::Vector2i old_pos, bool merge = false): m_newPos{ new_pos }, m_oldPos{ old_pos }, m_merge{ merge } {}
 
 	const sf::Vector2i& getNewPos() const { return m_newPos; }
 	const sf::Vector2i& getOldPos() const { return m_oldPos; }
@@ -17,17 +17,13 @@ struct MoveTile {
 class TileMatrix {
 private:
 	// Private variables
-	const int matrixwidth = 4, matrixheight = 4;
+	constexpr static int m_matrixWidth = 4, m_matrixHeight = 4, m_maxTiles = m_matrixWidth * m_matrixHeight;
+	const float* m_scale{}, * m_outerEdgeWidth{}, * m_innerEdgeWidth{}, * m_tileWidth{};
 
-	const float* m_scale;
-	const float* m_outerEdgeWidth;
-	const float* m_innerEdgeWidth;
-	const float* m_tileWidth;
+	Tile* m_matrix[4][4]{ {} };
+	sf::Texture* m_textures[12]{};
+	sf::Vector2f m_playgroundPosition{};
 
-	sf::Vector2f		m_playgroundPosition;
-	Tile*				matrix[4][4];
-	sf::Texture*		m_textures[12];
-	
 	float m_timeMoving = 0.f;
 	const float m_timeMovingMax = 0.2f;
 	
@@ -35,14 +31,13 @@ private:
 	const float m_timeMergingMax = 0.25f;
 
 
-	std::vector <MoveTile*>	move_tile_instructions;
-	std::vector <Tile*>	    merge_tile_instructions;
+	std::vector <MoveInstructions*>	m_moveInstructions;
+	std::vector <Tile*>	    m_tilesToMerge;
 	
-	int					m_addedScore = 0;
-	unsigned			m_tiles = 0;
+	int m_addedScore{ 0 };
+	unsigned m_tiles{ 0 };
 
-	bool m_isMoving{}, m_isMerging{}, m_isGameOver{};
-	bool m_mergedTiles{};
+	bool m_isGameOver{}, m_mergedTiles{};
 
 	// Movement manager
 	MovementManager* m_movementManager;
@@ -50,53 +45,56 @@ private:
 
 	// Initialize textures
 	void initTextures();
-	int findID(int type_);
-	sf::Vector2f calculateTilePos(int x, int y);
+	const int findID(int type) const;
+	const sf::Vector2f calculateTilePos(const sf::Vector2i& pos) const;
 
-	int findFreeLeft(int x, int y);
-	int findFreeRight(int x, int y);
-	int findFreeUp(int x, int y);
-	int findFreeDown(int x, int y);
+	int findFreeLeft(const sf::Vector2i& pos);
+	int findFreeRight(const sf::Vector2i& pos);
+	int findFreeUp(const sf::Vector2i& pos);
+	int findFreeDown(const sf::Vector2i& pos);
 
-	int mergeLeft(int x, int y);
-	int mergeRight(int x, int y);
-	int mergeUp(int x, int y);
-	int mergeDown(int x, int y);
+	int mergeLeft(const sf::Vector2i& pos);
+	int mergeRight(const sf::Vector2i& pos);
+	int mergeUp(const sf::Vector2i& pos);
+	int mergeDown(const sf::Vector2i& pos);
 
-	bool willBeOccupied(int x, int y);
+	const bool willBeOccupied(const sf::Vector2i& pos) const;
+
+	void endMove();
+	void endMerge();
 
 public:
-	
+	enum Tstate { IDLE, MOVING, MERGING };
+	Tstate m_state{ IDLE };
 
 	// Constructors / Destructors
-	TileMatrix(float *scale_, float *outer_, float *inner_, float *tile_width_, sf::Vector2f playground_pos_);
+	TileMatrix(const float *scale, const float *outer, const float *inner, const float *tileWidth, const sf::Vector2f& playgroundPos);
 	virtual ~TileMatrix();
 
 	// Update functions
 	void update(float dt);
 	void updateMove(float dt);
 	void updateMerge(float dt);
-	void endMerge();
 
 	// Move functions
 	void moveLeft();
 	void moveRight();
 	void moveUp();
 	void moveDown();
-	void addMoveInstructions(sf::Vector2i new_pos_, sf::Vector2i old_pos_, int distance_);
+	void addMoveInstructions(const sf::Vector2i& newPos, const sf::Vector2i& oldPos);
 
 	// Tile manipulation functions
-	void spawn(unsigned amount_ = 1);
-	void addTile(sf::Vector2i pos_, int type_ = 2);
+	void spawn(const int amount = 1);
+	void addTile(const sf::Vector2i& pos, const int type = 2);
 	void clearBoard();
 	bool isGameOver();
 
-	// Accessors
-	const bool getIsMoving() const { return m_isMoving; }
-	const bool getIsGameOver() const { return m_isGameOver; }
-	const int getAddedScore() const { return m_addedScore; }
+	// Accessors / Mutators
+	const bool getIsMoving() const;
+	const bool getIsGameOver() const;
+	const int getAddedScore() const;
 
-	void setAddedScore(int score) { m_addedScore = score; }
+	void setAddedScore(const int score);
 
 	// Rendering tiles
 	void render(sf::RenderTarget& target);

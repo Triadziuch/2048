@@ -20,7 +20,7 @@ private:
 
 public:
 	// Constructors / Destructors
-	Tile(const int type, const sf::Texture* texture, const float *scale, const sf::Vector2f& position);
+	Tile(const int type, const sf::Texture* texture, const float *m_scale, const sf::Vector2f& position);
 	~Tile();
 
 	// Update functions
@@ -37,7 +37,7 @@ public:
 	void startMerging();
 
 	// Mutators
-	void setScale(float scale);
+	void setScale(float m_scale);
 	void setIsMoving(bool value);
 	void setIsMerging(bool value);
 	

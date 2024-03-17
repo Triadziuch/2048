@@ -6,38 +6,38 @@ using namespace std;
 class Playground {
 private:
 	// Background variables
-	sf::Color		color_background				= sf::Color(250, 248, 239);
-	sf::Texture		texture_playground;
-	sf::Sprite		sprite_playground;
-	const float		playground_top_bottom_space		= 100.f;
-	float			outer_edge_width				= 37.f;
-	float			inner_edge_width				= 36.f;
-	float			tile_width						= 215.f;
-	float			scale;
-	int				score							= 0;
-	TileMatrix*		matrix;
-	GUI*			gui;
-	bool			GAMEOVER_FLAG = false;
+	const sf::Color m_backgroundColor{ 250, 248, 239 };
+	sf::Texture* m_texture{};
+	sf::Sprite m_sprite{};
+
+	const float m_playgroundPadding{ 100.f };
+	float m_outerEdgeWidth{ 37.f }, m_innerEdgeWidth{ 36.f }, m_tileWidth{ 215.f };
+	float m_scale{ 1.f };
+
+	int m_score{};
+	TileMatrix* m_tileMatrix{};
+	GUI* m_gui{};
+	bool GAMEOVER_FLAG = false;
 
 public:
 	// Constructors / Destructors
-	Playground(sf::Vector2f window_size_);
+	Playground(const sf::Vector2f& windowSize);
 	virtual ~Playground();
 
 	void update(float dt);
 	void updateScore();
 
-	void move(char direction_);
+	void move(const sf::Keyboard::Key key);
 	void clearBoard();
 
 	// Accessors
-	const float& getOuterEdgeWidth() const { return this->outer_edge_width; }
-	const float& getInnerEdgeWidth() const { return this->inner_edge_width; }
-	const float& getTileWidth() const { return this->tile_width; }
-	const float& getScale() const { return this->scale; }
-	const bool getIsMoving() const { return this->matrix->getIsMoving(); }
-	sf::FloatRect getNewGameButton() { return this->gui->getNewGameButton(); }
-	const bool getIsGameOver() const { return this->matrix->getIsGameOver(); }
+	const float& getOuterEdgeWidth() const { return this->m_outerEdgeWidth; }
+	const float& getInnerEdgeWidth() const { return this->m_innerEdgeWidth; }
+	const float& getTileWidth() const { return this->m_tileWidth; }
+	const float& getScale() const { return this->m_scale; }
+	const bool getIsMoving() const { return this->m_tileMatrix->getIsMoving(); }
+	sf::FloatRect getNewGameButton() { return this->m_gui->getNewGameButton(); }
+	const bool getIsGameOver() const { return this->m_tileMatrix->getIsGameOver(); }
 
 	// Rendering playground
 	void render (sf::RenderTarget& target);

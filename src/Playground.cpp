@@ -1,78 +1,90 @@
 #include "Playground.h"
 
-Playground::Playground(sf::Vector2f window_size_)
+Playground::Playground(const sf::Vector2f& windowSize)
 {
 	// Playground initialization
-	this->texture_playground.loadFromFile("Textures/playground.png");
-	this->sprite_playground.setTexture(this->texture_playground);
-	this->sprite_playground.setOrigin(this->sprite_playground.getPosition().x + this->sprite_playground.getGlobalBounds().width / 2.f,
-									  this->sprite_playground.getPosition().y + this->sprite_playground.getGlobalBounds().height / 2.f);
-	this->sprite_playground.setPosition(window_size_ / 2.f);
-	this->scale = (window_size_.y - this->playground_top_bottom_space * 2) / this->sprite_playground.getGlobalBounds().height;
-	this->sprite_playground.setScale(this->scale, this->scale);
+	m_texture = &AssetManager::GetTexture("Textures/playground.png");
+	m_sprite.setTexture(*m_texture);
+	m_sprite.setOrigin(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width / 2.f,
+									  m_sprite.getPosition().y + m_sprite.getGlobalBounds().height / 2.f);
+	m_sprite.setPosition(windowSize / 2.f);
+	m_scale = (windowSize.y - m_playgroundPadding * 2) / m_sprite.getGlobalBounds().height;
+	m_sprite.setScale(m_scale, m_scale);
 
-	this->inner_edge_width	*= this->scale;
-	this->outer_edge_width	*= this->scale;
-	this->tile_width		*= this->scale;
+	m_innerEdgeWidth *= m_scale;
+	m_outerEdgeWidth *= m_scale;
+	m_tileWidth *= m_scale;
 
-	sf::Vector2f playground_pos = this->sprite_playground.getPosition();
-	playground_pos.x -= this->sprite_playground.getLocalBounds().width / 4.f;
-	playground_pos.y -= this->sprite_playground.getLocalBounds().height / 4.f;
-	this->matrix = new TileMatrix(&this->scale, &this->outer_edge_width, &this->inner_edge_width, &this->tile_width, playground_pos);
-	/*this->matrix->addTile({ 0, 0 }, 4096);
-	this->matrix->addTile({ 1, 0 }, 2048);
-	this->matrix->addTile({ 2, 0 }, 1024);
-	this->matrix->addTile({ 3, 0 }, 512);
-	this->matrix->addTile({ 0, 1 }, 256);*/
-	this->matrix->spawn(2u);
-	this->gui = new GUI(window_size_, this->sprite_playground.getGlobalBounds());
+	sf::Vector2f playground_pos = m_sprite.getPosition();
+	playground_pos.x -= m_sprite.getLocalBounds().width / 4.f;
+	playground_pos.y -= m_sprite.getLocalBounds().height / 4.f;
+	m_tileMatrix = new TileMatrix(&m_scale, &m_outerEdgeWidth, &m_innerEdgeWidth, &m_tileWidth, playground_pos);
+	m_tileMatrix->addTile({ 0, 0 }, 4096);
+	m_tileMatrix->addTile({ 1, 0 }, 2048);
+	m_tileMatrix->addTile({ 2, 0 }, 1024);
+	m_tileMatrix->addTile({ 3, 0 }, 512);
+	m_tileMatrix->addTile({ 0, 1 }, 256);
+	m_tileMatrix->spawn(2);
+	m_gui = new GUI(windowSize, m_sprite.getGlobalBounds());
 }
 
 Playground::~Playground()
 {
-	this->texture_playground.~Texture();
-	this->gui->~GUI();
-	this->matrix->~TileMatrix();
+	delete m_gui;
+	delete m_tileMatrix;
 }
 
 void Playground::update(float dt)
 {
-	this->matrix->update(dt);
-	this->updateScore();
+	m_tileMatrix->update(dt);
+	updateScore();
 }
 
 void Playground::updateScore()
 {
-	const int added_score = this->matrix->getAddedScore();
-	this->matrix->setAddedScore(0);
-	this->score += added_score;
-	this->gui->addScore(added_score);
+	const int added_m_score = m_tileMatrix->getAddedScore();
+	m_tileMatrix->setAddedScore(0);
+	m_score += added_m_score;
+	m_gui->addScore(added_m_score);
 }
 
-void Playground::move(char direction_)
+void Playground::move(const sf::Keyboard::Key key)
 {
-	if (direction_ == 'U')
-		this->matrix->moveUp();
-	else if (direction_ == 'D')
-		this->matrix->moveDown();
-	else if (direction_ == 'L')
-		this->matrix->moveLeft();
-	else if (direction_ == 'R')
-		this->matrix->moveRight();
+	if (this->m_tileMatrix->getIsMoving()) return;
+
+	switch (key)
+	{
+		case sf::Keyboard::Key::Up:
+		case sf::Keyboard::Key::W:
+			m_tileMatrix->moveUp();
+			break;
+		case sf::Keyboard::Key::Down:
+		case sf::Keyboard::Key::S:
+			m_tileMatrix->moveDown();
+			break;
+		case sf::Keyboard::Key::Left:
+		case sf::Keyboard::Key::A:
+			m_tileMatrix->moveLeft();
+			break;
+		case sf::Keyboard::Key::Right:
+		case sf::Keyboard::Key::D:
+			m_tileMatrix->moveRight();
+			break;
+	}
 }
 
 void Playground::clearBoard()
 {
-	this->gui->saveBestScore();
-	this->gui->setScore(0);
-	this->matrix->clearBoard();
-	this->matrix->spawn();
+	m_gui->saveBestScore();
+	m_gui->setScore(0);
+	m_tileMatrix->clearBoard();
+	m_tileMatrix->spawn();
 }
 
 void Playground::render(sf::RenderTarget& target)
 {
-	target.clear(this->color_background);
-	target.draw(this->sprite_playground);
-	this->matrix->render(target);
-	this->gui->render(target, this->matrix->getIsGameOver());
+	target.clear(m_backgroundColor);
+	target.draw(m_sprite);
+	m_tileMatrix->render(target);
+	m_gui->render(target, m_tileMatrix->getIsGameOver());
 }
