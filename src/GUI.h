@@ -12,39 +12,39 @@ using namespace std;
 
 class GUI {
 private:
-	int					score				 = 0;
-	int					best_score			 = 9;
-	float				scale				 = 0.25f;
-	string				str_new_game		 = "New Game";
-	string				str_best_score		 = "BEST";
-	string				str_score			 = "SCORE";
-	string				str_title			 = "2048";
-	string				str_game_over		 = "GAME OVER";
-	string				best_score_filename  = "bestscore.txt";
-	sf::Font			font;
-	sf::Text			text_new_game;
-	sf::Text			text_best_score_header;
-	sf::Text			text_score_header;
-	sf::Text			text_title;
-	sf::Text			text_score;
-	sf::Text			text_best_score;
-	sf::Text			text_game_over;
-	unsigned			size_new_game		 = 20;
-	unsigned			size_best_score		 = 12;
-	unsigned			size_score			 = 12;
-	unsigned			size_title			 = 64;
-	unsigned			size_game_over		 = 60;
-	sf::Sprite			button_new_game;
-	sf::Sprite			button_best_score;
-	sf::Sprite			button_score;
-	sf::Texture			texture_new_game;
-	sf::Texture			texture_score;
-	sf::Color			color_title			 = sf::Color(119, 110, 101);
-	sf::Color			color_new_game		 = sf::Color(249, 246, 242);
-	sf::Color			color_score			 = sf::Color(238, 228, 218);
-	sf::Color			color_game_over		 = sf::Color(110, 100, 90);
-	sf::Vector2f		window_size;
-	sf::FloatRect		shape_playground;
+	int					m_score				 = 0;
+	int					m_bestScore			 = 9;
+	float				m_scale				 = 0.25f;
+	string				m_newGameString		 = "New Game";
+	string				m_bestScoreString		 = "BEST";
+	string				m_scoreString			 = "SCORE";
+	string				m_titleString			 = "2048";
+	string				m_gameOverString		 = "GAME OVER";
+	string				m_bestScoreFilename  = "bestscore.txt";
+	sf::Font			m_font;
+	sf::Text			m_newGameText;
+	sf::Text			m_bestScoreHeaderText;
+	sf::Text			m_scoreHeaderText;
+	sf::Text			m_titleText;
+	sf::Text			m_scoreText;
+	sf::Text			m_bestScoreText;
+	sf::Text			m_gameOverText;
+	unsigned			m_newGameSize		 = 20;
+	unsigned			m_bestScoreSize		 = 12;
+	unsigned			m_scoreSize			 = 12;
+	unsigned			m_titleSize			 = 64;
+	unsigned			m_gameOverSize		 = 60;
+	sf::Sprite			m_newGameButtonSprite;
+	sf::Sprite			m_bestScoreButtonSprite;
+	sf::Sprite			m_scoreButtonSprite;
+	sf::Texture			m_newGameTexture;
+	sf::Texture			m_scoreTexture;
+	sf::Color			m_titleColor			 = sf::Color(119, 110, 101);
+	sf::Color			m_newGameColor		 = sf::Color(249, 246, 242);
+	sf::Color			m_scoreColor			 = sf::Color(238, 228, 218);
+	sf::Color			m_gameOverColor		 = sf::Color(110, 100, 90);
+	sf::Vector2f		m_windowSize;
+	sf::FloatRect		m_playgroundRect;
 
 	void initText();
 	void initSprites();
@@ -53,7 +53,7 @@ private:
 
 public:
 	// Constructors / Destructors
-	GUI(sf::Vector2f window_size_, sf::FloatRect shape_playground_);
+	GUI(sf::Vector2f windowSize, sf::FloatRect playgroundRect);
 	virtual ~GUI();
 
 	// Functions
@@ -65,7 +65,7 @@ public:
 	void addScore(int value_);
 
 	// Accessors
-	sf::FloatRect getNewGameButton() { return this->button_new_game.getGlobalBounds(); }
+	sf::FloatRect getNewGameButton() { return this->m_newGameButtonSprite.getGlobalBounds(); }
 
 	// Render GUI
 	void render(sf::RenderTarget& target, bool is_game_over);

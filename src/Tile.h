@@ -40,7 +40,6 @@ public:
 	void setScale(float m_scale);
 	void setIsMoving(bool value);
 	void setIsMerging(bool value);
-	
 
 	// Accessors
 	const int getType() const;

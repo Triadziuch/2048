@@ -77,7 +77,6 @@ void Game::updatePollEvents()
 
 	if (this->window->pollEvent(ev)) {
 
-		// Zamykanie okna
 		if ((ev.Event::type == sf::Event::Closed) || (ev.Event::KeyPressed && ev.Event::key.code == sf::Keyboard::Escape)) 
 			this->window->close();
 				
@@ -117,9 +116,7 @@ void Game::updateGameOver()
 
 // Render functions
 void Game::render() {
-	// Drawing background
-	this->playground->render(*this->window);
 
-	// Displaying frame
+	this->playground->render(*this->window);
 	this->window->display();
 }

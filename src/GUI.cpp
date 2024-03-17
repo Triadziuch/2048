@@ -15,33 +15,30 @@ void GUI::justifyHorizontal(sf::FloatRect button, sf::Text& text)
 void GUI::saveBestScore()
 {
 	ofstream file;
-	file.open(best_score_filename, ios::out);
+	file.open(m_bestScoreFilename, ios::out);
 
 	if (file.good())
-		file << to_string(best_score);
+		file << to_string(m_bestScore);
 }
 
 void GUI::loadBestScore()
 {
 	fstream file;
-	file.open(best_score_filename);
+	file.open(m_bestScoreFilename);
 
 	if (file.good()) {
-		string str_best_score;
+		string m_bestScoreString;
 		stringstream ss_best_score;
 		int int_best_score;
-		file >> str_best_score;
-		ss_best_score << str_best_score;
+		file >> m_bestScoreString;
+		ss_best_score << m_bestScoreString;
 		ss_best_score >> int_best_score;
-		best_score = int_best_score;
+		m_bestScore = int_best_score;
 	}
 }
 
-GUI::GUI(sf::Vector2f window_size_, sf::FloatRect shape_playground_)
+GUI::GUI(sf::Vector2f windowSize, sf::FloatRect playgroundRect) : m_windowSize(windowSize), m_playgroundRect(playgroundRect)
 {
-	window_size = window_size_;
-	shape_playground = shape_playground_;
-
 	loadBestScore();
 	initSprites();
 	initText();
@@ -49,23 +46,23 @@ GUI::GUI(sf::Vector2f window_size_, sf::FloatRect shape_playground_)
 
 void GUI::setScore(int value_)
 {
-	score = value_;
+	m_score = value_;
 
-	float old_width = text_score.getGlobalBounds().width;
-	text_score.setString(to_string(score));
-	float new_width = text_score.getGlobalBounds().width;
+	float old_width = m_scoreText.getGlobalBounds().width;
+	m_scoreText.setString(to_string(m_score));
+	float new_width = m_scoreText.getGlobalBounds().width;
 
 	if (old_width != new_width)
-		text_score.move((old_width - new_width) / 2.f, 0.f);
+		m_scoreText.move((old_width - new_width) / 2.f, 0.f);
 
-	if (best_score < score) {
-		sf::Vector2f old_pos = text_best_score.getPosition();
-		best_score = score;
-		text_best_score = text_score;
-		text_best_score.setPosition(old_pos);
+	if (m_bestScore < m_score) {
+		sf::Vector2f old_pos = m_bestScoreText.getPosition();
+		m_bestScore = m_score;
+		m_bestScoreText = m_scoreText;
+		m_bestScoreText.setPosition(old_pos);
 
 		if (old_width != new_width)
-			text_best_score.move((old_width - new_width) / 2.f, 0.f);
+			m_bestScoreText.move((old_width - new_width) / 2.f, 0.f);
 	}
 }
 
@@ -76,124 +73,124 @@ GUI::~GUI()
 
 void GUI::initText()
 {
-	if (!font.loadFromFile("Fonts/ClearSans-Bold.ttf"))
-		cout << "Couldn't load font: /Fonts/ClearSans-Bold.ttf" << endl;
+	if (!m_font.loadFromFile("Fonts/ClearSans-Bold.ttf"))
+		cout << "Couldn't load m_font: /Fonts/ClearSans-Bold.ttf" << endl;
 
-	text_new_game.setFont(font);
-	text_best_score_header.setFont(font);
-	text_score_header.setFont(font);
-	text_title.setFont(font);
-	text_game_over.setFont(font);
+	m_newGameText.setFont(m_font);
+	m_bestScoreHeaderText.setFont(m_font);
+	m_scoreHeaderText.setFont(m_font);
+	m_titleText.setFont(m_font);
+	m_gameOverText.setFont(m_font);
 
-	text_new_game.setCharacterSize(size_new_game);
-	text_best_score_header.setCharacterSize(size_best_score);
-	text_score_header.setCharacterSize(size_score);
-	text_title.setCharacterSize(size_title);
-	text_game_over.setCharacterSize(size_game_over);
+	m_newGameText.setCharacterSize(m_newGameSize);
+	m_bestScoreHeaderText.setCharacterSize(m_bestScoreSize);
+	m_scoreHeaderText.setCharacterSize(m_scoreSize);
+	m_titleText.setCharacterSize(m_titleSize);
+	m_gameOverText.setCharacterSize(m_gameOverSize);
 
-	text_new_game.setFillColor(sf::Color::White);
-	text_best_score_header.setFillColor(color_score);
-	text_score_header.setFillColor(color_score);
-	text_title.setFillColor(color_title);
-	text_game_over.setFillColor(color_game_over);
+	m_newGameText.setFillColor(sf::Color::White);
+	m_bestScoreHeaderText.setFillColor(m_scoreColor);
+	m_scoreHeaderText.setFillColor(m_scoreColor);
+	m_titleText.setFillColor(m_titleColor);
+	m_gameOverText.setFillColor(m_gameOverColor);
 
-	text_new_game.setString(str_new_game);
-	text_best_score_header.setString(str_best_score);
-	text_score_header.setString(str_score);
-	text_title.setString(str_title);
-	text_game_over.setString(str_game_over);
+	m_newGameText.setString(m_newGameString);
+	m_bestScoreHeaderText.setString(m_bestScoreString);
+	m_scoreHeaderText.setString(m_scoreString);
+	m_titleText.setString(m_titleString);
+	m_gameOverText.setString(m_gameOverString);
 
-	text_game_over.setOutlineThickness(1.f);
+	m_gameOverText.setOutlineThickness(1.f);
 	
-	text_game_over.setOutlineColor(color_title);
+	m_gameOverText.setOutlineColor(m_titleColor);
 
-	text_new_game.setOrigin(text_new_game.getLocalBounds().left + text_new_game.getGlobalBounds().width / 2.f, text_new_game.getLocalBounds().top + text_new_game.getGlobalBounds().height / 2.f);
-	text_best_score_header.setOrigin(text_best_score_header.getLocalBounds().left + text_best_score_header.getGlobalBounds().width / 2.f, text_best_score_header.getLocalBounds().top + text_best_score_header.getGlobalBounds().height / 2.f);
-	text_score_header.setOrigin(text_score_header.getLocalBounds().left + text_score_header.getGlobalBounds().width / 2.f, text_score_header.getLocalBounds().top + text_score_header.getGlobalBounds().height / 2.f);
-	text_game_over.setOrigin(text_game_over.getLocalBounds().left + text_game_over.getGlobalBounds().width / 2.f, text_game_over.getLocalBounds().top + text_game_over.getGlobalBounds().height / 2.f);
+	m_newGameText.setOrigin(m_newGameText.getLocalBounds().left + m_newGameText.getGlobalBounds().width / 2.f, m_newGameText.getLocalBounds().top + m_newGameText.getGlobalBounds().height / 2.f);
+	m_bestScoreHeaderText.setOrigin(m_bestScoreHeaderText.getLocalBounds().left + m_bestScoreHeaderText.getGlobalBounds().width / 2.f, m_bestScoreHeaderText.getLocalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height / 2.f);
+	m_scoreHeaderText.setOrigin(m_scoreHeaderText.getLocalBounds().left + m_scoreHeaderText.getGlobalBounds().width / 2.f, m_scoreHeaderText.getLocalBounds().top + m_scoreHeaderText.getGlobalBounds().height / 2.f);
+	m_gameOverText.setOrigin(m_gameOverText.getLocalBounds().left + m_gameOverText.getGlobalBounds().width / 2.f, m_gameOverText.getLocalBounds().top + m_gameOverText.getGlobalBounds().height / 2.f);
 
-	text_new_game.setPosition(button_new_game.getGlobalBounds().left + button_new_game.getGlobalBounds().width / 2.f, button_new_game.getGlobalBounds().top + button_new_game.getGlobalBounds().height / 2.f);
-	text_best_score_header.setPosition(button_best_score.getGlobalBounds().left + button_best_score.getGlobalBounds().width / 2.f, button_best_score.getGlobalBounds().top + text_best_score_header.getGlobalBounds().height * 2);
-	text_score_header.setPosition(button_score.getGlobalBounds().left + button_score.getGlobalBounds().width / 2.f, button_score.getGlobalBounds().top + text_score_header.getGlobalBounds().height * 2);
-	text_title.setPosition(shape_playground.left, shape_playground.top - text_title.getGlobalBounds().height * 1.75f);
-	text_game_over.setPosition(shape_playground.left + shape_playground.width / 2.f, shape_playground.top + shape_playground.height / 2.f);
+	m_newGameText.setPosition(m_newGameButtonSprite.getGlobalBounds().left + m_newGameButtonSprite.getGlobalBounds().width / 2.f, m_newGameButtonSprite.getGlobalBounds().top + m_newGameButtonSprite.getGlobalBounds().height / 2.f);
+	m_bestScoreHeaderText.setPosition(m_bestScoreButtonSprite.getGlobalBounds().left + m_bestScoreButtonSprite.getGlobalBounds().width / 2.f, m_bestScoreButtonSprite.getGlobalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height * 2);
+	m_scoreHeaderText.setPosition(m_scoreButtonSprite.getGlobalBounds().left + m_scoreButtonSprite.getGlobalBounds().width / 2.f, m_scoreButtonSprite.getGlobalBounds().top + m_scoreHeaderText.getGlobalBounds().height * 2);
+	m_titleText.setPosition(m_playgroundRect.left, m_playgroundRect.top - m_titleText.getGlobalBounds().height * 1.75f);
+	m_gameOverText.setPosition(m_playgroundRect.left + m_playgroundRect.width / 2.f, m_playgroundRect.top + m_playgroundRect.height / 2.f);
 
-	text_score.setFont(font);
-	text_best_score.setFont(font);
+	m_scoreText.setFont(m_font);
+	m_bestScoreText.setFont(m_font);
 
-	text_score.setCharacterSize(20);
-	text_best_score.setCharacterSize(20);
+	m_scoreText.setCharacterSize(20);
+	m_bestScoreText.setCharacterSize(20);
 
-	text_score.setFillColor(sf::Color::White);
-	text_best_score.setFillColor(sf::Color::White);
+	m_scoreText.setFillColor(sf::Color::White);
+	m_bestScoreText.setFillColor(sf::Color::White);
 
-	text_score.setString(to_string(score));
-	text_best_score.setString(to_string(best_score));
+	m_scoreText.setString(to_string(m_score));
+	m_bestScoreText.setString(to_string(m_bestScore));
 
-	text_score.setOrigin(text_score.getLocalBounds().left + text_score.getGlobalBounds().width / 2.f, text_score.getLocalBounds().top + text_score.getGlobalBounds().height / 2.f);
-	text_best_score.setOrigin(text_best_score.getLocalBounds().left + text_best_score.getGlobalBounds().width / 2.f, text_best_score.getLocalBounds().top + text_best_score.getGlobalBounds().height / 2.f);
+	m_scoreText.setOrigin(m_scoreText.getLocalBounds().left + m_scoreText.getGlobalBounds().width / 2.f, m_scoreText.getLocalBounds().top + m_scoreText.getGlobalBounds().height / 2.f);
+	m_bestScoreText.setOrigin(m_bestScoreText.getLocalBounds().left + m_bestScoreText.getGlobalBounds().width / 2.f, m_bestScoreText.getLocalBounds().top + m_bestScoreText.getGlobalBounds().height / 2.f);
 
-	text_score.setPosition(text_score_header.getPosition().x, text_score_header.getGlobalBounds().top + text_score_header.getGlobalBounds().height + 15.f);
-	text_best_score.setPosition(text_best_score_header.getPosition().x, text_best_score_header.getGlobalBounds().top + text_best_score_header.getGlobalBounds().height + 15.f);
+	m_scoreText.setPosition(m_scoreHeaderText.getPosition().x, m_scoreHeaderText.getGlobalBounds().top + m_scoreHeaderText.getGlobalBounds().height + 15.f);
+	m_bestScoreText.setPosition(m_bestScoreHeaderText.getPosition().x, m_bestScoreHeaderText.getGlobalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height + 15.f);
 }
 
 void GUI::initSprites()
 {
-	if (!texture_new_game.loadFromFile("Textures/button_newgame.png"))
+	if (!m_newGameTexture.loadFromFile("Textures/button_newgame.png"))
 		cout << "Couldn't load texture: /Textures/button_newgame.png" << endl;
-	if (!texture_score.loadFromFile("Textures/button_score.png"))
-		cout << "Couldn't load texture: /Textures/button_score.png" << endl;
+	if (!m_scoreTexture.loadFromFile("Textures/m_scoreButtonSprite.png"))
+		cout << "Couldn't load texture: /Textures/m_scoreButtonSprite.png" << endl;
 
-	button_new_game.setTexture(texture_new_game);
-	button_best_score.setTexture(texture_score);
-	button_score.setTexture(texture_score);
+	m_newGameButtonSprite.setTexture(m_newGameTexture);
+	m_bestScoreButtonSprite.setTexture(m_scoreTexture);
+	m_scoreButtonSprite.setTexture(m_scoreTexture);
 
-	button_new_game.setScale(scale, scale);
-	button_best_score.setScale(scale, scale);
-	button_score.setScale(scale, scale);
+	m_newGameButtonSprite.setScale(m_scale, m_scale);
+	m_bestScoreButtonSprite.setScale(m_scale, m_scale);
+	m_scoreButtonSprite.setScale(m_scale, m_scale);
 
-	button_new_game.setPosition(window_size.x - button_new_game.getGlobalBounds().width * 1.25f, shape_playground.top + button_new_game.getGlobalBounds().height / 4.f );
-	button_best_score.setPosition(button_new_game.getPosition().x + button_new_game.getGlobalBounds().width - button_best_score.getGlobalBounds().width, shape_playground.top - button_new_game.getGlobalBounds().height / 4.f - button_best_score.getGlobalBounds().height);
-	button_score.setPosition(button_best_score.getPosition().x - button_score.getGlobalBounds().width - 10.f, button_best_score.getPosition().y);
+	m_newGameButtonSprite.setPosition(m_windowSize.x - m_newGameButtonSprite.getGlobalBounds().width * 1.25f, m_playgroundRect.top + m_newGameButtonSprite.getGlobalBounds().height / 4.f );
+	m_bestScoreButtonSprite.setPosition(m_newGameButtonSprite.getPosition().x + m_newGameButtonSprite.getGlobalBounds().width - m_bestScoreButtonSprite.getGlobalBounds().width, m_playgroundRect.top - m_newGameButtonSprite.getGlobalBounds().height / 4.f - m_bestScoreButtonSprite.getGlobalBounds().height);
+	m_scoreButtonSprite.setPosition(m_bestScoreButtonSprite.getPosition().x - m_scoreButtonSprite.getGlobalBounds().width - 10.f, m_bestScoreButtonSprite.getPosition().y);
 }
 
 
 void GUI::addScore(int value_) {
-	score += value_;
+	m_score += value_;
 	
-	float old_width = text_score.getGlobalBounds().width;
-	text_score.setString(to_string(score));
-	float new_width = text_score.getGlobalBounds().width;
+	float old_width = m_scoreText.getGlobalBounds().width;
+	m_scoreText.setString(to_string(m_score));
+	float new_width = m_scoreText.getGlobalBounds().width;
 	
 	if (old_width != new_width)
-		text_score.move((old_width - new_width) / 2.f, 0.f);
+		m_scoreText.move((old_width - new_width) / 2.f, 0.f);
 
-	if (best_score < score) {
-		best_score = score;
-		text_best_score.setString(to_string(best_score));
-		justifyHorizontal(button_best_score.getGlobalBounds(), text_best_score);
-		text_best_score.setPosition(text_best_score.getPosition().x, text_score.getPosition().y - text_score.getOrigin().y);
+	if (m_bestScore < m_score) {
+		m_bestScore = m_score;
+		m_bestScoreText.setString(to_string(m_bestScore));
+		justifyHorizontal(m_bestScoreButtonSprite.getGlobalBounds(), m_bestScoreText);
+		m_bestScoreText.setPosition(m_bestScoreText.getPosition().x, m_scoreText.getPosition().y - m_scoreText.getOrigin().y);
 	}
 }
 
 void GUI::render(sf::RenderTarget& target, bool is_game_over)
 {
 	// Drawing buttons
-	target.draw(button_new_game);
-	target.draw(button_best_score);
-	target.draw(button_score);
+	target.draw(m_newGameButtonSprite);
+	target.draw(m_bestScoreButtonSprite);
+	target.draw(m_scoreButtonSprite);
 
 	// Drawing text
-	target.draw(text_new_game);
-	target.draw(text_best_score_header);
-	target.draw(text_score_header);
-	target.draw(text_title);
+	target.draw(m_newGameText);
+	target.draw(m_bestScoreHeaderText);
+	target.draw(m_scoreHeaderText);
+	target.draw(m_titleText);
 
 	// Drawing score
-	target.draw(text_best_score);
-	target.draw(text_score);
+	target.draw(m_bestScoreText);
+	target.draw(m_scoreText);
 
 	// Drawing game over
 	if (is_game_over)
-		target.draw(text_game_over);
+		target.draw(m_gameOverText);
 }
