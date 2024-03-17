@@ -43,13 +43,10 @@ void Playground::update(float dt)
 
 void Playground::updateScore()
 {
-	int added_score = this->matrix->getAddedScore();
+	const int added_score = this->matrix->getAddedScore();
 	this->matrix->setAddedScore(0);
-
-	if (added_score != 0) {
-		this->score += added_score;
-		this->gui->addScore(added_score);
-	}
+	this->score += added_score;
+	this->gui->addScore(added_score);
 }
 
 void Playground::move(char direction_)
@@ -77,5 +74,5 @@ void Playground::render(sf::RenderTarget& target)
 	target.clear(this->color_background);
 	target.draw(this->sprite_playground);
 	this->matrix->render(target);
-	this->gui->render(target, this->matrix->GAMEOVER_FLAG);
+	this->gui->render(target, this->matrix->getIsGameOver());
 }

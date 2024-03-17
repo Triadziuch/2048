@@ -27,20 +27,19 @@ public:
 	void update(const float dt);
 
 	// Functions
-	void move(sf::Vector2f offset)			{ m_sprite.move(offset); }
-	void increaseType()						{ m_type *= 2; }
+	void move(const sf::Vector2f& offset) { m_sprite.move(offset); }
+	void smoothMove(const sf::Vector2f& offset, const float duration);
+
+	void increaseType() { m_type *= 2; }
 	void gameOver();
 
 	void startSpawning();
 	void startMerging();
 
 	// Mutators
-	void setScale(float scale)				{ m_sprite.setScale(scale, scale); }
-	void setTexture(sf::Texture* texture)   { m_sprite.setTexture(*texture); }
-	void setPosition(sf::Vector2f pos)		{ m_sprite.setPosition(pos); }
-	void setType(int type)					{ m_type = type; }
-	void setIsMoving(bool value)			{ m_isMoving = value; }
-	void setMerging(bool value)				{ m_isMerging = value; }
+	void setScale(float scale);
+	void setIsMoving(bool value);
+	void setIsMerging(bool value);
 	
 
 	// Accessors

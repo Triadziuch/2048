@@ -18,7 +18,6 @@ Tile::~Tile()
 {
 	m_movementManager->unlinkScalingRoutine(&m_sprite, "TILE_SPAWNING");
 	m_movementManager->unlinkScalingRoutine(&m_sprite, "TILE_MERGING");
-	m_scale = nullptr;
 }
 
 // Update functions
@@ -38,6 +37,11 @@ void Tile::update(const float dt)
 	}
 }
 
+void Tile::smoothMove(const sf::Vector2f& offset, const float duration)
+{
+	m_movementContainer->addMovement(&m_sprite, new movementInfo(m_sprite.getPosition(), m_sprite.getPosition() + offset, duration, easeFunctions::getFunction(easeFunctions::IN_OUT_SINE), false, 0.f, 0.f));
+}
+
 void Tile::gameOver()
 {
 	m_sprite.setColor(sf::Color(250, 248, 239, 160));
@@ -55,6 +59,22 @@ void Tile::startMerging()
 {
 	m_movementManager->linkScalingRoutine(m_sprite, "TILE_MERGING");
 	m_movementManager->startScalingRoutine(m_sprite, "TILE_MERGING");
+}
+
+// Mutators
+void Tile::setScale(float scale)
+{
+	m_sprite.setScale(scale, scale);
+}
+
+void Tile::setIsMoving(bool value)
+{
+	m_isMoving = value;
+}
+
+void Tile::setIsMerging(bool value)
+{
+	m_isMerging = value;
 }
 
 // Accessors

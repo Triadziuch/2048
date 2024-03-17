@@ -33,11 +33,11 @@ public:
 	// Accessors
 	const float& getOuterEdgeWidth() const { return this->outer_edge_width; }
 	const float& getInnerEdgeWidth() const { return this->inner_edge_width; }
-	const float& getTileWidth()		 const { return this->tile_width; }
-	const float& getScale()			 const { return this->scale; }
-	bool& getIsMoving()					   { return this->matrix->getIsMoving(); }
-	sf::FloatRect getNewGameButton()	   { return this->gui->getNewGameButton(); }
-	bool getIsGameOver()				   { return this->matrix->GAMEOVER_FLAG; }
+	const float& getTileWidth() const { return this->tile_width; }
+	const float& getScale() const { return this->scale; }
+	const bool getIsMoving() const { return this->matrix->getIsMoving(); }
+	sf::FloatRect getNewGameButton() { return this->gui->getNewGameButton(); }
+	const bool getIsGameOver() const { return this->matrix->getIsGameOver(); }
 
 	// Rendering playground
 	void render (sf::RenderTarget& target);
