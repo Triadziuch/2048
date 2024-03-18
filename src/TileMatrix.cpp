@@ -41,6 +41,8 @@ int TileMatrix::mergeLeft(const sf::Vector2i& pos)
 			neighbourMovingTile.getMerging() == false &&
 			tile.getMerging() == false) {
 
+			checkWin(tile);
+
 			m_mergedTiles = true;
 			neighbourMovingTile.setIsMerging(true);
 			tile.setIsMerging(true);
@@ -52,6 +54,8 @@ int TileMatrix::mergeLeft(const sf::Vector2i& pos)
 	for (int i = pos.x - 1; i >= 0; --i)
 		if (m_matrix[i][pos.y] != nullptr) {
 			if (m_matrix[i][pos.y]->getType() == tile.getType() && !m_matrix[i][pos.y]->getMerging() && !tile.getMerging()) {
+
+				checkWin(tile);
 				m_mergedTiles = true;
 				m_matrix[i][pos.y]->setIsMerging(true);
 				tile.setIsMerging(true);
@@ -79,6 +83,8 @@ int TileMatrix::mergeRight(const sf::Vector2i& pos)
 			neighbourMovingTile.getMerging() == false &&
 			tile.getMerging() == false) {
 
+			checkWin(tile);
+
 			m_mergedTiles = true;
 			neighbourMovingTile.setIsMerging(true);
 			tile.setIsMerging(true);
@@ -90,6 +96,8 @@ int TileMatrix::mergeRight(const sf::Vector2i& pos)
 	for (int i = pos.x + 1; i < m_matrixWidth; ++i)
 		if (m_matrix[i][pos.y] != nullptr) {
 			if (m_matrix[i][pos.y]->getType() == tile.getType() && !m_matrix[i][pos.y]->getMerging() && !tile.getMerging()) {
+				
+				checkWin(tile);
 				m_mergedTiles = true;
 				m_matrix[i][pos.y]->setIsMerging(true);
 				tile.setIsMerging(true);
@@ -117,6 +125,7 @@ int TileMatrix::mergeUp(const sf::Vector2i& pos)
 			neighbourMovingTile.getMerging() == false &&
 			tile.getMerging() == false) {
 
+			checkWin(tile);
 			m_mergedTiles = true;
 			neighbourMovingTile.setIsMerging(true);
 			tile.setIsMerging(true);
@@ -128,6 +137,8 @@ int TileMatrix::mergeUp(const sf::Vector2i& pos)
 	for (int i = pos.y - 1; i >= 0; --i)
 		if (m_matrix[pos.x][i] != nullptr) {
 			if (m_matrix[pos.x][i]->getType() == tile.getType() && !m_matrix[pos.x][i]->getMerging() && !tile.getMerging()) {
+				
+				checkWin(tile);
 				m_mergedTiles = true;
 				m_matrix[pos.x][i]->setIsMerging(true);
 				tile.setIsMerging(true);
@@ -155,6 +166,7 @@ int TileMatrix::mergeDown(const sf::Vector2i& pos)
 			neighbourMovingTile.getMerging() == false &&
 			tile.getMerging() == false) {
 
+			checkWin(tile);
 			m_mergedTiles = true;
 			neighbourMovingTile.setIsMerging(true);
 			tile.setIsMerging(true);
@@ -166,6 +178,8 @@ int TileMatrix::mergeDown(const sf::Vector2i& pos)
 	for (int i = pos.y + 1; i < m_matrixHeight; ++i)
 		if (m_matrix[pos.x][i] != nullptr) {
 			if (m_matrix[pos.x][i]->getType() == tile.getType() && !m_matrix[pos.x][i]->getMerging() && !tile.getMerging()) {
+				
+				checkWin(tile);
 				m_mergedTiles = true;
 				m_matrix[pos.x][i]->setIsMerging(true);
 				tile.setIsMerging(true);
@@ -189,6 +203,18 @@ int TileMatrix::findFreeLeft(const sf::Vector2i& pos)
 			if ((m_matrix[i][pos.y] == nullptr || m_matrix[i][pos.y]->getIsMoving()) && !willBeOccupied(sf::Vector2i(i, pos.y)))
 				return i;
 		return pos.x;
+	}
+}
+
+void TileMatrix::checkWin(const Tile& tile)
+{
+	if (tile.getType() == 1024 && !m_isWin) {
+		m_isWin = true;
+
+		for (size_t x = 0; x < m_matrixWidth; ++x)
+			for (size_t y = 0; y < m_matrixHeight; ++y)
+				if (m_matrix[x][y])
+					m_matrix[x][y]->startWin();
 	}
 }
 
