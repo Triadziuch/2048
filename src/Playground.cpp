@@ -19,11 +19,12 @@ Playground::Playground(const sf::Vector2f& windowSize)
 	playground_pos.x -= m_sprite.getLocalBounds().width / 4.f;
 	playground_pos.y -= m_sprite.getLocalBounds().height / 4.f;
 	m_tileMatrix = new TileMatrix(&m_scale, &m_outerEdgeWidth, &m_innerEdgeWidth, &m_tileWidth, playground_pos);
-	m_tileMatrix->addTile({ 0, 0 }, 4096);
+	/*m_tileMatrix->addTile({ 0, 0 }, 4096);
 	m_tileMatrix->addTile({ 1, 0 }, 2048);
 	m_tileMatrix->addTile({ 2, 0 }, 1024);
 	m_tileMatrix->addTile({ 3, 0 }, 512);
 	m_tileMatrix->addTile({ 0, 1 }, 256);
+	m_tileMatrix->addTile({ 0, 2 }, 128);*/
 	m_tileMatrix->spawn(2);
 	m_gui = new GUI(windowSize, m_sprite.getGlobalBounds());
 }
@@ -38,6 +39,16 @@ void Playground::update(float dt)
 {
 	m_tileMatrix->update(dt);
 	updateScore();
+
+	if (m_tileMatrix->getIsGameOver()) {
+		if (!m_isGameOver) {
+			m_isGameOver = true;
+			m_gui->startGameOver();
+			m_gui->saveBestScore();
+		}
+
+		m_gui->updateGameOver(dt);
+	}
 }
 
 void Playground::updateScore()
@@ -50,7 +61,7 @@ void Playground::updateScore()
 
 void Playground::move(const sf::Keyboard::Key key)
 {
-	if (this->m_tileMatrix->getIsMoving()) return;
+	if (m_tileMatrix->getIsMoving()) return;
 
 	switch (key)
 	{
@@ -75,6 +86,8 @@ void Playground::move(const sf::Keyboard::Key key)
 
 void Playground::clearBoard()
 {
+	m_isGameOver = false;
+	m_gui->stopGameOver();
 	m_gui->saveBestScore();
 	m_gui->setScore(0);
 	m_tileMatrix->clearBoard();
@@ -86,5 +99,5 @@ void Playground::render(sf::RenderTarget& target)
 	target.clear(m_backgroundColor);
 	target.draw(m_sprite);
 	m_tileMatrix->render(target);
-	m_gui->render(target, m_tileMatrix->getIsGameOver());
+	m_gui->render(target);
 }

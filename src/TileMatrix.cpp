@@ -3,11 +3,11 @@
 
 void TileMatrix::initTextures()
 {
-	for (int i = 1, k = 0; i < 13; i++, ++k) 
+	for (int i = 1, k = 0; i < 13; i++, ++k)
 		m_textures[k] = &AssetManager::GetTexture("Textures/" + std::to_string(static_cast<int>(pow(2.f, static_cast<double>(i)))) + ".png");
 }
 
-const int TileMatrix::findID(int type) const
+int TileMatrix::findID(int type) const
 {
 	int ID = 0;
 	while (type != 1) {
@@ -17,7 +17,7 @@ const int TileMatrix::findID(int type) const
 	return ID - 1;
 }
 
-const sf::Vector2f TileMatrix::calculateTilePos(const sf::Vector2i& pos) const
+sf::Vector2f TileMatrix::calculateTilePos(const sf::Vector2i& pos) const
 {
 	sf::Vector2f tilePos{ m_playgroundPosition };
 
@@ -30,7 +30,8 @@ const sf::Vector2f TileMatrix::calculateTilePos(const sf::Vector2i& pos) const
 int TileMatrix::mergeLeft(const sf::Vector2i& pos)
 {
 	Tile& tile = *m_matrix[pos.x][pos.y];
-	
+	if (tile.getType() == m_maxType) return -1;
+
 	// Merge if both are moving
 	if (m_moveInstructions.size() != 0) {
 		Tile& neighbourMovingTile = *m_matrix[m_moveInstructions.back()->getOldPos().x][m_moveInstructions.back()->getOldPos().y];
@@ -67,11 +68,12 @@ int TileMatrix::mergeLeft(const sf::Vector2i& pos)
 int TileMatrix::mergeRight(const sf::Vector2i& pos)
 {
 	Tile& tile = *m_matrix[pos.x][pos.y];
-	
+	if (tile.getType() == m_maxType) return -1;
+
 	// Merge if both are moving
 	if (m_moveInstructions.size() != 0) {
 		Tile& neighbourMovingTile = *m_matrix[m_moveInstructions.back()->getOldPos().x][m_moveInstructions.back()->getOldPos().y];
-	
+
 		if (m_moveInstructions.back()->getOldPos().y == pos.y &&
 			neighbourMovingTile.getType() == tile.getType() &&
 			neighbourMovingTile.getMerging() == false &&
@@ -85,7 +87,7 @@ int TileMatrix::mergeRight(const sf::Vector2i& pos)
 	}
 
 	// Merge if only one is moving
-	for (size_t i = pos.x + 1; i < m_matrixWidth; ++i)
+	for (int i = pos.x + 1; i < m_matrixWidth; ++i)
 		if (m_matrix[i][pos.y] != nullptr) {
 			if (m_matrix[i][pos.y]->getType() == tile.getType() && !m_matrix[i][pos.y]->getMerging() && !tile.getMerging()) {
 				m_mergedTiles = true;
@@ -104,7 +106,8 @@ int TileMatrix::mergeRight(const sf::Vector2i& pos)
 int TileMatrix::mergeUp(const sf::Vector2i& pos)
 {
 	Tile& tile = *m_matrix[pos.x][pos.y];
-	
+	if (tile.getType() == m_maxType) return -1;
+
 	// Merge if both are moving
 	if (m_moveInstructions.size() != 0) {
 		Tile& neighbourMovingTile = *m_matrix[m_moveInstructions.back()->getOldPos().x][m_moveInstructions.back()->getOldPos().y];
@@ -141,6 +144,7 @@ int TileMatrix::mergeUp(const sf::Vector2i& pos)
 int TileMatrix::mergeDown(const sf::Vector2i& pos)
 {
 	Tile& tile = *m_matrix[pos.x][pos.y];
+	if (tile.getType() == m_maxType) return -1;
 
 	// Merge if both are moving
 	if (m_moveInstructions.size() != 0) {
@@ -159,7 +163,7 @@ int TileMatrix::mergeDown(const sf::Vector2i& pos)
 	}
 
 	// Merge if only one is moving
-	for (size_t i = pos.y + 1; i < m_matrixHeight; ++i)
+	for (int i = pos.y + 1; i < m_matrixHeight; ++i)
 		if (m_matrix[pos.x][i] != nullptr) {
 			if (m_matrix[pos.x][i]->getType() == tile.getType() && !m_matrix[pos.x][i]->getMerging() && !tile.getMerging()) {
 				m_mergedTiles = true;
@@ -199,7 +203,7 @@ int TileMatrix::findFreeRight(const sf::Vector2i& pos)
 				return i;
 		return pos.x;
 	}
-	
+
 }
 
 int TileMatrix::findFreeUp(const sf::Vector2i& pos)
@@ -213,7 +217,7 @@ int TileMatrix::findFreeUp(const sf::Vector2i& pos)
 				return i;
 		return pos.y;
 	}
-	
+
 }
 
 int TileMatrix::findFreeDown(const sf::Vector2i& pos)
@@ -254,7 +258,7 @@ void TileMatrix::moveRight()
 			if (m_matrix[i][j] != nullptr) {
 				const sf::Vector2i new_pos{ findFreeRight(sf::Vector2i(i, j)), j };
 				const int distance = new_pos.x - i;
-				
+
 				if (distance > 0) {
 					const float pixel_distance = static_cast<float>(distance) * (*m_innerEdgeWidth + *m_tileWidth);
 					m_matrix[i][j]->smoothMove(sf::Vector2f(pixel_distance, 0.f), m_timeMovingMax);
@@ -288,11 +292,11 @@ void TileMatrix::moveDown()
 			if (m_matrix[i][j] != nullptr) {
 				const sf::Vector2i new_pos{ i, findFreeDown(sf::Vector2i(i, j)) };
 				const int distance = new_pos.y - j;
-				
+
 				if (distance > 0) {
 					const float pixel_distance = static_cast<float>(distance) * (*m_innerEdgeWidth + *m_tileWidth);
 					m_matrix[i][j]->smoothMove(sf::Vector2f(0.f, pixel_distance), m_timeMovingMax);
-					addMoveInstructions(new_pos, sf::Vector2i{i, j});
+					addMoveInstructions(new_pos, sf::Vector2i{ i, j });
 				}
 			}
 }
@@ -305,9 +309,9 @@ void TileMatrix::addMoveInstructions(const sf::Vector2i& newPos, const sf::Vecto
 	m_mergedTiles = false;
 }
 
-const bool TileMatrix::willBeOccupied(const sf::Vector2i& pos) const
+bool TileMatrix::willBeOccupied(const sf::Vector2i& pos) const
 {
-	for (const auto& instruction: m_moveInstructions)
+	for (const auto& instruction : m_moveInstructions)
 		if (instruction->getNewPos() == pos)
 			return true;
 	return false;
@@ -368,18 +372,18 @@ void TileMatrix::endMerge()
 	}
 }
 
-TileMatrix::TileMatrix(const float* scale, const float* outer, const float* inner, const float* tileWidth, const sf::Vector2f& playgroundPos) : 
+TileMatrix::TileMatrix(const float* scale, const float* outer, const float* inner, const float* tileWidth, const sf::Vector2f& playgroundPos) :
 	m_scale{ scale }, m_outerEdgeWidth{ outer }, m_innerEdgeWidth{ inner }, m_tileWidth{ tileWidth }, m_playgroundPosition{ playgroundPos }
 {
 	m_movementManager = MovementManager::getInstance();
 	m_movementContainer = MovementContainer::getInstance();
 
 	auto routine = m_movementManager->createScalingRoutine("TILE_SPAWNING");
-	routine->addScaling(new scalingInfo(sf::Vector2f(0.1f, 0.1f) * *m_scale, sf::Vector2f(1.f, 1.f) * *m_scale, 0.2f, easeFunctions::getFunction(easeFunctions::OUT_QUAD), false, 0.f, 0.f));
-	
+	routine->addScaling(new scalingInfo(sf::Vector2f(0.1f, 0.1f) * *m_scale, sf::Vector2f(1.f, 1.f) * *m_scale, m_timeSpawningMax, easeFunctions::getFunction(easeFunctions::OUT_QUAD), false, 0.f, 0.f));
+
 	routine = m_movementManager->createScalingRoutine("TILE_MERGING");
 	routine->addScaling(new scalingInfo(sf::Vector2f(0.1f, 0.1f) * *m_scale, sf::Vector2f(1.f, 1.f) * *m_scale, m_timeMergingMax, easeFunctions::getFunction(easeFunctions::OUT_BACK), false, 0.f, 0.f));
-	
+
 	initTextures();
 }
 
@@ -393,17 +397,17 @@ TileMatrix::~TileMatrix()
 
 void TileMatrix::update(float dt)
 {
-	if (m_state == Tstate::MOVING)
-		updateMove(dt);
-
-	if (m_state == Tstate::MERGING)
-		updateMerge(dt);
+	for (size_t i = 0; i < m_matrixHeight; ++i)
+		for (size_t j = 0; j < m_matrixWidth; ++j)
+			if (m_matrix[i][j])
+				m_matrix[i][j]->update(dt);
 
 	if (!m_isGameOver) {
-		for (size_t i = 0; i < m_matrixHeight; ++i)
-			for (size_t j = 0; j < m_matrixWidth; ++j)
-				if (m_matrix[i][j])
-					m_matrix[i][j]->update(dt);
+		if (m_state == Tstate::MOVING)
+			updateMove(dt);
+
+		if (m_state == Tstate::MERGING)
+			updateMerge(dt);
 
 		m_movementManager->update(dt);
 		m_movementContainer->update(dt);
@@ -432,7 +436,7 @@ void TileMatrix::spawn(const int amount)
 	for (int i = 0; i < amount; ++i) {
 		sf::Vector2i pos{ rand() % 4, rand() % 4 };
 
-		while (m_matrix[pos.x][pos.y]) 
+		while (m_matrix[pos.x][pos.y])
 			pos = { rand() % 4, rand() % 4 };
 
 		addTile(pos);
@@ -441,7 +445,7 @@ void TileMatrix::spawn(const int amount)
 
 void TileMatrix::addTile(const sf::Vector2i& pos, const int type)
 {
-	if (pos.x > m_matrixWidth - 1 || pos.y > m_matrixHeight - 1) 
+	if (pos.x > m_matrixWidth - 1 || pos.y > m_matrixHeight - 1)
 		printf("TileMatrix::addTile ERROR: Tile spawning position out of bounds\n");
 	else {
 		m_matrix[pos.x][pos.y] = new Tile(type, m_textures[findID(type)], m_scale, calculateTilePos(pos));
@@ -496,7 +500,7 @@ bool TileMatrix::isGameOver()
 		for (size_t i = 0; i < m_matrixHeight; ++i)
 			for (size_t j = 0; j < m_matrixWidth; ++j) {
 				m_matrix[i][j]->setScale(*m_scale);
-				m_matrix[i][j]->gameOver();
+				m_matrix[i][j]->startGameOver();
 			}
 
 		endMove();
@@ -508,17 +512,17 @@ bool TileMatrix::isGameOver()
 }
 
 // Accessors / Mutators
-const bool TileMatrix::getIsMoving() const
+bool TileMatrix::getIsMoving() const
 {
 	return m_state == Tstate::MOVING;
 }
 
-const bool TileMatrix::getIsGameOver() const
+bool TileMatrix::getIsGameOver() const
 {
 	return m_isGameOver;
 }
 
-const int TileMatrix::getAddedScore() const
+int TileMatrix::getAddedScore() const
 {
 	return m_addedScore;
 }
@@ -531,7 +535,7 @@ void TileMatrix::setAddedScore(const int value)
 // Rendering tiles
 void TileMatrix::render(sf::RenderTarget& target)
 {
-	for (auto tile: m_tilesToMerge)
+	for (auto tile : m_tilesToMerge)
 		tile->render(target);
 
 	for (int i = 0; i < m_matrixHeight; ++i)

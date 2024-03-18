@@ -3,20 +3,21 @@
 
 class Tile {
 private:
+	// Static variables
+	constexpr static float m_spawningTimeMax{ 0.2f }, m_gameOverTimeMax{ 0.5f };
+
+	// Movement manager signleton instances
 	MovementContainer* m_movementContainer;
 	MovementManager*   m_movementManager;
 
 	// Private variables
 	sf::Sprite m_sprite;
 	const float* m_scale;
-	int	m_type = 2;
+	int	m_type{ 2 };
 
-	bool m_isMoving   = false;
-	bool m_isMerging  = false;
-	bool m_isSpawning = false;
+	bool m_isMoving{}, m_isMerging{}, m_isSpawning{}, m_isGameOver{};
 
-	float m_spawningTime = 0.f;
-	float m_spawningTimeMax	= 0.2f;
+	float m_spawningTime{}, m_gameOverTime{};
 
 public:
 	// Constructors / Destructors
@@ -27,25 +28,21 @@ public:
 	void update(const float dt);
 
 	// Functions
-	void move(const sf::Vector2f& offset) { m_sprite.move(offset); }
 	void smoothMove(const sf::Vector2f& offset, const float duration);
-
-	void increaseType() { m_type *= 2; }
-	void gameOver();
-
 	void startSpawning();
 	void startMerging();
+	void startGameOver();
 
 	// Mutators
-	void setScale(float m_scale);
-	void setIsMoving(bool value);
-	void setIsMerging(bool value);
+	void setScale(const float m_scale);
+	void setIsMoving(const bool value);
+	void setIsMerging(const bool value);
 
 	// Accessors
-	const int getType() const;
-	const bool getIsMoving() const;
-	const bool getMerging() const;
-	const bool getSpawning() const;
+	int getType() const;
+	bool getIsMoving() const;
+	bool getMerging() const;
+	bool getSpawning() const;
 	sf::Sprite* getSprite();
 
 	// Rendering functions

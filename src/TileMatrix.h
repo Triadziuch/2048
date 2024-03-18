@@ -17,12 +17,14 @@ struct MoveInstructions {
 class TileMatrix {
 private:
 	// Private variables
-	constexpr static int m_matrixWidth = 4, m_matrixHeight = 4, m_maxTiles = m_matrixWidth * m_matrixHeight;
+	constexpr static int m_matrixWidth = 4, m_matrixHeight = 4, m_maxTiles = m_matrixWidth * m_matrixHeight, m_maxType = 4096;
 	const float* m_scale{}, * m_outerEdgeWidth{}, * m_innerEdgeWidth{}, * m_tileWidth{};
 
 	Tile* m_matrix[4][4]{ {} };
 	sf::Texture* m_textures[12]{};
 	sf::Vector2f m_playgroundPosition{};
+
+	const float m_timeSpawningMax = 0.2f;
 
 	float m_timeMoving = 0.f;
 	const float m_timeMovingMax = 0.2f;
@@ -32,10 +34,10 @@ private:
 
 
 	std::vector <MoveInstructions*>	m_moveInstructions;
-	std::vector <Tile*>	    m_tilesToMerge;
+	std::vector <Tile*> m_tilesToMerge;
 	
-	int m_addedScore{ 0 };
-	unsigned m_tiles{ 0 };
+	int m_addedScore{};
+	unsigned m_tiles{};
 
 	bool m_isGameOver{}, m_mergedTiles{};
 
@@ -45,8 +47,8 @@ private:
 
 	// Initialize textures
 	void initTextures();
-	const int findID(int type) const;
-	const sf::Vector2f calculateTilePos(const sf::Vector2i& pos) const;
+	int findID(int type) const;
+	sf::Vector2f calculateTilePos(const sf::Vector2i& pos) const;
 
 	int findFreeLeft(const sf::Vector2i& pos);
 	int findFreeRight(const sf::Vector2i& pos);
@@ -58,7 +60,7 @@ private:
 	int mergeUp(const sf::Vector2i& pos);
 	int mergeDown(const sf::Vector2i& pos);
 
-	const bool willBeOccupied(const sf::Vector2i& pos) const;
+	bool willBeOccupied(const sf::Vector2i& pos) const;
 
 	void endMove();
 	void endMerge();
@@ -90,9 +92,9 @@ public:
 	bool isGameOver();
 
 	// Accessors / Mutators
-	const bool getIsMoving() const;
-	const bool getIsGameOver() const;
-	const int getAddedScore() const;
+	bool getIsMoving() const;
+	bool getIsGameOver() const;
+	int getAddedScore() const;
 
 	void setAddedScore(const int score);
 

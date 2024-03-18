@@ -35,16 +35,22 @@ void Tile::update(const float dt)
 		else
 			m_sprite.setColor(sf::Color(255, 255, 255, 255 * m_spawningTime / m_spawningTimeMax));
 	}
+
+	if (m_isGameOver) {
+		if (m_gameOverTime < m_gameOverTimeMax) {
+			m_gameOverTime += dt;
+			m_sprite.setColor(sf::Color(250, 248, 239, 255 - (95 * m_gameOverTime / m_gameOverTimeMax)));
+		}
+		else {
+			m_sprite.setColor(sf::Color(250, 248, 239, 160));
+			m_isGameOver = false;
+		}
+	}
 }
 
 void Tile::smoothMove(const sf::Vector2f& offset, const float duration)
 {
 	m_movementContainer->addMovement(&m_sprite, new movementInfo(m_sprite.getPosition(), m_sprite.getPosition() + offset, duration, easeFunctions::getFunction(easeFunctions::IN_OUT_SINE), false, 0.f, 0.f));
-}
-
-void Tile::gameOver()
-{
-	m_sprite.setColor(sf::Color(250, 248, 239, 160));
 }
 
 void Tile::startSpawning()
@@ -59,6 +65,18 @@ void Tile::startMerging()
 {
 	m_movementManager->linkScalingRoutine(m_sprite, "TILE_MERGING");
 	m_movementManager->startScalingRoutine(m_sprite, "TILE_MERGING");
+}
+
+void Tile::startGameOver()
+{
+	m_isSpawning = false;
+	m_isMerging = false;
+	m_isGameOver = true;
+
+	m_movementManager->unlinkScalingRoutine(&m_sprite, "TILE_SPAWNING");
+	m_movementManager->unlinkScalingRoutine(&m_sprite, "TILE_MERGING");
+
+	m_gameOverTime = 0.f;
 }
 
 // Mutators
@@ -78,22 +96,22 @@ void Tile::setIsMerging(bool value)
 }
 
 // Accessors
-const int Tile::getType() const
+int Tile::getType() const
 {
 	return m_type;
 }
 
-const bool Tile::getIsMoving() const
+bool Tile::getIsMoving() const
 {
 	return m_isMoving;
 }
 
-const bool Tile::getMerging() const
+bool Tile::getMerging() const
 {
 	return m_isMerging;
 }
 
-const bool Tile::getSpawning() const
+bool Tile::getSpawning() const
 {
 	return m_isSpawning;
 }

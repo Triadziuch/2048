@@ -13,11 +13,11 @@ private:
 	const float m_playgroundPadding{ 100.f };
 	float m_outerEdgeWidth{ 37.f }, m_innerEdgeWidth{ 36.f }, m_tileWidth{ 215.f };
 	float m_scale{ 1.f };
+	bool m_isGameOver{ false };
 
 	int m_score{};
 	TileMatrix* m_tileMatrix{};
 	GUI* m_gui{};
-	bool GAMEOVER_FLAG = false;
 
 public:
 	// Constructors / Destructors
@@ -31,13 +31,13 @@ public:
 	void clearBoard();
 
 	// Accessors
-	const float& getOuterEdgeWidth() const { return this->m_outerEdgeWidth; }
-	const float& getInnerEdgeWidth() const { return this->m_innerEdgeWidth; }
-	const float& getTileWidth() const { return this->m_tileWidth; }
-	const float& getScale() const { return this->m_scale; }
-	const bool getIsMoving() const { return this->m_tileMatrix->getIsMoving(); }
-	sf::FloatRect getNewGameButton() { return this->m_gui->getNewGameButton(); }
-	const bool getIsGameOver() const { return this->m_tileMatrix->getIsGameOver(); }
+	const float& getOuterEdgeWidth() const { return m_outerEdgeWidth; }
+	const float& getInnerEdgeWidth() const { return m_innerEdgeWidth; }
+	const float& getTileWidth() const { return m_tileWidth; }
+	const float& getScale() const { return m_scale; }
+	const bool getIsMoving() const { return m_tileMatrix->getIsMoving(); }
+	sf::FloatRect getNewGameButton() { return m_gui->getNewGameButton(); }
+	const bool getIsGameOver() const { return m_tileMatrix->getIsGameOver(); }
 
 	// Rendering playground
 	void render (sf::RenderTarget& target);

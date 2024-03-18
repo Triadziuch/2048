@@ -1,12 +1,15 @@
+#pragma once
 #include "GUI.h"
+
+using namespace std;
 
 void GUI::center_origin(sf::Sprite& sprite)
 {
 	sprite.setOrigin(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width / 2.f,
-		sprite.getGlobalBounds().top + sprite.getGlobalBounds().height / 2.f);
+					 sprite.getGlobalBounds().top + sprite.getGlobalBounds().height / 2.f);
 }
 
-void GUI::justifyHorizontal(sf::FloatRect button, sf::Text& text)
+void GUI::justifyHorizontal(const sf::FloatRect& button, sf::Text& text)
 {
 	text.setOrigin(0.f, 0.f);
 	text.setPosition(button.left + (button.width - text.getGlobalBounds().width) / 2.f, text.getPosition().y);
@@ -19,6 +22,27 @@ void GUI::saveBestScore()
 
 	if (file.good())
 		file << to_string(m_bestScore);
+
+	file.close();
+}
+
+void GUI::updateGameOver(const float dt)
+{
+	if (m_gameOverTime < m_gameOverTimeMax) {
+		m_gameOverTime += dt;
+		m_gameOverText.setFillColor(sf::Color(250, 248, 239, 255 * m_gameOverTime / m_gameOverTimeMax));
+	}
+}
+
+void GUI::startGameOver()
+{
+	m_gameOverTime = 0.f;
+	m_isGameOver = true;
+}
+
+void GUI::stopGameOver()
+{
+	m_isGameOver = false;
 }
 
 void GUI::loadBestScore()
@@ -27,14 +51,16 @@ void GUI::loadBestScore()
 	file.open(m_bestScoreFilename);
 
 	if (file.good()) {
-		string m_bestScoreString;
+		string bestScoreString;
 		stringstream ss_best_score;
 		int int_best_score;
-		file >> m_bestScoreString;
-		ss_best_score << m_bestScoreString;
+		file >> bestScoreString;
+		ss_best_score << bestScoreString;
 		ss_best_score >> int_best_score;
 		m_bestScore = int_best_score;
 	}
+
+	file.close();
 }
 
 GUI::GUI(sf::Vector2f windowSize, sf::FloatRect playgroundRect) : m_windowSize(windowSize), m_playgroundRect(playgroundRect)
@@ -48,9 +74,9 @@ void GUI::setScore(int value_)
 {
 	m_score = value_;
 
-	float old_width = m_scoreText.getGlobalBounds().width;
+	const float old_width = m_scoreText.getGlobalBounds().width;
 	m_scoreText.setString(to_string(m_score));
-	float new_width = m_scoreText.getGlobalBounds().width;
+	const float new_width = m_scoreText.getGlobalBounds().width;
 
 	if (old_width != new_width)
 		m_scoreText.move((old_width - new_width) / 2.f, 0.f);
@@ -74,7 +100,7 @@ GUI::~GUI()
 void GUI::initText()
 {
 	if (!m_font.loadFromFile("Fonts/ClearSans-Bold.ttf"))
-		cout << "Couldn't load m_font: /Fonts/ClearSans-Bold.ttf" << endl;
+		printf("Couldn't load m_font: /Fonts/ClearSans-Bold.ttf\n");
 
 	m_newGameText.setFont(m_font);
 	m_bestScoreHeaderText.setFont(m_font);
@@ -100,9 +126,7 @@ void GUI::initText()
 	m_titleText.setString(m_titleString);
 	m_gameOverText.setString(m_gameOverString);
 
-	m_gameOverText.setOutlineThickness(1.f);
-	
-	m_gameOverText.setOutlineColor(m_titleColor);
+	m_gameOverText.setFillColor(m_titleColor);
 
 	m_newGameText.setOrigin(m_newGameText.getLocalBounds().left + m_newGameText.getGlobalBounds().width / 2.f, m_newGameText.getLocalBounds().top + m_newGameText.getGlobalBounds().height / 2.f);
 	m_bestScoreHeaderText.setOrigin(m_bestScoreHeaderText.getLocalBounds().left + m_bestScoreHeaderText.getGlobalBounds().width / 2.f, m_bestScoreHeaderText.getLocalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height / 2.f);
@@ -137,9 +161,10 @@ void GUI::initText()
 void GUI::initSprites()
 {
 	if (!m_newGameTexture.loadFromFile("Textures/button_newgame.png"))
-		cout << "Couldn't load texture: /Textures/button_newgame.png" << endl;
-	if (!m_scoreTexture.loadFromFile("Textures/m_scoreButtonSprite.png"))
-		cout << "Couldn't load texture: /Textures/m_scoreButtonSprite.png" << endl;
+		printf("Couldn't load texture: /Textures/button_newgame.png\n");
+
+	if (!m_scoreTexture.loadFromFile("Textures/button_score.png"))
+		printf("Couldn't load texture: /Textures/button_score.png\n");
 
 	m_newGameButtonSprite.setTexture(m_newGameTexture);
 	m_bestScoreButtonSprite.setTexture(m_scoreTexture);
@@ -173,7 +198,7 @@ void GUI::addScore(int value_) {
 	}
 }
 
-void GUI::render(sf::RenderTarget& target, bool is_game_over)
+void GUI::render(sf::RenderTarget& target)
 {
 	// Drawing buttons
 	target.draw(m_newGameButtonSprite);
@@ -191,6 +216,6 @@ void GUI::render(sf::RenderTarget& target, bool is_game_over)
 	target.draw(m_scoreText);
 
 	// Drawing game over
-	if (is_game_over)
+	if (m_isGameOver)
 		target.draw(m_gameOverText);
 }
