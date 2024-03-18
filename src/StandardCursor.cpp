@@ -2,7 +2,6 @@
 
 sf::StandardCursor::StandardCursor(const TYPE type_)
 {
-	printf("A\n");
 	switch (type_) {
 	case sf::StandardCursor::WAIT:
 		Cursor = LoadCursor(NULL, IDC_WAIT);

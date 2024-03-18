@@ -79,6 +79,24 @@ void Tile::startGameOver()
 	m_gameOverTime = 0.f;
 }
 
+void Tile::startWin()
+{
+	m_isSpawning = false;
+	m_isMerging = false;
+	m_isWin = true;
+
+	m_movementManager->unlinkScalingRoutine(&m_sprite, "TILE_SPAWNING");
+	m_movementManager->unlinkScalingRoutine(&m_sprite, "TILE_MERGING");
+
+	m_winTime = 0.f;
+}
+
+void Tile::stopWin()
+{
+	m_isWin = false;
+	m_sprite.setColor(sf::Color(255, 255, 255, 255));
+}
+
 // Mutators
 void Tile::setScale(float scale)
 {

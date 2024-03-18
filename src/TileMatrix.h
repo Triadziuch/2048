@@ -39,7 +39,7 @@ private:
 	int m_addedScore{};
 	unsigned m_tiles{};
 
-	bool m_isGameOver{}, m_mergedTiles{};
+	bool m_isGameOver{}, m_isWin{}, m_mergedTiles{};
 
 	// Movement manager
 	MovementManager* m_movementManager;
@@ -49,6 +49,7 @@ private:
 	void initTextures();
 	int findID(int type) const;
 	sf::Vector2f calculateTilePos(const sf::Vector2i& pos) const;
+	void checkWin(const Tile& tile);
 
 	int findFreeLeft(const sf::Vector2i& pos);
 	int findFreeRight(const sf::Vector2i& pos);
