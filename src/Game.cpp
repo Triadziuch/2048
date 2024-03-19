@@ -25,7 +25,6 @@ void Game::initAssets()
 		AssetManager::GetTexture("bin/Textures/" + to_string(static_cast<int>(pow(2, i))) + ".png");
 	AssetManager::GetTexture("bin/Textures/button_newgame.png");
 	AssetManager::GetTexture("bin/Textures/button_score.png");
-	AssetManager::GetTexture("bin/Textures/tiles.png");
 }
 
 // Constructors / Destructors
