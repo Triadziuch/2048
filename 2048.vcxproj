@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GUI.h" />
@@ -50,6 +51,13 @@
     <ClCompile Include="src\StandardCursor.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\TileMatrix.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="2048.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Textures\2048.bmp" />
+    <Image Include="Textures\icon.ico" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
