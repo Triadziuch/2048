@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
+#include "AssetManager.h"
 
 class GUI {
 private:
@@ -20,14 +21,14 @@ private:
 					  m_titleString{ "2048" }, m_gameOverString{ "Game over!" };
 	const std::string m_bestScoreFilename{ "best_score.txt" };
 
-	sf::Font m_font;
+	sf::Font *m_font;
 	sf::Text m_newGameText, m_bestScoreHeaderText, m_scoreHeaderText,
 			 m_titleText, m_scoreText, m_bestScoreText, m_gameOverText;
 
 	const unsigned m_newGameSize{ 20u }, m_bestScoreSize{ 12u }, m_scoreSize{ 12u }, m_titleSize{ 64u }, m_gameOverSize{ 60u };
 	sf::Sprite m_newGameButtonSprite, m_bestScoreButtonSprite, m_scoreButtonSprite;
 
-	sf::Texture m_newGameTexture, m_scoreTexture;
+	sf::Texture *m_newGameTexture, *m_scoreTexture;
 	sf::Color m_titleColor{ 119, 110, 101 }, m_newGameColor{ 249, 246, 242 }, m_scoreColor{ 238, 228, 218 }, m_gameOverColor{ 110, 100, 90 };
 
 	sf::Vector2f m_windowSize;

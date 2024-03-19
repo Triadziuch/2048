@@ -3,7 +3,7 @@
 Playground::Playground(const sf::Vector2f& windowSize)
 {
 	// Playground initialization
-	m_texture = &AssetManager::GetTexture("Textures/playground.png");
+	m_texture = &AssetManager::GetTexture("bin/Textures/playground.png");
 	m_sprite.setTexture(*m_texture);
 	m_sprite.setOrigin(m_sprite.getPosition().x + m_sprite.getGlobalBounds().width / 2.f,
 									  m_sprite.getPosition().y + m_sprite.getGlobalBounds().height / 2.f);

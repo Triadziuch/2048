@@ -7,7 +7,7 @@ void Game::initWindow()
 	window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE, sf::Style::Titlebar | sf::Style::Close);
 	
 	sf::Image icon;
-	icon.loadFromFile("Textures/2048.png");
+	icon.loadFromFile("bin/Textures/2048.png");
 	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	//window->setFramerateLimit(FRAMERATE);
 	//window->setVerticalSyncEnabled(VERTICAL_SYNC);
@@ -22,10 +22,10 @@ void Game::initVariables()
 void Game::initAssets()
 {
 	for(int i = 1; i < 13; i++)
-		AssetManager::GetTexture("Textures/" + to_string(static_cast<int>(pow(2, i))) + ".png");
-	AssetManager::GetTexture("Textures/button_newgame.png");
-	AssetManager::GetTexture("Textures/button_score.png");
-	AssetManager::GetTexture("Textures/tiles.png");
+		AssetManager::GetTexture("bin/Textures/" + to_string(static_cast<int>(pow(2, i))) + ".png");
+	AssetManager::GetTexture("bin/Textures/button_newgame.png");
+	AssetManager::GetTexture("bin/Textures/button_score.png");
+	AssetManager::GetTexture("bin/Textures/tiles.png");
 }
 
 // Constructors / Destructors

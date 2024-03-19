@@ -99,14 +99,15 @@ GUI::~GUI()
 
 void GUI::initText()
 {
-	if (!m_font.loadFromFile("Fonts/ClearSans-Bold.ttf"))
-		printf("Couldn't load m_font: /Fonts/ClearSans-Bold.ttf\n");
+	m_font = &AssetManager::GetFont("bin/Fonts/ClearSans-Bold.ttf");
+	if (!m_font)
+		printf("Couldn't load m_font: bin/Fonts/ClearSans-Bold.ttf\n");
 
-	m_newGameText.setFont(m_font);
-	m_bestScoreHeaderText.setFont(m_font);
-	m_scoreHeaderText.setFont(m_font);
-	m_titleText.setFont(m_font);
-	m_gameOverText.setFont(m_font);
+	m_newGameText.setFont(*m_font);
+	m_bestScoreHeaderText.setFont(*m_font);
+	m_scoreHeaderText.setFont(*m_font);
+	m_titleText.setFont(*m_font);
+	m_gameOverText.setFont(*m_font);
 
 	m_newGameText.setCharacterSize(m_newGameSize);
 	m_bestScoreHeaderText.setCharacterSize(m_bestScoreSize);
@@ -139,8 +140,8 @@ void GUI::initText()
 	m_titleText.setPosition(m_playgroundRect.left, m_playgroundRect.top - m_titleText.getGlobalBounds().height * 1.75f);
 	m_gameOverText.setPosition(m_playgroundRect.left + m_playgroundRect.width / 2.f, m_playgroundRect.top + m_playgroundRect.height / 2.f);
 
-	m_scoreText.setFont(m_font);
-	m_bestScoreText.setFont(m_font);
+	m_scoreText.setFont(*m_font);
+	m_bestScoreText.setFont(*m_font);
 
 	m_scoreText.setCharacterSize(20);
 	m_bestScoreText.setCharacterSize(20);
@@ -160,15 +161,17 @@ void GUI::initText()
 
 void GUI::initSprites()
 {
-	if (!m_newGameTexture.loadFromFile("Textures/button_newgame.png"))
-		printf("Couldn't load texture: /Textures/button_newgame.png\n");
+	m_newGameTexture = &AssetManager::GetTexture("bin/Textures/button_newgame.png");
+	if (!m_newGameTexture)
+		printf("Couldn't load texture: bin//Textures/button_newgame.png\n");
 
-	if (!m_scoreTexture.loadFromFile("Textures/button_score.png"))
-		printf("Couldn't load texture: /Textures/button_score.png\n");
+	m_scoreTexture = &AssetManager::GetTexture("bin/Textures/button_score.png");
+	if (!m_scoreTexture)
+		printf("Couldn't load texture: bin//Textures/button_score.png\n");
 
-	m_newGameButtonSprite.setTexture(m_newGameTexture);
-	m_bestScoreButtonSprite.setTexture(m_scoreTexture);
-	m_scoreButtonSprite.setTexture(m_scoreTexture);
+	m_newGameButtonSprite.setTexture(*m_newGameTexture);
+	m_bestScoreButtonSprite.setTexture(*m_scoreTexture);
+	m_scoreButtonSprite.setTexture(*m_scoreTexture);
 
 	m_newGameButtonSprite.setScale(m_scale, m_scale);
 	m_bestScoreButtonSprite.setScale(m_scale, m_scale);
