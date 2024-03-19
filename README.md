@@ -8,6 +8,7 @@ This project is a result of exploring the SFML library and serves as a testing g
 
 ## License
 Copyright © 2024 by Triadziuch
+
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Third-party Components
