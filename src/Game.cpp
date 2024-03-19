@@ -7,7 +7,7 @@ void Game::initWindow()
 	window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE, sf::Style::Titlebar | sf::Style::Close);
 	
 	sf::Image icon;
-	icon.loadFromFile("bin/Textures/2048.png");
+	icon.loadFromFile("bin/Textures/appicon.png");
 	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 	//window->setFramerateLimit(FRAMERATE);
 	//window->setVerticalSyncEnabled(VERTICAL_SYNC);
