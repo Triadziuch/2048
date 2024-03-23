@@ -8,6 +8,7 @@ class MovementRoutineEngine;
 class TransformationRoutine {
 protected:
 	MovementRoutineEngine* m_movementRoutineEngine{};
+	std::vector <transformationInfo*> m_transformations;
 	bool				   m_adjustStartToCurrentTransform{};
 	bool				   m_adjustAllToCurrentTransform{};
 	bool				   m_isLooping{};
@@ -25,7 +26,7 @@ public:
 	TransformationRoutine();
 	TransformationRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr);
 	TransformationRoutine(const TransformationRoutine& obj);
-	virtual ~TransformationRoutine();
+	~TransformationRoutine();
 
 	// Mutators
 	void setLooping(bool looping);
@@ -34,10 +35,21 @@ public:
 	void adjustStartToCurrentTransform(bool adjust);
 	void adjustAllToCurrentTransform(bool adjust);
 
+	void setDelayBefore(const float delay, const bool reset = false);
+	void setMotionDuration(const float animationTime, const bool reset = false);
+	void setDelayAfter(const float delay, const bool reset = false);
+
+	void setFunction(easeFunctions::Tmovement_function usedFunctionType);
+	void setFunction(easeFunctions::Tmovement_function usedFunctionType, const size_t transformation_id);
+	void setFunction(double(*usedFunctionPtr)(double));
+	void setFunction(double(*usedFunctionPtr)(double), const size_t transformation_id);
+
 	void pause();
+	void reset();
 	void resume();
 
 	// Accessors
+	std::string& getName();
 	const std::string& getName() const;
 };
 
@@ -70,7 +82,6 @@ public:
 	void removeMovement(movementInfo* movement);
 
 	void clear();
-	void reset();
 
 	const bool start(sf::Transformable& transformable);
 	void reset(sf::Transformable& transformable);
@@ -81,13 +92,6 @@ public:
 	movementInfo* getCurrentMovement() const;
 
 	const bool goToNextMovement(const sf::Transformable& transformable);
-
-	void setFunction(easeFunctions::Tmovement_function usedFunctionType);
-	void setFunction(easeFunctions::Tmovement_function usedFunctionType, const size_t movement_id);
-	void setFunction(double(*usedFunctionPtr)(double));
-	void setFunction(double(*usedFunctionPtr)(double), const size_t movement_id);
-
-	void setAnimationTime(const float animationTime);
 
 	movementInfo* operator[](const size_t& index) const;
 
@@ -101,8 +105,8 @@ private:
 	std::vector <scalingInfo*> m_routineScalings;
 
 	// Private functions
-	void adjustStartToCurrent(const sf::Vector2f& m_current_scale);
-	void adjustAllToCurrent(const sf::Vector2f& m_current_scale);
+	void adjustStartToCurrent(const sf::Vector2f& currentScale);
+	void adjustAllToCurrent(const sf::Vector2f& currentScale);
 
 public:
 	// Constructors / Destructors
@@ -121,7 +125,6 @@ public:
 	void removeScaling(scalingInfo* scaling);
 
 	void clear();
-	void reset();
 
 	const bool start(sf::Transformable& transformable);
 	void reset(sf::Transformable& transformable);
@@ -131,13 +134,6 @@ public:
 
 	const bool goToNextScaling(const sf::Transformable& transformable);
 	ScalingRoutine* goToScaling(const sf::Transformable& transformable, const size_t scaling_id);
-
-	void setFunction(easeFunctions::Tmovement_function usedFunctionType);
-	void setFunction(easeFunctions::Tmovement_function usedFunctionType, const size_t scaling_id);
-	void setFunction(double(*usedFunctionPtr)(double));
-	void setFunction(double(*usedFunctionPtr)(double), const size_t scaling_id);
-
-	void setAnimationTime(const float animationTime);
 
 	const long long int& size() const;
 };
@@ -149,10 +145,10 @@ public:
 class RotationRoutine : public TransformationRoutine {
 private:
 	std::vector <rotationInfo*> m_routineRotations;
-	bool was_last_clockwise{};
+	bool m_wasLastClockwise{};
 
-	void adjustStartToCurrent(float current_rotation);
-	void adjustAllToCurrent(const float current_rotation);
+	void adjustStartToCurrent(float currentRotation);
+	void adjustAllToCurrent(const float currentRotation);
 
 public:
 	// Constructors / Destructors
@@ -171,7 +167,6 @@ public:
 	void removeRotation(rotationInfo* rotation);
 
 	void clear();
-	void reset();
 
 	const bool start(sf::Transformable& transformable);
 	void reset(sf::Transformable& transformable);
@@ -180,13 +175,6 @@ public:
 	rotationInfo* getCurrentRotation() const;
 
 	const bool goToNextRotation(const sf::Transformable& transformable);
-
-	void setFunction(easeFunctions::Tmovement_function usedFunctionType);
-	void setFunction(easeFunctions::Tmovement_function usedFunctionType, const size_t rotation_id);
-	void setFunction(double(*usedFunctionPtr)(double));
-	void setFunction(double(*usedFunctionPtr)(double), const size_t rotation_id);
-
-	void setAnimationTime(const float animationTime);
 
 	const long long int& size() const;
 };

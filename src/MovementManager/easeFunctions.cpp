@@ -2,6 +2,7 @@
 #include "easeFunctions.h"
 
 std::map<easeFunctions::Tmovement_function, double(*)(double)>	easeFunctions::movement_functions = {
+												{easeFunctions::Tmovement_function::LINEAR, linear},
 												{easeFunctions::Tmovement_function::IN_SINE, inSine},
 												{easeFunctions::Tmovement_function::OUT_SINE, outSine},
 												{easeFunctions::Tmovement_function::IN_OUT_SINE, inOutSine},
@@ -35,6 +36,7 @@ std::map<easeFunctions::Tmovement_function, double(*)(double)>	easeFunctions::mo
 };
 
 std::map<easeFunctions::Tmovement_function, std::string> easeFunctions::easeFunctionNames = {
+	{easeFunctions::Tmovement_function::LINEAR, "LINEAR"},
 	{easeFunctions::Tmovement_function::IN_SINE, "IN_SINE"},
 	{easeFunctions::Tmovement_function::OUT_SINE, "OUT_SINE"},
 	{easeFunctions::Tmovement_function::IN_OUT_SINE, "IN_OUT_SINE"},
@@ -68,6 +70,12 @@ std::map<easeFunctions::Tmovement_function, std::string> easeFunctions::easeFunc
 };
 
 easeFunctions::easeFunctions() {}
+
+// Linear
+double easeFunctions::linear(double x)
+{
+	return x;
+}
 
 // Sine
 inline double easeFunctions::inSine(double x)

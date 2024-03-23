@@ -39,7 +39,7 @@ public:
 	// Public functions
 
 	// Movement functions
-	const movementInfo* addMovement(sf::Transformable* transformable, movementInfo* _movementInfo);
+	const movementInfo* addMovement(sf::Transformable* transformable, movementInfo* movement);
 
 	void undoMovement();
 	void undoMovement(sf::Transformable* transformable);
@@ -51,7 +51,7 @@ public:
 	void stopMovement(sf::Transformable* transformable);
 
 	// Scaling functions
-	const scalingInfo* addScaling(sf::Transformable* transformable, scalingInfo* _scalingInfo);
+	const scalingInfo* addScaling(sf::Transformable* transformable, scalingInfo* scaling);
 
 	void undoScaling();
 	void undoScaling(sf::Transformable* transformable);
@@ -63,7 +63,7 @@ public:
 	void stopScaling(sf::Transformable* transformable);
 
 	// Rotation functions
-	const rotationInfo* addRotation(sf::Transformable* transformable, rotationInfo* _rotationInfo);
+	const rotationInfo* addRotation(sf::Transformable* transformable, rotationInfo* rotation);
 
 	void undoRotation();
 	void undoRotation(sf::Transformable* transformable);
@@ -106,7 +106,7 @@ public:
 	// Public functions
 
 	// Movement functions
-	const MovementRoutine* addMovement(sf::Transformable* transformable, MovementRoutine* _movementRoutine);
+	const MovementRoutine* addMovement(sf::Transformable* transformable, MovementRoutine* routine);
 
 	void undoMovement();
 	void undoMovement(sf::Transformable* transformable);
@@ -117,7 +117,7 @@ public:
 	void stopMovement(sf::Transformable* transformable);
 
 	// Scaling functions
-	const ScalingRoutine* addScaling(sf::Transformable* transformable, ScalingRoutine* _scalingRoutine);
+	const ScalingRoutine* addScaling(sf::Transformable* transformable, ScalingRoutine* routine);
 
 	void undoScaling();
 	void undoScaling(sf::Transformable* transformable);
@@ -128,7 +128,7 @@ public:
 	void stopScaling(sf::Transformable* transformable);
 
 	// Rotation functions
-	const RotationRoutine* addRotation(sf::Transformable* transformable, RotationRoutine* _rotationRoutine);
+	const RotationRoutine* addRotation(sf::Transformable* transformable, RotationRoutine* routine);
 
 	void undoRotation();
 	void undoRotation(sf::Transformable* transformable);

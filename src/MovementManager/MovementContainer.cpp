@@ -52,7 +52,7 @@ void MovementContainer::update(float dt)
 // Public functions
 
 // Movement functions
-const movementInfo* MovementContainer::addMovement(sf::Transformable* transformable, movementInfo* _movementInfo)
+const movementInfo* MovementContainer::addMovement(sf::Transformable* transformable, movementInfo* movement)
 {
 	auto& transformsMap = sInstance->m_Transforms;
 	auto transformsFound = transformsMap.find(transformable);
@@ -62,15 +62,15 @@ const movementInfo* MovementContainer::addMovement(sf::Transformable* transforma
 		return nullptr;
 	}
 	else if (transformsFound == transformsMap.end()) {
-		auto routinesTuplePtr = new std::tuple<movementInfo*, scalingInfo*, rotationInfo*>(_movementInfo, nullptr, nullptr);
+		auto routinesTuplePtr = new std::tuple<movementInfo*, scalingInfo*, rotationInfo*>(movement, nullptr, nullptr);
 		transformsMap.insert(std::make_pair(transformable, routinesTuplePtr));
 	}
 	else {
 		auto& routinesTuplePtr = transformsFound->second;
-		std::get<0>(*routinesTuplePtr) = _movementInfo;
+		std::get<0>(*routinesTuplePtr) = movement;
 	}
 
-	return _movementInfo;
+	return movement;
 }
 
 void MovementContainer::undoMovement()
@@ -156,7 +156,7 @@ void MovementContainer::stopMovement(sf::Transformable* transformable)
 }
 
 // Scaling functions
-const scalingInfo* MovementContainer::addScaling(sf::Transformable* transformable, scalingInfo* _scalingInfo)
+const scalingInfo* MovementContainer::addScaling(sf::Transformable* transformable, scalingInfo* scaling)
 {
 	auto& transformsMap = sInstance->m_Transforms;
 	auto transformsFound = transformsMap.find(transformable);
@@ -166,12 +166,12 @@ const scalingInfo* MovementContainer::addScaling(sf::Transformable* transformabl
 		return nullptr;
 	}
 	else if (transformsFound == transformsMap.end()) {
-		auto routinesTuplePtr = new std::tuple<movementInfo*, scalingInfo*, rotationInfo*>(nullptr, _scalingInfo, nullptr);
+		auto routinesTuplePtr = new std::tuple<movementInfo*, scalingInfo*, rotationInfo*>(nullptr, scaling, nullptr);
 		transformsMap.insert(std::make_pair(transformable, routinesTuplePtr));
 	}
 	else {
 		auto& routinesTuplePtr = transformsFound->second;
-		std::get<1>(*routinesTuplePtr) = _scalingInfo;
+		std::get<1>(*routinesTuplePtr) = scaling;
 	}
 }
 
@@ -265,7 +265,7 @@ void MovementContainer::stopScaling(sf::Transformable* transformable)
 }
 
 // Rotation functions
-const rotationInfo* MovementContainer::addRotation(sf::Transformable* transformable, rotationInfo* _rotationInfo)
+const rotationInfo* MovementContainer::addRotation(sf::Transformable* transformable, rotationInfo* rotation)
 {
 	auto& transformsMap = sInstance->m_Transforms;
 	auto transformsFound = transformsMap.find(transformable);
@@ -275,12 +275,12 @@ const rotationInfo* MovementContainer::addRotation(sf::Transformable* transforma
 		return nullptr;
 	}
 	else if (transformsFound == transformsMap.end()) {
-		auto routinesTuplePtr = new std::tuple<movementInfo*, scalingInfo*, rotationInfo*>(nullptr, nullptr, _rotationInfo);
+		auto routinesTuplePtr = new std::tuple<movementInfo*, scalingInfo*, rotationInfo*>(nullptr, nullptr, rotation);
 		transformsMap.insert(std::make_pair(transformable, routinesTuplePtr));
 	}
 	else {
 		auto& routinesTuplePtr = transformsFound->second;
-		std::get<2>(*routinesTuplePtr) = _rotationInfo;
+		std::get<2>(*routinesTuplePtr) = rotation;
 	}
 }
 
@@ -443,7 +443,7 @@ void MovementRoutineEngine::update(float dt)
 	}
 }
 
-const MovementRoutine* MovementRoutineEngine::addMovement(sf::Transformable* transformable, MovementRoutine* _movementRoutine)
+const MovementRoutine* MovementRoutineEngine::addMovement(sf::Transformable* transformable, MovementRoutine* routine)
 {
 	auto& routinesMap = sInstance->m_Routines;
 	auto routinesFound = routinesMap.find(transformable);
@@ -453,15 +453,15 @@ const MovementRoutine* MovementRoutineEngine::addMovement(sf::Transformable* tra
 		return nullptr;
 	}
 	else if (routinesFound == routinesMap.end()) {
-		auto routinesTuplePtr = new std::tuple<MovementRoutine*, ScalingRoutine*, RotationRoutine*>(_movementRoutine, nullptr, nullptr);
+		auto routinesTuplePtr = new std::tuple<MovementRoutine*, ScalingRoutine*, RotationRoutine*>(routine, nullptr, nullptr);
 		routinesMap.insert(std::make_pair(transformable, routinesTuplePtr));
 	}
 	else {
 		auto& routinesTuplePtr = routinesFound->second;
-		std::get<0>(*routinesTuplePtr) = _movementRoutine;
+		std::get<0>(*routinesTuplePtr) = routine;
 	}
 
-	return _movementRoutine;
+	return routine;
 }
 
 void MovementRoutineEngine::undoMovement()
@@ -479,7 +479,7 @@ void MovementRoutineEngine::resetMovement()
 		auto& movement = std::get<0>(*routinesTuple);
 
 		if (movement) {
-			movement->reset();
+			movement->TransformationRoutine::reset();
 			routines->first->setPosition(movement->getCurrentMovement()->getStartingPos());
 		}
 	}
@@ -516,7 +516,7 @@ void MovementRoutineEngine::stopMovement(sf::Transformable* transformable)
 	}
 }
 
-const ScalingRoutine* MovementRoutineEngine::addScaling(sf::Transformable* transformable, ScalingRoutine* _scalingRoutine)
+const ScalingRoutine* MovementRoutineEngine::addScaling(sf::Transformable* transformable, ScalingRoutine* routine)
 {
 	auto& routinesMap = sInstance->m_Routines;
 	auto routinesFound = routinesMap.find(transformable);
@@ -526,15 +526,15 @@ const ScalingRoutine* MovementRoutineEngine::addScaling(sf::Transformable* trans
 		return nullptr;
 	}
 	else if (routinesFound == routinesMap.end()) {
-		auto routinesTuplePtr = new std::tuple<MovementRoutine*, ScalingRoutine*, RotationRoutine*>(nullptr, _scalingRoutine, nullptr);
+		auto routinesTuplePtr = new std::tuple<MovementRoutine*, ScalingRoutine*, RotationRoutine*>(nullptr, routine, nullptr);
 		routinesMap.insert(std::make_pair(transformable, routinesTuplePtr));
 	}
 	else {
 		auto& routinesTuplePtr = routinesFound->second;
-		std::get<1>(*routinesTuplePtr) = _scalingRoutine;
+		std::get<1>(*routinesTuplePtr) = routine;
 	}
 
-	return _scalingRoutine;
+	return routine;
 }
 
 void MovementRoutineEngine::undoScaling()
@@ -552,7 +552,7 @@ void MovementRoutineEngine::resetScaling()
 		auto& scaling = std::get<1>(*routinesTuple);
 
 		if (scaling) {
-			scaling->reset();
+			scaling->TransformationRoutine::reset();
 			routines->first->setScale(scaling->getCurrentScaling()->getStartingScale());
 		}
 	}
@@ -589,7 +589,7 @@ void MovementRoutineEngine::stopScaling(sf::Transformable* transformable)
 	}
 }
 
-const RotationRoutine* MovementRoutineEngine::addRotation(sf::Transformable* transformable, RotationRoutine* _rotationRoutine)
+const RotationRoutine* MovementRoutineEngine::addRotation(sf::Transformable* transformable, RotationRoutine* routine)
 {
 	auto& routinesMap = sInstance->m_Routines;
 	auto routinesFound = routinesMap.find(transformable);
@@ -599,15 +599,15 @@ const RotationRoutine* MovementRoutineEngine::addRotation(sf::Transformable* tra
 		return nullptr;
 	}
 	else if (routinesFound == routinesMap.end()) {
-		auto routinesTuplePtr = new std::tuple<MovementRoutine*, ScalingRoutine*, RotationRoutine*>(nullptr, nullptr, _rotationRoutine);
+		auto routinesTuplePtr = new std::tuple<MovementRoutine*, ScalingRoutine*, RotationRoutine*>(nullptr, nullptr, routine);
 		routinesMap.insert(std::make_pair(transformable, routinesTuplePtr));
 	}
 	else {
 		auto& routinesTuplePtr = routinesFound->second;
-		std::get<2>(*routinesTuplePtr) = _rotationRoutine;
+		std::get<2>(*routinesTuplePtr) = routine;
 	}
 
-	return _rotationRoutine;
+	return routine;
 }
 
 void MovementRoutineEngine::undoRotation()
@@ -625,7 +625,7 @@ void MovementRoutineEngine::resetRotation()
 		auto& rotation = std::get<2>(*routinesTuple);
 
 		if (rotation) {
-			rotation->reset();
+			rotation->TransformationRoutine::reset();
 			routines->first->setRotation(rotation->getCurrentRotation()->getStartingRotation());
 		}
 	}

@@ -30,7 +30,7 @@ private:
 	const float m_timeMovingMax = 0.2f;
 	
 	float m_timeMerging = 0.f;
-	const float m_timeMergingMax = 0.25f;
+	const float m_timeMergingMax = 0.2f;
 
 	std::vector <MoveInstructions*>	m_moveInstructions;
 	std::vector <Tile*> m_tilesToMerge;
