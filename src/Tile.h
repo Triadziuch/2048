@@ -21,7 +21,7 @@ private:
 
 public:
 	// Constructors / Destructors
-	Tile(const int type, const sf::Texture* texture, const float *m_scale, const sf::Vector2f& position);
+	Tile(const int type, const sf::Texture* texture, const float *m_scale, const sf::Vector2f& position, MovementManager* const movementManagerPtr);
 	~Tile();
 
 	// Update functions

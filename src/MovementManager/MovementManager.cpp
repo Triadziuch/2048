@@ -1,18 +1,113 @@
 #pragma once
 #include "MovementManager.h"
 
-// Singleton initialization
-MovementManager* MovementManager::sInstance = nullptr;
+inline void MovementManager::printDebug(const std::string& message) const
+{
+	if (m_showDebug)
+		printf("MovementManager: %s\n", message.c_str());
+}
 
 // Constructors / Destructors
 MovementManager::MovementManager()
 {
-	movementRoutineEngine = MovementRoutineEngine::getInstance();
-	movementRoutineEngine->setMovementManager(this);
+	movementRoutineEngine = new MovementRoutineEngine(this);
 
-	m_movementRoutineContainer = new MovementRoutineContainer();
-	m_scalingRoutineContainer = new ScalingRoutineContainer();
-	m_rotationRoutineContainer = new RotationRoutineContainer();
+	m_movementRoutineContainer = new MovementRoutineContainer(movementRoutineEngine);
+	m_scalingRoutineContainer = new ScalingRoutineContainer(movementRoutineEngine);
+	m_rotationRoutineContainer = new RotationRoutineContainer(movementRoutineEngine);
+}
+
+MovementManager::MovementManager(const MovementManager& obj)
+{
+	movementRoutineEngine = new MovementRoutineEngine(this);
+
+	m_movementRoutineContainer = new MovementRoutineContainer(*obj.m_movementRoutineContainer);
+	m_scalingRoutineContainer = new ScalingRoutineContainer(*obj.m_scalingRoutineContainer);
+	m_rotationRoutineContainer = new RotationRoutineContainer(*obj.m_rotationRoutineContainer);
+
+	for (const auto& movementRoutine : obj.m_routineMovementActive) {
+		auto* newMovementRoutine = new MovementRoutine(*movementRoutine.second);
+		auto map_iterator = m_routineMovementActive.insert(std::make_pair(movementRoutine.first, newMovementRoutine)).first;
+
+		auto routineActiveMappedFound = m_routineMovementActiveMapped.find(newMovementRoutine->getName());
+		if (routineActiveMappedFound != m_routineMovementActiveMapped.end())
+			routineActiveMappedFound->second.emplace_back(map_iterator);
+		else
+			m_routineMovementActiveMapped.insert(std::make_pair(newMovementRoutine->getName(), std::vector<std::map<sf::Transformable*, MovementRoutine*>::iterator>{ map_iterator }));
+	}
+
+	for (const auto& movementRoutine : obj.m_routineMovement) {
+		auto* newMovementRoutineContainer = new MovementRoutineContainer(*movementRoutine.second);
+		auto map_iterator = m_routineMovement.insert(std::make_pair(movementRoutine.first, newMovementRoutineContainer)).first;
+
+		std::vector<std::string> &routineNames = newMovementRoutineContainer->getRoutineNames();
+		for (std::string& name : routineNames) {
+
+			auto routineMappedFound = m_routineMovementMapped.find(name);
+			if (routineMappedFound != m_routineMovementMapped.end())
+				routineMappedFound->second.emplace_back(map_iterator);
+			else
+				m_routineMovementMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, MovementRoutineContainer*>::iterator>{ map_iterator }));
+		}
+	}
+
+	m_movementRoutineContainer = new MovementRoutineContainer(*obj.m_movementRoutineContainer);
+
+	for (const auto& scalingRoutine : obj.m_routineScalingActive) {
+		auto* newScalingRoutine = new ScalingRoutine(*scalingRoutine.second);
+		auto map_iterator = m_routineScalingActive.insert(std::make_pair(scalingRoutine.first, newScalingRoutine)).first;
+
+		auto routineActiveMappedFound = m_routineScalingActiveMapped.find(newScalingRoutine->getName());
+		if (routineActiveMappedFound != m_routineScalingActiveMapped.end())
+			routineActiveMappedFound->second.emplace_back(map_iterator);
+		else
+			m_routineScalingActiveMapped.insert(std::make_pair(newScalingRoutine->getName(), std::vector<std::map<sf::Transformable*, ScalingRoutine*>::iterator>{ map_iterator }));
+	}
+
+	for (const auto& scalingRoutine : obj.m_routineScaling) {
+		auto* newScalingRoutineContainer = new ScalingRoutineContainer(*scalingRoutine.second);
+		auto map_iterator = m_routineScaling.insert(std::make_pair(scalingRoutine.first, newScalingRoutineContainer)).first;
+
+		const std::vector<std::string> &routineNames = newScalingRoutineContainer->getRoutineNames();
+		for (const std::string& name : routineNames) {
+
+			auto routineMappedFound = m_routineScalingMapped.find(name);
+			if (routineMappedFound != m_routineScalingMapped.end())
+				routineMappedFound->second.emplace_back(map_iterator);
+			else
+				m_routineScalingMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, ScalingRoutineContainer*>::iterator>{ map_iterator }));
+		}
+	}
+
+	m_scalingRoutineContainer = new ScalingRoutineContainer(*obj.m_scalingRoutineContainer);
+
+	for (const auto& rotationRoutine : obj.m_routineRotationActive) {
+		auto* newRotationRoutine = new RotationRoutine(*rotationRoutine.second);
+		auto map_iterator = m_routineRotationActive.insert(std::make_pair(rotationRoutine.first, newRotationRoutine)).first;
+
+		auto routineActiveMappedFound = m_routineRotationActiveMapped.find(newRotationRoutine->getName());
+		if (routineActiveMappedFound != m_routineRotationActiveMapped.end())
+			routineActiveMappedFound->second.emplace_back(map_iterator);
+		else
+			m_routineRotationActiveMapped.insert(std::make_pair(newRotationRoutine->getName(), std::vector<std::map<sf::Transformable*, RotationRoutine*>::iterator>{ map_iterator }));
+	}
+
+	for (const auto& rotationRoutine : obj.m_routineRotation) {
+		auto* newRotationRoutineContainer = new RotationRoutineContainer(*rotationRoutine.second);
+		auto map_iterator = m_routineRotation.insert(std::make_pair(rotationRoutine.first, newRotationRoutineContainer)).first;
+
+		const std::vector<std::string> &routineNames = newRotationRoutineContainer->getRoutineNames();
+		for (const std::string& name : routineNames) {
+
+			auto routineMappedFound = m_routineRotationMapped.find(name);
+			if (routineMappedFound != m_routineRotationMapped.end())
+				routineMappedFound->second.emplace_back(map_iterator);
+			else
+				m_routineRotationMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, RotationRoutineContainer*>::iterator>{ map_iterator }));
+		}
+	}
+
+	m_rotationRoutineContainer = new RotationRoutineContainer(*obj.m_rotationRoutineContainer);
 }
 
 MovementManager::~MovementManager()
@@ -22,19 +117,8 @@ MovementManager::~MovementManager()
 	this->deleteRotationRoutine();
 
 	delete m_movementRoutineContainer;
-}
-
-inline void MovementManager::printDebug(const std::string& message) const
-{
-	if (debug)
-		printf("MovementManager: %s\n", message.c_str());
-}
-
-MovementManager* MovementManager::getInstance()
-{
-	if (!sInstance)
-		sInstance = new MovementManager();
-	return sInstance;
+	delete m_scalingRoutineContainer;
+	delete m_rotationRoutineContainer;
 }
 
 // Update functions
@@ -43,18 +127,48 @@ void MovementManager::update(const float dt)
 	this->movementRoutineEngine->update(dt);
 }
 
+void MovementManager::setFunction(easeFunctions::Tmovement_function usedFunctionType)
+{
+	for (auto& movementRoutine : m_routineMovement)
+		movementRoutine.second->setFunction(usedFunctionType);
+
+	for (auto& scalingRoutine : m_routineScaling)
+		scalingRoutine.second->setFunction(usedFunctionType);
+
+	for (auto& rotationRoutine : m_routineRotation)
+		rotationRoutine.second->setFunction(usedFunctionType);
+}
+
+void MovementManager::setFunction(std::string& name, easeFunctions::Tmovement_function usedFunctionType)
+{
+	auto movementRoutineFound = m_routineMovementMapped.find(name);
+	if (movementRoutineFound != m_routineMovementMapped.end())
+		for (const auto& movementRoutine : movementRoutineFound->second)
+			movementRoutine->second->setFunction(usedFunctionType);
+
+	auto scalingRoutineFound = m_routineScalingMapped.find(name);
+	if (scalingRoutineFound != m_routineScalingMapped.end())
+		for (const auto& scalingRoutine : scalingRoutineFound->second)
+			scalingRoutine->second->setFunction(usedFunctionType);
+
+	auto rotationRoutineFound = m_routineRotationMapped.find(name);
+	if (rotationRoutineFound != m_routineRotationMapped.end())
+		for (const auto& rotationRoutine : rotationRoutineFound->second)
+			rotationRoutine->second->setFunction(usedFunctionType);
+}
+
 void MovementManager::setFunction(sf::Transformable& transformable, easeFunctions::Tmovement_function usedFunctionType)
 {
-	auto movementRoutineFound = m_routineMovementActive.find(&transformable);
-	if (movementRoutineFound != m_routineMovementActive.end())
+	auto movementRoutineFound = m_routineMovement.find(&transformable);
+	if (movementRoutineFound != m_routineMovement.end())
 		movementRoutineFound->second->setFunction(usedFunctionType);
 
-	auto scalingRoutineFound = m_routineScalingActive.find(&transformable);
-	if (scalingRoutineFound != m_routineScalingActive.end())
+	auto scalingRoutineFound = m_routineScaling.find(&transformable);
+	if (scalingRoutineFound != m_routineScaling.end())
 		scalingRoutineFound->second->setFunction(usedFunctionType);
 
-	auto rotationRoutineFound = m_routineRotationActive.find(&transformable);
-	if (rotationRoutineFound != m_routineRotationActive.end())
+	auto rotationRoutineFound = m_routineRotation.find(&transformable);
+	if (rotationRoutineFound != m_routineRotation.end())
 		rotationRoutineFound->second->setFunction(usedFunctionType);
 }
 
@@ -211,6 +325,18 @@ void MovementManager::setDelayAfter(sf::Transformable& transformable, const floa
 		rotationRoutineFound->second->setDelayAfter(delay, reset);
 }
 
+void MovementManager::resetRoutines()
+{
+	for (auto& movementRoutine : m_routineMovementActive)
+		movementRoutine.second->reset(*movementRoutine.first);
+
+	for (auto& scalingRoutine : m_routineScalingActive)
+		scalingRoutine.second->reset(*scalingRoutine.first);
+
+	for (auto& rotationRoutine : m_routineRotationActive)
+		rotationRoutine.second->reset(*rotationRoutine.first);
+}
+
 void MovementManager::resetRoutines(sf::Transformable& transformable)
 {
 	auto movementRoutineFound = m_routineMovementActive.find(&transformable);
@@ -228,21 +354,21 @@ void MovementManager::resetRoutines(sf::Transformable& transformable)
 
 // - - - - - - - - - - - - - - - - - - - - Movement  - - - - - - - - - - - - - - - - - - - - \\
 
-MovementRoutine* MovementManager::createMovementRoutine(const std::string& _name)
+MovementRoutine* MovementManager::createMovementRoutine(const std::string& name)
 {
-	return this->m_movementRoutineContainer->createRoutine(_name);
+	return this->m_movementRoutineContainer->createRoutine(name);
 }
 
-MovementRoutine* MovementManager::getMovementRoutine(const std::string& _name)
+MovementRoutine* MovementManager::getMovementRoutine(const std::string& name)
 {
-	return this->m_movementRoutineContainer->getRoutinePtr(_name);
+	return this->m_movementRoutineContainer->getRoutinePtr(name);
 }
 
-MovementRoutine* MovementManager::getMovementRoutine(sf::Transformable& transformable, const std::string& _name)
+MovementRoutine* MovementManager::getMovementRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto m_movementRoutineContainerFound = m_routineMovement.find(&transformable);
 	if (m_movementRoutineContainerFound != m_routineMovement.end()) {
-		return m_movementRoutineContainerFound->second->exists(_name);
+		return m_movementRoutineContainerFound->second->exists(name);
 	}
 	else {
 		printDebug("getMovementRoutine: Routine for shape not found");
@@ -250,13 +376,13 @@ MovementRoutine* MovementManager::getMovementRoutine(sf::Transformable& transfor
 	}
 }
 
-MovementRoutine* MovementManager::linkMovementRoutine(sf::Transformable& transformable, const std::string& _name)
+MovementRoutine* MovementManager::linkMovementRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	// Check if routine with given name exists
-	MovementRoutine* movementRoutineOriginal = m_movementRoutineContainer->getRoutinePtr(_name);
+	MovementRoutine* movementRoutineOriginal = m_movementRoutineContainer->getRoutinePtr(name);
 
 	if (movementRoutineOriginal == nullptr) {
-		printDebug("linkMovementRoutine: Routine with name " + _name + " not found");
+		printDebug("linkMovementRoutine: Routine with name " + name + " not found");
 		return nullptr;
 	}
 
@@ -264,9 +390,9 @@ MovementRoutine* MovementManager::linkMovementRoutine(sf::Transformable& transfo
 	auto m_movementRoutineContainerFound = m_routineMovement.find(&transformable);
 	if (m_movementRoutineContainerFound != m_routineMovement.end()) {
 
-		auto* movementRoutineFound = m_movementRoutineContainerFound->second->exists(_name);
+		auto* movementRoutineFound = m_movementRoutineContainerFound->second->exists(name);
 		if (movementRoutineFound != nullptr) {
-			printDebug("linkMovementRoutine: Routine with name " + _name + " already linked to shape");
+			printDebug("linkMovementRoutine: Routine with name " + name + " already linked to shape");
 			return movementRoutineFound;
 		}
 	}
@@ -275,41 +401,41 @@ MovementRoutine* MovementManager::linkMovementRoutine(sf::Transformable& transfo
 		MovementRoutineContainer* newMovementRoutineContainer = new MovementRoutineContainer(this->movementRoutineEngine);
 		auto map_iterator = m_routineMovement.insert(std::make_pair(&transformable, newMovementRoutineContainer)).first;
 
-		auto routineMappedFound = m_routineMovementMapped.find(_name);
+		auto routineMappedFound = m_routineMovementMapped.find(name);
 		if (routineMappedFound != m_routineMovementMapped.end())
 			routineMappedFound->second.emplace_back(map_iterator);
 		else
-			m_routineMovementMapped.insert(std::make_pair(_name, std::vector<std::map<sf::Transformable*, MovementRoutineContainer*>::iterator>{ map_iterator }));
+			m_routineMovementMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, MovementRoutineContainer*>::iterator>{ map_iterator }));
 
 		MovementRoutine* newMovementRoutine = new MovementRoutine(*movementRoutineOriginal);
-		return newMovementRoutineContainer->createRoutine(_name, newMovementRoutine);
+		return newMovementRoutineContainer->createRoutine(name, newMovementRoutine);
 	}
 
 	// If yes, create a new movement routine and link it to the existing movement routine container
 	MovementRoutine* newMovementRoutine = new MovementRoutine(*movementRoutineOriginal);
 
-	auto routineMappedFound = m_routineMovementMapped.find(_name);
+	auto routineMappedFound = m_routineMovementMapped.find(name);
 	if (routineMappedFound != m_routineMovementMapped.end())
 		routineMappedFound->second.emplace_back(m_movementRoutineContainerFound);
 	else
-		m_routineMovementMapped.insert(std::make_pair(_name, std::vector<std::map<sf::Transformable*, MovementRoutineContainer*>::iterator>{ m_movementRoutineContainerFound }));
-	return m_movementRoutineContainerFound->second->createRoutine(_name, newMovementRoutine);
+		m_routineMovementMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, MovementRoutineContainer*>::iterator>{ m_movementRoutineContainerFound }));
+	return m_movementRoutineContainerFound->second->createRoutine(name, newMovementRoutine);
 }
 
-void MovementManager::unlinkMovementRoutine(sf::Transformable* transformable, const std::string& _name)
+void MovementManager::unlinkMovementRoutine(sf::Transformable* transformable, const std::string& name)
 {
 	// Stop the routine if it's active
-	this->stopMovementRoutine(transformable, _name);
+	this->stopMovementRoutine(transformable, name);
 
 	// Delete the routine from m_routineMovement
 	auto m_movementRoutineContainerFound = m_routineMovement.find(transformable);
 	if (m_movementRoutineContainerFound != m_routineMovement.end()) {
 
-		auto* movementRoutineFound = m_movementRoutineContainerFound->second->exists(_name);
+		auto* movementRoutineFound = m_movementRoutineContainerFound->second->exists(name);
 		if (movementRoutineFound != nullptr) {
-			m_movementRoutineContainerFound->second->deleteRoutine(_name);
+			m_movementRoutineContainerFound->second->deleteRoutine(name);
 
-			auto routineMappedFound = m_routineMovementMapped.find(_name);
+			auto routineMappedFound = m_routineMovementMapped.find(name);
 			if (routineMappedFound != m_routineMovementMapped.end()) {
 				routineMappedFound->second.erase(std::remove_if(routineMappedFound->second.begin(),
 																routineMappedFound->second.end(),
@@ -323,83 +449,83 @@ void MovementManager::unlinkMovementRoutine(sf::Transformable* transformable, co
 		}
 			
 		else
-			printDebug("unlinkMovementRoutine: Routine with name " + _name + " not found");
+			printDebug("unlinkMovementRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("unlinkMovementRoutine: Routine for shape not found");
 }
 
-void MovementManager::startMovementRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::startMovementRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto m_movementRoutineContainerFound = m_routineMovement.find(&transformable);
 	if (m_movementRoutineContainerFound != m_routineMovement.end()) {
-		auto* movementRoutineFound = m_movementRoutineContainerFound->second->exists(_name);
+		auto* movementRoutineFound = m_movementRoutineContainerFound->second->exists(name);
 
 		if (movementRoutineFound != nullptr) {
 			if (movementRoutineFound->start(transformable) && m_routineMovementActive.find(&transformable) == m_routineMovementActive.end()) {
 				auto map_iterator = m_routineMovementActive.insert(std::make_pair(&transformable, movementRoutineFound)).first;
 
-				auto routineActiveMappedFound = m_routineMovementActiveMapped.find(_name);
+				auto routineActiveMappedFound = m_routineMovementActiveMapped.find(name);
 				if (routineActiveMappedFound != m_routineMovementActiveMapped.end())
 					routineActiveMappedFound->second.emplace_back(map_iterator);
 				else
-					m_routineMovementActiveMapped.insert(std::make_pair(_name, std::vector<std::map<sf::Transformable*, MovementRoutine*>::iterator>{ map_iterator }));
+					m_routineMovementActiveMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, MovementRoutine*>::iterator>{ map_iterator }));
 			}
 		}
 		else
-			printDebug("startMovementRoutine: Routine with name " + _name + " not found");
+			printDebug("startMovementRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("startMovementRoutine: Routine for shape not found");
 }
 
-void MovementManager::pauseMovementRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::pauseMovementRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto movementRoutineFound = m_routineMovementActive.find(&transformable);
 	if (movementRoutineFound != m_routineMovementActive.end()) {
-		if (movementRoutineFound->second->getName() == _name)
+		if (movementRoutineFound->second->getName() == name)
 			movementRoutineFound->second->pause();
 		else
-			printDebug("pauseMovementRoutine: Routine with name " + _name + " not found");
+			printDebug("pauseMovementRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("pauseMovementRoutine: Routine for shape not found");
 }
 
-void MovementManager::resumeMovementRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::resumeMovementRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto movementRoutineFound = m_routineMovementActive.find(&transformable);
 	if (movementRoutineFound != m_routineMovementActive.end()) {
-		if (movementRoutineFound->second->getName() == _name)
+		if (movementRoutineFound->second->getName() == name)
 			movementRoutineFound->second->resume();
 		else
-			printDebug("resumeMovementRoutine: Routine with name " + _name + " not found");
+			printDebug("resumeMovementRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("resumeMovementRoutine: Routine for shape not found");
 }
 
-void MovementManager::resetMovementRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::resetMovementRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto movementRoutineFound = m_routineMovementActive.find(&transformable);
 	if (movementRoutineFound != m_routineMovementActive.end()) {
-		if (movementRoutineFound->second->getName() == _name)
+		if (movementRoutineFound->second->getName() == name)
 			movementRoutineFound->second->reset(transformable);
 		else
-			printDebug("resetMovementRoutine: Routine with name " + _name + " not found");
+			printDebug("resetMovementRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("resetMovementRoutine: Routine for shape not found");
 }
 
-void MovementManager::stopMovementRoutine(sf::Transformable* transformable, const std::string& _name)
+void MovementManager::stopMovementRoutine(sf::Transformable* transformable, const std::string& name)
 {
 	auto movementRoutineFound = m_routineMovementActive.find(transformable);
 	if (movementRoutineFound != m_routineMovementActive.end()) {
-		if (movementRoutineFound->second->getName() == _name) {
+		if (movementRoutineFound->second->getName() == name) {
 			movementRoutineFound->second->stop(transformable);
 
-			auto movementRoutineFoundMapped = m_routineMovementActiveMapped.find(_name);
+			auto movementRoutineFoundMapped = m_routineMovementActiveMapped.find(name);
 			if (movementRoutineFoundMapped != m_routineMovementActiveMapped.end()) {
 				movementRoutineFoundMapped->second.erase(std::remove_if(movementRoutineFoundMapped->second.begin(),
 																		movementRoutineFoundMapped->second.end(),
@@ -413,7 +539,7 @@ void MovementManager::stopMovementRoutine(sf::Transformable* transformable, cons
 			m_routineMovementActive.erase(movementRoutineFound);
 		}
 		else
-			printDebug("stopMovementRoutine: Routine with name " + _name + " not found");
+			printDebug("stopMovementRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("stopMovementRoutine: Routine for shape not found");
@@ -437,9 +563,9 @@ void MovementManager::deleteMovementRoutine()
 	m_movementRoutineContainer->clear();
 }
 
-void MovementManager::deleteMovementRoutine(const std::string& _name)
+void MovementManager::deleteMovementRoutine(const std::string& name)
 {
-	auto routineActiveFound = m_routineMovementActiveMapped.find(_name);
+	auto routineActiveFound = m_routineMovementActiveMapped.find(name);
 	if (routineActiveFound != m_routineMovementActiveMapped.end()) {
 
 		for (const auto& active_routine : routineActiveFound->second) {
@@ -451,10 +577,10 @@ void MovementManager::deleteMovementRoutine(const std::string& _name)
 		m_routineMovementActiveMapped.erase(routineActiveFound);
 	}
 
-	auto routineFound = m_routineMovementMapped.find(_name);
+	auto routineFound = m_routineMovementMapped.find(name);
 	if (routineFound != m_routineMovementMapped.end()) {
 		for (auto routine : routineFound->second) {
-			routine->second->deleteRoutine(_name);
+			routine->second->deleteRoutine(name);
 
 			if (routine->second->getRoutineCount() == 0) {
 				delete routine->second;
@@ -466,7 +592,7 @@ void MovementManager::deleteMovementRoutine(const std::string& _name)
 		m_routineMovementMapped.erase(routineFound);
 	}
 
-	m_movementRoutineContainer->deleteRoutine(_name);
+	m_movementRoutineContainer->deleteRoutine(name);
 }
 
 const long long int MovementManager::getSizeMovement() const
@@ -488,21 +614,21 @@ const long long int MovementManager::getSizeMovement() const
 
 // - - - - - - - - - - - - - - - - - - - - Scaling  - - - - - - - - - - - - - - - - - - - - \\
 
-ScalingRoutine* MovementManager::createScalingRoutine(const std::string& _name)
+ScalingRoutine* MovementManager::createScalingRoutine(const std::string& name)
 {
-	return this->m_scalingRoutineContainer->createRoutine(_name);
+	return this->m_scalingRoutineContainer->createRoutine(name);
 }
 
-ScalingRoutine* MovementManager::getScalingRoutine(const std::string& _name)
+ScalingRoutine* MovementManager::getScalingRoutine(const std::string& name)
 {
-	return this->m_scalingRoutineContainer->getRoutinePtr(_name);
+	return this->m_scalingRoutineContainer->getRoutinePtr(name);
 }
 
-ScalingRoutine* MovementManager::getScalingRoutine(sf::Transformable& transformable, const std::string& _name)
+ScalingRoutine* MovementManager::getScalingRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto scalingRoutineContainerFound = m_routineScaling.find(&transformable);
 	if (scalingRoutineContainerFound != m_routineScaling.end()) {
-		return scalingRoutineContainerFound->second->exists(_name);
+		return scalingRoutineContainerFound->second->exists(name);
 	}
 	else
 		printDebug("getScalingRoutine: Routine for shape not found");
@@ -510,13 +636,13 @@ ScalingRoutine* MovementManager::getScalingRoutine(sf::Transformable& transforma
 	return nullptr;
 }
 
-ScalingRoutine* MovementManager::linkScalingRoutine(sf::Transformable& transformable, const std::string& _name)
+ScalingRoutine* MovementManager::linkScalingRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	// Check if routine with given name exists
-	ScalingRoutine* scalingRoutineOriginal = m_scalingRoutineContainer->getRoutinePtr(_name);
+	ScalingRoutine* scalingRoutineOriginal = m_scalingRoutineContainer->getRoutinePtr(name);
 
 	if (scalingRoutineOriginal == nullptr) {
-		printDebug("linkScalingRoutine: Routine with name " + _name + " not found");
+		printDebug("linkScalingRoutine: Routine with name " + name + " not found");
 		return nullptr;
 	}
 
@@ -524,9 +650,9 @@ ScalingRoutine* MovementManager::linkScalingRoutine(sf::Transformable& transform
 	auto m_scalingRoutineContainerFound = m_routineScaling.find(&transformable);
 	if (m_scalingRoutineContainerFound != m_routineScaling.end()) {
 
-		auto* scalingRoutineFound = m_scalingRoutineContainerFound->second->exists(_name);
+		auto* scalingRoutineFound = m_scalingRoutineContainerFound->second->exists(name);
 		if (scalingRoutineFound != nullptr) {
-			printDebug("linkScalingRoutine: Routine with name " + _name + " already linked to shape");
+			printDebug("linkScalingRoutine: Routine with name " + name + " already linked to shape");
 			return scalingRoutineFound;
 		}
 	}
@@ -535,42 +661,42 @@ ScalingRoutine* MovementManager::linkScalingRoutine(sf::Transformable& transform
 		ScalingRoutineContainer* newScalingRoutineContainer = new ScalingRoutineContainer(this->movementRoutineEngine);
 		auto map_iterator = m_routineScaling.insert(std::make_pair(&transformable, newScalingRoutineContainer)).first;
 
-		auto routineMappedFound = m_routineScalingMapped.find(_name);
+		auto routineMappedFound = m_routineScalingMapped.find(name);
 		if (routineMappedFound != m_routineScalingMapped.end())
 			routineMappedFound->second.emplace_back(map_iterator);
 		else
-			m_routineScalingMapped.insert(std::make_pair(_name, std::vector<std::map<sf::Transformable*, ScalingRoutineContainer*>::iterator>{ map_iterator }));
+			m_routineScalingMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, ScalingRoutineContainer*>::iterator>{ map_iterator }));
 
 		ScalingRoutine* newScalingRoutine = new ScalingRoutine(*scalingRoutineOriginal);
-		return newScalingRoutineContainer->createRoutine(_name, newScalingRoutine);
+		return newScalingRoutineContainer->createRoutine(name, newScalingRoutine);
 	}
 
 	// If yes, create a new scaling routine and link it to the existing scaling routine container
 	ScalingRoutine* newScalingRoutine = new ScalingRoutine(*scalingRoutineOriginal);
 
-	auto routineMappedFound = m_routineScalingMapped.find(_name);
+	auto routineMappedFound = m_routineScalingMapped.find(name);
 	if (routineMappedFound != m_routineScalingMapped.end())
 		routineMappedFound->second.emplace_back(m_scalingRoutineContainerFound);
 	else
-		m_routineScalingMapped.insert(std::make_pair(_name, std::vector<std::map<sf::Transformable*, ScalingRoutineContainer*>::iterator>{ m_scalingRoutineContainerFound }));
+		m_routineScalingMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, ScalingRoutineContainer*>::iterator>{ m_scalingRoutineContainerFound }));
 
-	return m_scalingRoutineContainerFound->second->createRoutine(_name, newScalingRoutine);
+	return m_scalingRoutineContainerFound->second->createRoutine(name, newScalingRoutine);
 }
 
-void MovementManager::unlinkScalingRoutine(sf::Transformable* transformable, const std::string& _name)
+void MovementManager::unlinkScalingRoutine(sf::Transformable* transformable, const std::string& name)
 {
 	// Stop the routine if it's active
-	this->stopScalingRoutine(transformable, _name);
+	this->stopScalingRoutine(transformable, name);
 
 	// Delete the routine from m_routineScaling
 	auto m_scalingRoutineContainerFound = m_routineScaling.find(transformable);
 	if (m_scalingRoutineContainerFound != m_routineScaling.end()) {
 
-		auto* scalingRoutineFound = m_scalingRoutineContainerFound->second->exists(_name);
+		auto* scalingRoutineFound = m_scalingRoutineContainerFound->second->exists(name);
 		if (scalingRoutineFound != nullptr) {
-			m_scalingRoutineContainerFound->second->deleteRoutine(_name);
+			m_scalingRoutineContainerFound->second->deleteRoutine(name);
 
-			auto routineMappedFound = m_routineScalingMapped.find(_name);
+			auto routineMappedFound = m_routineScalingMapped.find(name);
 			if (routineMappedFound != m_routineScalingMapped.end()) {
 				routineMappedFound->second.erase(std::remove_if(routineMappedFound->second.begin(),
 																routineMappedFound->second.end(),
@@ -582,84 +708,84 @@ void MovementManager::unlinkScalingRoutine(sf::Transformable* transformable, con
 			}
 		}
 		else
-			printDebug("unlinkScalingRoutine: Routine with name " + _name + " not found");
+			printDebug("unlinkScalingRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("unlinkScalingRoutine: Routine for shape not found");
 }
 
-void MovementManager::startScalingRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::startScalingRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto m_scalingRoutineContainerFound = m_routineScaling.find(&transformable);
 	if (m_scalingRoutineContainerFound != m_routineScaling.end()) {
 
-		auto* scalingRoutineFound = m_scalingRoutineContainerFound->second->exists(_name);
+		auto* scalingRoutineFound = m_scalingRoutineContainerFound->second->exists(name);
 		if (scalingRoutineFound != nullptr) {
 
 			if (scalingRoutineFound->start(transformable) && m_routineScalingActive.find(&transformable) == m_routineScalingActive.end()) {
 				auto map_iterator = m_routineScalingActive.insert(std::make_pair(&transformable, scalingRoutineFound)).first;
 
-				auto routineActiveMappedFound = m_routineScalingActiveMapped.find(_name);
+				auto routineActiveMappedFound = m_routineScalingActiveMapped.find(name);
 				if (routineActiveMappedFound != m_routineScalingActiveMapped.end())
 					routineActiveMappedFound->second.emplace_back(map_iterator);
 				else
-					m_routineScalingActiveMapped.insert(std::make_pair(_name, std::vector<std::map<sf::Transformable*, ScalingRoutine*>::iterator>{ map_iterator }));
+					m_routineScalingActiveMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, ScalingRoutine*>::iterator>{ map_iterator }));
 			}
 		}
 		else
-			printDebug("startScalingRoutine: Routine with name " + _name + " not found");
+			printDebug("startScalingRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("startScalingRoutine: Routine for shape not found");
 }
 
-void MovementManager::pauseScalingRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::pauseScalingRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto scalingRoutineFound = m_routineScalingActive.find(&transformable);
 	if (scalingRoutineFound != m_routineScalingActive.end()) {
-		if (scalingRoutineFound->second->getName() == _name)
+		if (scalingRoutineFound->second->getName() == name)
 			scalingRoutineFound->second->pause();
 		else
-			printDebug("pauseScalingRoutine: Routine with name " + _name + " not found");
+			printDebug("pauseScalingRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("pauseScalingRoutine: Routine for shape not found");
 }
 
-void MovementManager::resumeScalingRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::resumeScalingRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto scalingRoutineFound = m_routineScalingActive.find(&transformable);
 	if (scalingRoutineFound != m_routineScalingActive.end()) {
-		if (scalingRoutineFound->second->getName() == _name)
+		if (scalingRoutineFound->second->getName() == name)
 			scalingRoutineFound->second->resume();
 		else
-			printDebug("resumeScalingRoutine: Routine with name " + _name + " not found");
+			printDebug("resumeScalingRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("resumeScalingRoutine: Routine for shape not found");
 }
 
-void MovementManager::resetScalingRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::resetScalingRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto scalingRoutineFound = m_routineScalingActive.find(&transformable);
 	if (scalingRoutineFound != m_routineScalingActive.end()) {
-		if (scalingRoutineFound->second->getName() == _name)
+		if (scalingRoutineFound->second->getName() == name)
 			scalingRoutineFound->second->reset(transformable);
 		else
-			printDebug("resetScalingRoutine: Routine with name " + _name + " not found");
+			printDebug("resetScalingRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("resetScalingRoutine: Routine for shape not found");
 }
 
-void MovementManager::stopScalingRoutine(sf::Transformable* transformable, const std::string& _name)
+void MovementManager::stopScalingRoutine(sf::Transformable* transformable, const std::string& name)
 {
 	auto scalingRoutineFound = m_routineScalingActive.find(transformable);
 	if (scalingRoutineFound != m_routineScalingActive.end()) {
-		if (scalingRoutineFound->second->getName() == _name) {
+		if (scalingRoutineFound->second->getName() == name) {
 			scalingRoutineFound->second->stop(transformable);
 			
-			auto scalingRoutineFoundMapped = m_routineScalingActiveMapped.find(_name);
+			auto scalingRoutineFoundMapped = m_routineScalingActiveMapped.find(name);
 			if (scalingRoutineFoundMapped != m_routineScalingActiveMapped.end()) {
 				scalingRoutineFoundMapped->second.erase(std::remove_if(scalingRoutineFoundMapped->second.begin(),
 																		scalingRoutineFoundMapped->second.end(),
@@ -673,7 +799,7 @@ void MovementManager::stopScalingRoutine(sf::Transformable* transformable, const
 			m_routineScalingActive.erase(scalingRoutineFound);
 		}
 		else
-			printDebug("stopScalingRoutine: Routine with name " + _name + " not found");
+			printDebug("stopScalingRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("stopScalingRoutine: Routine for shape not found");
@@ -697,9 +823,9 @@ void MovementManager::deleteScalingRoutine()
 	m_scalingRoutineContainer->clear();
 }
 
-void MovementManager::deleteScalingRoutine(const std::string& _name)
+void MovementManager::deleteScalingRoutine(const std::string& name)
 {
-	auto routineActiveFound = m_routineScalingActiveMapped.find(_name);
+	auto routineActiveFound = m_routineScalingActiveMapped.find(name);
 	if (routineActiveFound != m_routineScalingActiveMapped.end()) {
 		for (const auto& active_routine : routineActiveFound->second) {
 			active_routine->second->stop(active_routine->first);
@@ -710,10 +836,10 @@ void MovementManager::deleteScalingRoutine(const std::string& _name)
 		m_routineScalingActiveMapped.erase(routineActiveFound);
 	}
 
-	auto routineFound = m_routineScalingMapped.find(_name);
+	auto routineFound = m_routineScalingMapped.find(name);
 	if (routineFound != m_routineScalingMapped.end()) {
 		for (auto routine : routineFound->second) {
-			routine->second->deleteRoutine(_name);
+			routine->second->deleteRoutine(name);
 
 			if (routine->second->getRoutineCount() == 0) {
 				delete routine->second;
@@ -725,7 +851,7 @@ void MovementManager::deleteScalingRoutine(const std::string& _name)
 		m_routineScalingMapped.erase(routineFound);
 	}
 
-	m_scalingRoutineContainer->deleteRoutine(_name);
+	m_scalingRoutineContainer->deleteRoutine(name);
 }
 
 const long long int MovementManager::getSizeScaling() const
@@ -744,22 +870,22 @@ const long long int MovementManager::getSizeScaling() const
 
 // - - - - - - - - - - - - - - - - - - - - Rotation  - - - - - - - - - - - - - - - - - - - - \\
 
-RotationRoutine* MovementManager::createRotationRoutine(const std::string& _name)
+RotationRoutine* MovementManager::createRotationRoutine(const std::string& name)
 {
-	return this->m_rotationRoutineContainer->createRoutine(_name);
+	return this->m_rotationRoutineContainer->createRoutine(name);
 }
 
-RotationRoutine* MovementManager::getRotationRoutine(const std::string& _name)
+RotationRoutine* MovementManager::getRotationRoutine(const std::string& name)
 {
-	return this->m_rotationRoutineContainer->getRoutinePtr(_name);
+	return this->m_rotationRoutineContainer->getRoutinePtr(name);
 }
 
-RotationRoutine* MovementManager::getRotationRoutine(sf::Transformable& transformable, const std::string& _name)
+RotationRoutine* MovementManager::getRotationRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto rotationRoutineContainerFound = m_routineRotation.find(&transformable);
 
 	if (rotationRoutineContainerFound != m_routineRotation.end())
-		return rotationRoutineContainerFound->second->exists(_name);
+		return rotationRoutineContainerFound->second->exists(name);
 	else
 		printDebug("getRotationRoutine: Routine for shape not found");
 
@@ -767,13 +893,13 @@ RotationRoutine* MovementManager::getRotationRoutine(sf::Transformable& transfor
 
 }
 
-RotationRoutine* MovementManager::linkRotationRoutine(sf::Transformable& transformable, const std::string& _name)
+RotationRoutine* MovementManager::linkRotationRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	// Check if routine with given name exists
-	RotationRoutine* rotationRoutineOriginal = m_rotationRoutineContainer->getRoutinePtr(_name);
+	RotationRoutine* rotationRoutineOriginal = m_rotationRoutineContainer->getRoutinePtr(name);
 
 	if (rotationRoutineOriginal == nullptr) {
-		printDebug("linkRotationRoutine: Routine with name " + _name + " not found");
+		printDebug("linkRotationRoutine: Routine with name " + name + " not found");
 		return nullptr;
 	}
 
@@ -781,9 +907,9 @@ RotationRoutine* MovementManager::linkRotationRoutine(sf::Transformable& transfo
 	auto m_rotationRoutineContainerFound = m_routineRotation.find(&transformable);
 	if (m_rotationRoutineContainerFound != m_routineRotation.end()) {
 
-		auto* rotationRoutineFound = m_rotationRoutineContainerFound->second->exists(_name);
+		auto* rotationRoutineFound = m_rotationRoutineContainerFound->second->exists(name);
 		if (rotationRoutineFound != nullptr) {
-			printDebug("linkRotationRoutine: Routine with name " + _name + " already linked to shape");
+			printDebug("linkRotationRoutine: Routine with name " + name + " already linked to shape");
 			return rotationRoutineFound;
 		}
 	}
@@ -793,42 +919,42 @@ RotationRoutine* MovementManager::linkRotationRoutine(sf::Transformable& transfo
 		auto map_iterator = m_routineRotation.insert(std::make_pair(&transformable, newRotationRoutineContainer)).first;
 
 
-		auto routineMappedFound = m_routineRotationMapped.find(_name);
+		auto routineMappedFound = m_routineRotationMapped.find(name);
 		if (routineMappedFound != m_routineRotationMapped.end())
 			routineMappedFound->second.emplace_back(map_iterator);
 		else
-			m_routineRotationMapped.insert(std::make_pair(_name, std::vector<std::map<sf::Transformable*, RotationRoutineContainer*>::iterator>{ map_iterator }));
+			m_routineRotationMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, RotationRoutineContainer*>::iterator>{ map_iterator }));
 
 		RotationRoutine* newRotationRoutine = new RotationRoutine(*rotationRoutineOriginal);
-		return newRotationRoutineContainer->createRoutine(_name, newRotationRoutine);
+		return newRotationRoutineContainer->createRoutine(name, newRotationRoutine);
 	}
 
 	// If yes, create a new rotation routine and link it to the existing rotation routine container
 	RotationRoutine* newRotationRoutine = new RotationRoutine(*rotationRoutineOriginal);
 
-	auto routineMappedFound = m_routineRotationMapped.find(_name);
+	auto routineMappedFound = m_routineRotationMapped.find(name);
 	if (routineMappedFound != m_routineRotationMapped.end())
 		routineMappedFound->second.emplace_back(m_rotationRoutineContainerFound);
 	else
-		m_routineRotationMapped.insert(std::make_pair(_name, std::vector<std::map<sf::Transformable*, RotationRoutineContainer*>::iterator>{ m_rotationRoutineContainerFound }));
+		m_routineRotationMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, RotationRoutineContainer*>::iterator>{ m_rotationRoutineContainerFound }));
 
-	return m_rotationRoutineContainerFound->second->createRoutine(_name, newRotationRoutine);
+	return m_rotationRoutineContainerFound->second->createRoutine(name, newRotationRoutine);
 }
 
-void MovementManager::unlinkRotationRoutine(sf::Transformable* transformable, const std::string& _name)
+void MovementManager::unlinkRotationRoutine(sf::Transformable* transformable, const std::string& name)
 {
 	// Stop the routine if it's active
-	this->stopRotationRoutine(transformable, _name);
+	this->stopRotationRoutine(transformable, name);
 
 	// Delete the routine from m_routineRotation
 	auto m_rotationRoutineContainerFound = m_routineRotation.find(transformable);
 	if (m_rotationRoutineContainerFound != m_routineRotation.end()) {
 
-		auto* rotationRoutineFound = m_rotationRoutineContainerFound->second->exists(_name);
+		auto* rotationRoutineFound = m_rotationRoutineContainerFound->second->exists(name);
 		if (rotationRoutineFound != nullptr) {
-			m_rotationRoutineContainerFound->second->deleteRoutine(_name);
+			m_rotationRoutineContainerFound->second->deleteRoutine(name);
 
-			auto routineMappedFound = m_routineRotationMapped.find(_name);
+			auto routineMappedFound = m_routineRotationMapped.find(name);
 			if (routineMappedFound != m_routineRotationMapped.end()) {
 				routineMappedFound->second.erase(std::remove_if(routineMappedFound->second.begin(),
 																routineMappedFound->second.end(),
@@ -840,84 +966,84 @@ void MovementManager::unlinkRotationRoutine(sf::Transformable* transformable, co
 			}
 		}
 		else
-			printDebug("unlinkRotationRoutine: Routine with name " + _name + " not found");
+			printDebug("unlinkRotationRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("unlinkRotationRoutine: Routine for shape not found");
 }
 
-void MovementManager::startRotationRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::startRotationRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto m_rotationRoutineContainerFound = m_routineRotation.find(&transformable);
 	if (m_rotationRoutineContainerFound != m_routineRotation.end()) {
 
-		auto* rotationRoutineFound = m_rotationRoutineContainerFound->second->exists(_name);
+		auto* rotationRoutineFound = m_rotationRoutineContainerFound->second->exists(name);
 		if (rotationRoutineFound != nullptr) {
 
 			if (rotationRoutineFound->start(transformable) && m_routineRotationActive.find(&transformable) == m_routineRotationActive.end()) {
 				auto map_iterator = m_routineRotationActive.insert(std::make_pair(&transformable, rotationRoutineFound)).first;
 
-				auto routineActiveMappedFound = m_routineRotationActiveMapped.find(_name);
+				auto routineActiveMappedFound = m_routineRotationActiveMapped.find(name);
 				if (routineActiveMappedFound != m_routineRotationActiveMapped.end())
 					routineActiveMappedFound->second.emplace_back(map_iterator);
 				else
-					m_routineRotationActiveMapped.insert(std::make_pair(_name, std::vector<std::map<sf::Transformable*, RotationRoutine*>::iterator>{ map_iterator }));
+					m_routineRotationActiveMapped.insert(std::make_pair(name, std::vector<std::map<sf::Transformable*, RotationRoutine*>::iterator>{ map_iterator }));
 			}
 		}
 		else
-			printDebug("startRotationRoutine: Routine with name " + _name + " not found");
+			printDebug("startRotationRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("startRotationRoutine: Routine for shape not found");
 }
 
-void MovementManager::pauseRotationRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::pauseRotationRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto rotationRoutineFound = m_routineRotationActive.find(&transformable);
 	if (rotationRoutineFound != m_routineRotationActive.end()) {
-		if (rotationRoutineFound->second->getName() == _name)
+		if (rotationRoutineFound->second->getName() == name)
 			rotationRoutineFound->second->pause();
 		else
-			printDebug("pauseRotationRoutine: Routine with name " + _name + " not found");
+			printDebug("pauseRotationRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("pauseRotationRoutine: Routine for shape not found");
 }
 
-void MovementManager::resumeRotationRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::resumeRotationRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto rotationRoutineFound = m_routineRotationActive.find(&transformable);
 	if (rotationRoutineFound != m_routineRotationActive.end()) {
-		if (rotationRoutineFound->second->getName() == _name)
+		if (rotationRoutineFound->second->getName() == name)
 			rotationRoutineFound->second->resume();
 		else
-			printDebug("resumeRotationRoutine: Routine with name " + _name + " not found");
+			printDebug("resumeRotationRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("resumeRotationRoutine: Routine for shape not found");
 }
 
-void MovementManager::resetRotationRoutine(sf::Transformable& transformable, const std::string& _name)
+void MovementManager::resetRotationRoutine(sf::Transformable& transformable, const std::string& name)
 {
 	auto rotationRoutineFound = m_routineRotationActive.find(&transformable);
 	if (rotationRoutineFound != m_routineRotationActive.end()) {
-		if (rotationRoutineFound->second->getName() == _name)
+		if (rotationRoutineFound->second->getName() == name)
 			rotationRoutineFound->second->reset(transformable);
 		else
-			printDebug("resetRotationRoutine: Routine with name " + _name + " not found");
+			printDebug("resetRotationRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("resetRotationRoutine: Routine for shape not found");
 }
 
-void MovementManager::stopRotationRoutine(sf::Transformable* transformable, const std::string& _name)
+void MovementManager::stopRotationRoutine(sf::Transformable* transformable, const std::string& name)
 {
 	auto rotationRoutineFound = m_routineRotationActive.find(transformable);
 	if (rotationRoutineFound != m_routineRotationActive.end()) {
-		if (rotationRoutineFound->second->getName() == _name) {
+		if (rotationRoutineFound->second->getName() == name) {
 			rotationRoutineFound->second->stop(transformable);
 			
-			auto rotationRoutineFoundMapped = m_routineRotationActiveMapped.find(_name);
+			auto rotationRoutineFoundMapped = m_routineRotationActiveMapped.find(name);
 			if (rotationRoutineFoundMapped != m_routineRotationActiveMapped.end()) {
 				rotationRoutineFoundMapped->second.erase(std::remove_if(rotationRoutineFoundMapped->second.begin(),
 																		rotationRoutineFoundMapped->second.end(),
@@ -931,7 +1057,7 @@ void MovementManager::stopRotationRoutine(sf::Transformable* transformable, cons
 			m_routineRotationActive.erase(rotationRoutineFound);
 		}
 		else
-			printDebug("stopRotationRoutine: Routine with name " + _name + " not found");
+			printDebug("stopRotationRoutine: Routine with name " + name + " not found");
 	}
 	else
 		printDebug("stopRotationRoutine: Routine for shape not found");
@@ -955,9 +1081,9 @@ void MovementManager::deleteRotationRoutine()
 	m_rotationRoutineContainer->clear();
 }
 
-void MovementManager::deleteRotationRoutine(const std::string& _name)
+void MovementManager::deleteRotationRoutine(const std::string& name)
 {
-	auto routineActiveFound = m_routineRotationActiveMapped.find(_name);
+	auto routineActiveFound = m_routineRotationActiveMapped.find(name);
 	if (routineActiveFound != m_routineRotationActiveMapped.end()) {
 		for (const auto& active_routine : routineActiveFound->second) {
 			active_routine->second->stop(active_routine->first);
@@ -968,10 +1094,10 @@ void MovementManager::deleteRotationRoutine(const std::string& _name)
 		m_routineRotationActiveMapped.erase(routineActiveFound);
 	}
 
-	auto routineFound = m_routineRotationMapped.find(_name);
+	auto routineFound = m_routineRotationMapped.find(name);
 	if (routineFound != m_routineRotationMapped.end()) {
 		for (auto routine : routineFound->second) {
-			routine->second->deleteRoutine(_name);
+			routine->second->deleteRoutine(name);
 
 			if (routine->second->getRoutineCount() == 0) {
 				delete routine->second;
@@ -983,7 +1109,7 @@ void MovementManager::deleteRotationRoutine(const std::string& _name)
 		m_routineRotationMapped.erase(routineFound);
 	}
 
-	m_rotationRoutineContainer->deleteRoutine(_name);
+	m_rotationRoutineContainer->deleteRoutine(name);
 }
 
 const long long int MovementManager::getSizeRotation() const
@@ -1002,5 +1128,5 @@ const long long int MovementManager::getSizeRotation() const
 
 void MovementManager::setDebug(const bool debug)
 {
-	this->debug = debug;
+	this->m_showDebug = debug;
 }

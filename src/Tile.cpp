@@ -2,10 +2,10 @@
 #include "Tile.h"
 
 // Constructors / Destructors
-Tile::Tile(const int type, const sf::Texture* texture, const float* scale, const sf::Vector2f& position) : m_type(type), m_scale(scale)
+Tile::Tile(const int type, const sf::Texture* texture, const float* scale, const sf::Vector2f& position, MovementManager* const movementManagerPtr) :
+	m_type(type), m_scale(scale), m_movementManager(movementManagerPtr)
 {
 	m_movementContainer = MovementContainer::getInstance();
-	m_movementManager = MovementManager::getInstance();
 
 	m_sprite.setTexture(*texture);
 	m_sprite.setOrigin(m_sprite.getGlobalBounds().left + m_sprite.getGlobalBounds().width / 2.f,

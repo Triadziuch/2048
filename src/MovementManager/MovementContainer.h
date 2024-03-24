@@ -3,9 +3,6 @@
 #include "transformationInfo.h"
 #include <map>
 #include <assert.h>
-#include <chrono>
-
-using namespace std::chrono;
 
 class MovementManager;
 class TransformationRoutine;
@@ -83,22 +80,18 @@ public:
 class MovementRoutineEngine : protected MovementContainerBase {
 private:
 	std::map<sf::Transformable*, std::tuple<MovementRoutine*, ScalingRoutine*, RotationRoutine*>*>	m_Routines;
+	bool m_showDebug = false;
 
 	MovementManager* movementManager{};
 
-	// Singleton instance
-	static MovementRoutineEngine* sInstance;
-
-	// Constructors / Destructors
-	MovementRoutineEngine() {};
-
+	void printDebug(const std::string& message) const;
+	
 public:
-	MovementRoutineEngine(const MovementRoutineEngine&) = delete;
-	MovementRoutineEngine& operator=(const MovementRoutineEngine&) = delete;
+	// Constructors / Destructors
+	MovementRoutineEngine(const MovementRoutineEngine& obj);
+	MovementRoutineEngine(MovementManager* movementManager);
 
-	static MovementRoutineEngine* getInstance();
-
-	void setMovementManager(MovementManager* _movementManager);
+	void setMovementManager(MovementManager* movementManager);
 
 	// Update functions
 	void update(float dt);

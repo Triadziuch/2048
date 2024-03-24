@@ -17,7 +17,7 @@ MovementContainer* MovementContainer::getInstance()
 // Update functions
 void MovementContainer::update(float dt)
 {
-	for (auto transforms = this->m_Transforms.begin(); transforms != this->m_Transforms.end();) {
+	for (auto transforms = m_Transforms.begin(); transforms != m_Transforms.end();) {
 		auto& movementRoutine = std::get<0>(*transforms->second);
 		if (movementRoutine != nullptr)
 			if (!movementRoutine->update(*transforms->first, dt)) {
@@ -75,7 +75,7 @@ const movementInfo* MovementContainer::addMovement(sf::Transformable* transforma
 
 void MovementContainer::undoMovement()
 {
-	for (auto transforms = this->m_Transforms.begin(); transforms != this->m_Transforms.end();) {
+	for (auto transforms = m_Transforms.begin(); transforms != m_Transforms.end();) {
 		auto& movement = std::get<0>(*transforms->second);
 		if (movement != nullptr) {
 			movement->undoMovement(*transforms->first);
@@ -102,7 +102,7 @@ void MovementContainer::undoMovement(sf::Transformable* transformable)
 
 void MovementContainer::resetMovement()
 {
-	for (auto transforms = this->m_Transforms.begin(); transforms != this->m_Transforms.end();) {
+	for (auto transforms = m_Transforms.begin(); transforms != m_Transforms.end();) {
 		auto& movement = std::get<0>(*transforms->second);
 		if (movement != nullptr) {
 			transforms->first->setPosition(movement->getStartingPos());
@@ -120,7 +120,7 @@ void MovementContainer::resetMovement(sf::Transformable* transformable)
 
 void MovementContainer::stopMovement()
 {
-	for (auto transforms = this->m_Transforms.begin(); transforms != this->m_Transforms.end();) {
+	for (auto transforms = m_Transforms.begin(); transforms != m_Transforms.end();) {
 		auto& movement = std::get<0>(*transforms->second);
 		if (movement != nullptr) {
 			movement = nullptr;
@@ -129,7 +129,7 @@ void MovementContainer::stopMovement()
 
 		if (std::get<1>(*transforms->second) == nullptr && std::get<2>(*transforms->second) == nullptr) {
 			delete transforms->second;
-			transforms = this->m_Transforms.erase(transforms);
+			transforms = m_Transforms.erase(transforms);
 		}
 		else
 			++transforms;
@@ -177,7 +177,7 @@ const scalingInfo* MovementContainer::addScaling(sf::Transformable* transformabl
 
 void MovementContainer::undoScaling()
 {
-	for (auto transforms = this->m_Transforms.begin(); transforms != this->m_Transforms.end();) {
+	for (auto transforms = m_Transforms.begin(); transforms != m_Transforms.end();) {
 		auto& scaling = std::get<1>(*transforms->second);
 		if (scaling != nullptr) {
 			scaling->undoScaling(*transforms->first);
@@ -204,7 +204,7 @@ void MovementContainer::undoScaling(sf::Transformable* transformable)
 
 void MovementContainer::resetScaling()
 {
-	for (auto transforms = this->m_Transforms.begin(); transforms != this->m_Transforms.end();) {
+	for (auto transforms = m_Transforms.begin(); transforms != m_Transforms.end();) {
 		auto& scaling = std::get<1>(*transforms->second);
 		if (scaling != nullptr) {
 			transforms->first->setScale(scaling->getStartingScale());
@@ -229,7 +229,7 @@ void MovementContainer::resetScaling(sf::Transformable* transformable)
 
 void MovementContainer::stopScaling()
 {
-	for (auto transforms = this->m_Transforms.begin(); transforms != this->m_Transforms.end();) {
+	for (auto transforms = m_Transforms.begin(); transforms != m_Transforms.end();) {
 		auto& scaling = std::get<1>(*transforms->second);
 		if (scaling != nullptr) {
 			scaling = nullptr;
@@ -238,7 +238,7 @@ void MovementContainer::stopScaling()
 
 		if (std::get<0>(*transforms->second) == nullptr && std::get<2>(*transforms->second) == nullptr) {
 			delete transforms->second;
-			transforms = this->m_Transforms.erase(transforms);
+			transforms = m_Transforms.erase(transforms);
 		}
 		else
 			++transforms;
@@ -286,7 +286,7 @@ const rotationInfo* MovementContainer::addRotation(sf::Transformable* transforma
 
 void MovementContainer::undoRotation()
 {
-	for (auto transforms = this->m_Transforms.begin(); transforms != this->m_Transforms.end();) {
+	for (auto transforms = m_Transforms.begin(); transforms != m_Transforms.end();) {
 		auto& rotation = std::get<2>(*transforms->second);
 		if (rotation != nullptr) {
 			rotation->undoRotation(*transforms->first);
@@ -313,7 +313,7 @@ void MovementContainer::undoRotation(sf::Transformable* transformable)
 
 void MovementContainer::resetRotation()
 {
-	for (auto transforms = this->m_Transforms.begin(); transforms != this->m_Transforms.end();) {
+	for (auto transforms = m_Transforms.begin(); transforms != m_Transforms.end();) {
 		auto& rotation = std::get<2>(*transforms->second);
 		if (rotation != nullptr) {
 			transforms->first->setRotation(rotation->getStartingRotation());
@@ -338,7 +338,7 @@ void MovementContainer::resetRotation(sf::Transformable* transformable)
 
 void MovementContainer::stopRotation()
 {
-	for (auto transforms = this->m_Transforms.begin(); transforms != this->m_Transforms.end();) {
+	for (auto transforms = m_Transforms.begin(); transforms != m_Transforms.end();) {
 		auto& rotation = std::get<2>(*transforms->second);
 		if (rotation != nullptr) {
 			rotation = nullptr;
@@ -347,7 +347,7 @@ void MovementContainer::stopRotation()
 
 		if (std::get<0>(*transforms->second) == nullptr && std::get<1>(*transforms->second) == nullptr) {
 			delete transforms->second;
-			transforms = this->m_Transforms.erase(transforms);
+			transforms = m_Transforms.erase(transforms);
 		}
 		else
 			++transforms;
@@ -375,48 +375,49 @@ void MovementContainer::stopRotation(sf::Transformable* transformable)
 
 const bool MovementContainer::isMoving(sf::Transformable* transformable)
 {
-	auto transformsFound = this->m_Transforms.find(transformable);
-	if (transformsFound != this->m_Transforms.end() && std::get<0>(*transformsFound->second))
+	auto transformsFound = m_Transforms.find(transformable);
+	if (transformsFound != m_Transforms.end() && std::get<0>(*transformsFound->second))
 		return true;
 	return false;
 }
 
 const bool MovementContainer::isScaling(sf::Transformable* transformable)
 {
-	auto transformsFound = this->m_Transforms.find(transformable);
-	if (transformsFound != this->m_Transforms.end() && std::get<1>(*transformsFound->second))
+	auto transformsFound = m_Transforms.find(transformable);
+	if (transformsFound != m_Transforms.end() && std::get<1>(*transformsFound->second))
 		return true;
 	return false;
 }
 
 const bool MovementContainer::isRotating(sf::Transformable* transformable)
 {
-	auto transformsFound = this->m_Transforms.find(transformable);
-	if (transformsFound != this->m_Transforms.end() && std::get<2>(*transformsFound->second))
+	auto transformsFound = m_Transforms.find(transformable);
+	if (transformsFound != m_Transforms.end() && std::get<2>(*transformsFound->second))
 		return true;
 	return false;
 }
 // ---------------------------------------------------------------------------------------------------------------------------
 
-// Singleton initialization
-MovementRoutineEngine* MovementRoutineEngine::sInstance = nullptr;
-
-MovementRoutineEngine* MovementRoutineEngine::getInstance()
+inline void MovementRoutineEngine::printDebug(const std::string& message) const
 {
-	if (!sInstance)
-		sInstance = new MovementRoutineEngine();
-	return sInstance;
+	if (m_showDebug)
+		printf("MovementManager: %s\n", message.c_str());
 }
 
-void MovementRoutineEngine::setMovementManager(MovementManager* _movementManager)
+// Constructors / Destructors
+MovementRoutineEngine::MovementRoutineEngine(const MovementRoutineEngine& obj) : movementManager(obj.movementManager), m_Routines(obj.m_Routines) {}
+
+MovementRoutineEngine::MovementRoutineEngine(MovementManager* movementManager) : movementManager(movementManager) {}
+
+void MovementRoutineEngine::setMovementManager(MovementManager* movementManager)
 {
-	this->movementManager = _movementManager;
+	movementManager = movementManager;
 }
 
 void MovementRoutineEngine::update(float dt)
 {
 	int it = 0;
-	for (auto routines = this->m_Routines.begin(); routines != this->m_Routines.end();) {
+	for (auto routines = m_Routines.begin(); routines != m_Routines.end();) {
 		++it;
 		auto& movementRoutine = std::get<0>(*routines->second);
 		if (movementRoutine != nullptr) 
@@ -445,7 +446,7 @@ void MovementRoutineEngine::update(float dt)
 
 const MovementRoutine* MovementRoutineEngine::addMovement(sf::Transformable* transformable, MovementRoutine* routine)
 {
-	auto& routinesMap = sInstance->m_Routines;
+	auto& routinesMap = m_Routines;
 	auto routinesFound = routinesMap.find(transformable);
 
 	if (routinesFound != routinesMap.end() && std::get<0>(*routinesFound->second) != nullptr) {
@@ -474,7 +475,7 @@ void MovementRoutineEngine::undoMovement(sf::Transformable* transformable)
 
 void MovementRoutineEngine::resetMovement()
 {
-	for (auto routines = this->m_Routines.begin(); routines != this->m_Routines.end();) {
+	for (auto routines = m_Routines.begin(); routines != m_Routines.end();) {
 		auto& routinesTuple = routines->second;
 		auto& movement = std::get<0>(*routinesTuple);
 
@@ -487,13 +488,13 @@ void MovementRoutineEngine::resetMovement()
 
 void MovementRoutineEngine::stopMovement()
 {
-	for (auto routines = this->m_Routines.begin(); routines != this->m_Routines.end();) {
+	for (auto routines = m_Routines.begin(); routines != m_Routines.end();) {
 		auto& routinesTuple = routines->second;
 		std::get<0>(*routinesTuple) = nullptr;
 
 		if (std::get<1>(*routinesTuple) == nullptr && std::get<2>(*routinesTuple) == nullptr) {
 			delete routines->second;
-			routines = this->m_Routines.erase(routines);
+			routines = m_Routines.erase(routines);
 		}
 		else
 			++routines;
@@ -502,7 +503,7 @@ void MovementRoutineEngine::stopMovement()
 
 void MovementRoutineEngine::stopMovement(sf::Transformable* transformable)
 {
-	auto& routinesMap = sInstance->m_Routines;
+	auto& routinesMap = m_Routines;
 	auto routinesFound = routinesMap.find(transformable);
 
 	if (routinesFound != routinesMap.end()) {
@@ -518,7 +519,7 @@ void MovementRoutineEngine::stopMovement(sf::Transformable* transformable)
 
 const ScalingRoutine* MovementRoutineEngine::addScaling(sf::Transformable* transformable, ScalingRoutine* routine)
 {
-	auto& routinesMap = sInstance->m_Routines;
+	auto& routinesMap = m_Routines;
 	auto routinesFound = routinesMap.find(transformable);
 
 	if (routinesFound != routinesMap.end() && std::get<1>(*routinesFound->second) != nullptr) {
@@ -547,7 +548,7 @@ void MovementRoutineEngine::undoScaling(sf::Transformable* transformable)
 
 void MovementRoutineEngine::resetScaling()
 {
-	for (auto routines = this->m_Routines.begin(); routines != this->m_Routines.end();) {
+	for (auto routines = m_Routines.begin(); routines != m_Routines.end();) {
 		auto& routinesTuple = routines->second;
 		auto& scaling = std::get<1>(*routinesTuple);
 
@@ -560,13 +561,13 @@ void MovementRoutineEngine::resetScaling()
 
 void MovementRoutineEngine::stopScaling()
 {
-	for (auto routines = this->m_Routines.begin(); routines != this->m_Routines.end();) {
+	for (auto routines = m_Routines.begin(); routines != m_Routines.end();) {
 		auto& routinesTuple = routines->second;
 		std::get<1>(*routinesTuple) = nullptr;
 
 		if (std::get<0>(*routinesTuple) == nullptr && std::get<2>(*routinesTuple) == nullptr) {
 			delete routines->second;
-			routines = this->m_Routines.erase(routines);
+			routines = m_Routines.erase(routines);
 		}
 		else
 			++routines;
@@ -575,7 +576,7 @@ void MovementRoutineEngine::stopScaling()
 
 void MovementRoutineEngine::stopScaling(sf::Transformable* transformable)
 {
-	auto& routinesMap = sInstance->m_Routines;
+	auto& routinesMap = m_Routines;
 	auto routinesFound = routinesMap.find(transformable);
 
 	if (routinesFound != routinesMap.end()) {
@@ -591,7 +592,7 @@ void MovementRoutineEngine::stopScaling(sf::Transformable* transformable)
 
 const RotationRoutine* MovementRoutineEngine::addRotation(sf::Transformable* transformable, RotationRoutine* routine)
 {
-	auto& routinesMap = sInstance->m_Routines;
+	auto& routinesMap = m_Routines;
 	auto routinesFound = routinesMap.find(transformable);
 
 	if (routinesFound != routinesMap.end() && std::get<2>(*routinesFound->second) != nullptr) {
@@ -620,7 +621,7 @@ void MovementRoutineEngine::undoRotation(sf::Transformable* transformable)
 
 void MovementRoutineEngine::resetRotation()
 {
-	for (auto routines = this->m_Routines.begin(); routines != this->m_Routines.end();) {
+	for (auto routines = m_Routines.begin(); routines != m_Routines.end();) {
 		auto& routinesTuple = routines->second;
 		auto& rotation = std::get<2>(*routinesTuple);
 
@@ -633,20 +634,20 @@ void MovementRoutineEngine::resetRotation()
 
 void MovementRoutineEngine::stopRotation()
 {
-	for (auto routines = this->m_Routines.begin(); routines != this->m_Routines.end();) {
+	for (auto routines = m_Routines.begin(); routines != m_Routines.end();) {
 		auto& routinesTuple = routines->second;
 		std::get<2>(*routinesTuple) = nullptr;
 
 		if (std::get<0>(*routinesTuple) == nullptr && std::get<1>(*routinesTuple) == nullptr) {
 			delete routines->second;
-			routines = this->m_Routines.erase(routines);
+			routines = m_Routines.erase(routines);
 		}
 	}
 }
 
 void MovementRoutineEngine::stopRotation(sf::Transformable* transformable)
 {
-	auto& routinesMap = sInstance->m_Routines;
+	auto& routinesMap = m_Routines;
 	auto routinesFound = routinesMap.find(transformable);
 
 	if (routinesFound != routinesMap.end()) {

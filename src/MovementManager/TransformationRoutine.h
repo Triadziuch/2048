@@ -23,7 +23,7 @@ public:
 	bool				   m_pauseAfterChangingMovements{};
 
 	// Constructors / Destructors
-	TransformationRoutine();
+	TransformationRoutine() = delete;
 	TransformationRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr);
 	TransformationRoutine(const TransformationRoutine& obj);
 	~TransformationRoutine();
@@ -67,7 +67,7 @@ private:
 
 public:
 	// Constructors / Destructors
-	MovementRoutine();
+	MovementRoutine() = delete;
 	MovementRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr);
 	MovementRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr, movementInfo* movement);
 	MovementRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr, std::vector<movementInfo*> movements);
@@ -110,7 +110,7 @@ private:
 
 public:
 	// Constructors / Destructors
-	ScalingRoutine();
+	ScalingRoutine() = delete;
 	ScalingRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr);
 	ScalingRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr, scalingInfo* scaling);
 	ScalingRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr, std::vector<scalingInfo*> scalings);
@@ -152,7 +152,7 @@ private:
 
 public:
 	// Constructors / Destructors
-	RotationRoutine();
+	RotationRoutine() = delete;
 	RotationRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr);
 	RotationRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr, rotationInfo* rotation);
 	RotationRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr, std::vector<rotationInfo*> rotations);

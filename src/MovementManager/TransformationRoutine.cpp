@@ -5,20 +5,6 @@
 // - - - - - - - - - - - - - - - - - - - - TransformationRoutine - - - - - - - - - - - - - - - - - - - - \\
 
 // Constructors / Destructors
-TransformationRoutine::TransformationRoutine() :
-	m_movementRoutineEngine{ nullptr },
-	m_routineName{},
-	m_current{},
-	m_count{},
-	m_isActive{},
-	m_isLooping{},
-	m_isPaused{},
-	m_adjustStartToCurrentTransform{},
-	m_adjustAllToCurrentTransform{},
-	m_pauseAtStart{},
-	m_pauseAfterChangingMovements{}
-{}
-
 TransformationRoutine::TransformationRoutine(const std::string& name, MovementRoutineEngine* movementRoutineEnginePtr) :
 	m_movementRoutineEngine{ movementRoutineEnginePtr },
 	m_routineName{ name },
@@ -172,11 +158,6 @@ void MovementRoutine::adjustAllToCurrent(const sf::Vector2f& currentPosition)
 }
 
 // Constructors / Destructors
-MovementRoutine::MovementRoutine() :
-	TransformationRoutine{},
-	m_routineMovements{}
-{}
-
 MovementRoutine::MovementRoutine(const std::string& name, MovementRoutineEngine* const movementRoutineEnginePtr) :
 	TransformationRoutine{ name, movementRoutineEnginePtr }
 {}
@@ -357,11 +338,6 @@ void ScalingRoutine::adjustAllToCurrent(const sf::Vector2f& currentScale)
 }
 
 // Constructors / Destructors
-ScalingRoutine::ScalingRoutine() :
-	TransformationRoutine{},
-	m_routineScalings{}
-{}
-
 ScalingRoutine::ScalingRoutine(const std::string& name, MovementRoutineEngine* const movementRoutineEnginePtr) :
 	TransformationRoutine{ name, movementRoutineEnginePtr }
 {}
@@ -578,11 +554,6 @@ void RotationRoutine::adjustAllToCurrent(const float currentRotation)
 }
 
 // Constructors / Destructors
-RotationRoutine::RotationRoutine() :
-	TransformationRoutine{},
-	m_routineRotations{}
-{}
-
 RotationRoutine::RotationRoutine(const std::string& name, MovementRoutineEngine* const movementRoutineEnginePtr) :
 	TransformationRoutine{ name, movementRoutineEnginePtr }
 {}

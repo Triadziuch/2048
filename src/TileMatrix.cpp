@@ -357,7 +357,7 @@ void TileMatrix::endMove()
 				m_matrix[old_pos.x][old_pos.y] = nullptr;
 
 				m_tilesToMerge.push_back(m_matrix[new_pos.x][new_pos.y]);
-				m_matrix[new_pos.x][new_pos.y] = new Tile(m_tilesToMerge.back()->getType() * 2, m_textures[findID(m_tilesToMerge.back()->getType() * 2)], m_scale, calculateTilePos(new_pos));
+				m_matrix[new_pos.x][new_pos.y] = new Tile(m_tilesToMerge.back()->getType() * 2, m_textures[findID(m_tilesToMerge.back()->getType() * 2)], m_scale, calculateTilePos(new_pos), m_movementManager);
 				m_matrix[new_pos.x][new_pos.y]->startMerging();
 				--m_tiles;
 
@@ -401,7 +401,7 @@ void TileMatrix::endMerge()
 TileMatrix::TileMatrix(const float* scale, const float* outer, const float* inner, const float* tileWidth, const sf::Vector2f& playgroundPos) :
 	m_scale{ scale }, m_outerEdgeWidth{ outer }, m_innerEdgeWidth{ inner }, m_tileWidth{ tileWidth }, m_playgroundPosition{ playgroundPos }
 {
-	m_movementManager = MovementManager::getInstance();
+	m_movementManager = new MovementManager();
 	m_movementContainer = MovementContainer::getInstance();
 
 	auto routine = m_movementManager->createScalingRoutine("TILE_SPAWNING");
@@ -474,7 +474,7 @@ void TileMatrix::addTile(const sf::Vector2i& pos, const int type)
 	if (pos.x > m_matrixWidth - 1 || pos.y > m_matrixHeight - 1)
 		printf("TileMatrix::addTile ERROR: Tile spawning position out of bounds\n");
 	else {
-		m_matrix[pos.x][pos.y] = new Tile(type, m_textures[findID(type)], m_scale, calculateTilePos(pos));
+		m_matrix[pos.x][pos.y] = new Tile(type, m_textures[findID(type)], m_scale, calculateTilePos(pos), m_movementManager);
 		m_matrix[pos.x][pos.y]->startSpawning();
 		++m_tiles;
 

@@ -5,10 +5,10 @@
 
 class MovementManager {
 private:
-	// Singleton instance
-	static MovementManager* sInstance;
-
-	bool debug = false;
+	// Movement container
+	MovementRoutineEngine* movementRoutineEngine;
+	
+	bool m_showDebug = false;
 
 	std::map<sf::Transformable*, MovementRoutine*> m_routineMovementActive;
 	std::unordered_map<std::string, std::vector<std::map<sf::Transformable*, MovementRoutine*>::iterator> > m_routineMovementActiveMapped;
@@ -31,25 +31,19 @@ private:
 	std::unordered_map<std::string, std::vector<std::map<sf::Transformable*, RotationRoutineContainer*>::iterator> > m_routineRotationMapped;
 	RotationRoutineContainer* m_rotationRoutineContainer;
 
-	// Constructors / Destructors
-	MovementManager();
-	~MovementManager();
-
 	inline void printDebug(const std::string& message) const;
 
 public:
-	MovementManager(const MovementManager&) = delete;
-	MovementManager& operator=(const MovementManager&) = delete;
-
-	static MovementManager* getInstance();
-
-	// Movement container
-	MovementRoutineEngine* movementRoutineEngine;
+	MovementManager();
+	MovementManager(const MovementManager& obj);
+	~MovementManager();
 
 	// Update functions
 	void update(const float dt);
 
 	// Universal public functions
+	void setFunction(easeFunctions::Tmovement_function usedFunctionType);
+	void setFunction(std::string& name, easeFunctions::Tmovement_function usedFunctionType);
 	void setFunction(sf::Transformable& transformable, easeFunctions::Tmovement_function usedFunctionType);
 
 	void setDelayBefore(const float delay, const bool reset = false);
@@ -64,65 +58,66 @@ public:
 	void setDelayAfter(std::string& name, const float delay, const bool reset = false);
 	void setDelayAfter(sf::Transformable& transformable, const float delay, const bool reset = false);
 
+	void resetRoutines();
 	void resetRoutines(sf::Transformable& transformable);
 
 	// === Movement ===
-	MovementRoutine* createMovementRoutine(const std::string& _name);
+	MovementRoutine* createMovementRoutine(const std::string& name);
 
-	MovementRoutine* getMovementRoutine(const std::string& _name);
-	MovementRoutine* getMovementRoutine(sf::Transformable& transformable, const std::string& _name);
+	MovementRoutine* getMovementRoutine(const std::string& name);
+	MovementRoutine* getMovementRoutine(sf::Transformable& transformable, const std::string& name);
 
-	MovementRoutine* linkMovementRoutine(sf::Transformable& transformable, const std::string& _name);
-	void unlinkMovementRoutine(sf::Transformable* transformable, const std::string& _name);
+	MovementRoutine* linkMovementRoutine(sf::Transformable& transformable, const std::string& name);
+	void unlinkMovementRoutine(sf::Transformable* transformable, const std::string& name);
 
-	void startMovementRoutine(sf::Transformable& transformable, const std::string& _name);
-	void pauseMovementRoutine(sf::Transformable& transformable, const std::string& _name);
-	void resumeMovementRoutine(sf::Transformable& transformable, const std::string& _name);
-	void resetMovementRoutine(sf::Transformable& transformable, const std::string& _name);
-	void stopMovementRoutine(sf::Transformable* transformable, const std::string& _name);
+	void startMovementRoutine(sf::Transformable& transformable, const std::string& name);
+	void pauseMovementRoutine(sf::Transformable& transformable, const std::string& name);
+	void resumeMovementRoutine(sf::Transformable& transformable, const std::string& name);
+	void resetMovementRoutine(sf::Transformable& transformable, const std::string& name);
+	void stopMovementRoutine(sf::Transformable* transformable, const std::string& name);
 
 	void deleteMovementRoutine();
-	void deleteMovementRoutine(const std::string& _name);
+	void deleteMovementRoutine(const std::string& name);
 
 	const long long int getSizeMovement() const;
 
 	// === Scaling ===
-	ScalingRoutine* createScalingRoutine(const std::string& _name);
+	ScalingRoutine* createScalingRoutine(const std::string& name);
 
-	ScalingRoutine* getScalingRoutine(const std::string& _name);
-	ScalingRoutine* getScalingRoutine(sf::Transformable& transformable, const std::string& _name);
+	ScalingRoutine* getScalingRoutine(const std::string& name);
+	ScalingRoutine* getScalingRoutine(sf::Transformable& transformable, const std::string& name);
 
-	ScalingRoutine* linkScalingRoutine(sf::Transformable& transformable, const std::string& _name);
-	void unlinkScalingRoutine(sf::Transformable* transformable, const std::string& _name);
+	ScalingRoutine* linkScalingRoutine(sf::Transformable& transformable, const std::string& name);
+	void unlinkScalingRoutine(sf::Transformable* transformable, const std::string& name);
 
-	void startScalingRoutine(sf::Transformable& transformable, const std::string& _name);
-	void pauseScalingRoutine(sf::Transformable& transformable, const std::string& _name);
-	void resumeScalingRoutine(sf::Transformable& transformable, const std::string& _name);
-	void resetScalingRoutine(sf::Transformable& transformable, const std::string& _name);
-	void stopScalingRoutine(sf::Transformable* transformable, const std::string& _name);
+	void startScalingRoutine(sf::Transformable& transformable, const std::string& name);
+	void pauseScalingRoutine(sf::Transformable& transformable, const std::string& name);
+	void resumeScalingRoutine(sf::Transformable& transformable, const std::string& name);
+	void resetScalingRoutine(sf::Transformable& transformable, const std::string& name);
+	void stopScalingRoutine(sf::Transformable* transformable, const std::string& name);
 
 	void deleteScalingRoutine();
-	void deleteScalingRoutine(const std::string& _name);
+	void deleteScalingRoutine(const std::string& name);
 
 	const long long int getSizeScaling() const;
 
 	// === Rotation ===
-	RotationRoutine* createRotationRoutine(const std::string& _name);
+	RotationRoutine* createRotationRoutine(const std::string& name);
 
-	RotationRoutine* getRotationRoutine(const std::string& _name);
-	RotationRoutine* getRotationRoutine(sf::Transformable& transformable, const std::string& _name);
+	RotationRoutine* getRotationRoutine(const std::string& name);
+	RotationRoutine* getRotationRoutine(sf::Transformable& transformable, const std::string& name);
 
-	RotationRoutine* linkRotationRoutine(sf::Transformable& transformable, const std::string& _name);
-	void unlinkRotationRoutine(sf::Transformable* transformable, const std::string& _name);
+	RotationRoutine* linkRotationRoutine(sf::Transformable& transformable, const std::string& name);
+	void unlinkRotationRoutine(sf::Transformable* transformable, const std::string& name);
 
-	void startRotationRoutine(sf::Transformable& transformable, const std::string& _name);
-	void pauseRotationRoutine(sf::Transformable& transformable, const std::string& _name);
-	void resumeRotationRoutine(sf::Transformable& transformable, const std::string& _name);
-	void resetRotationRoutine(sf::Transformable& transformable, const std::string& _name);
-	void stopRotationRoutine(sf::Transformable* transformable, const std::string& _name);
+	void startRotationRoutine(sf::Transformable& transformable, const std::string& name);
+	void pauseRotationRoutine(sf::Transformable& transformable, const std::string& name);
+	void resumeRotationRoutine(sf::Transformable& transformable, const std::string& name);
+	void resetRotationRoutine(sf::Transformable& transformable, const std::string& name);
+	void stopRotationRoutine(sf::Transformable* transformable, const std::string& name);
 
 	void deleteRotationRoutine();
-	void deleteRotationRoutine(const std::string& _name);
+	void deleteRotationRoutine(const std::string& name);
 
 	const long long int getSizeRotation() const;
 
