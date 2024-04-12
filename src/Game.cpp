@@ -81,7 +81,7 @@ void Game::updatePollEvents()
 
 	if (window->pollEvent(ev)) {
 
-		if ((ev.Event::type == sf::Event::Closed) || (ev.Event::KeyPressed && ev.Event::key.code == sf::Keyboard::Escape)) 
+		if (ev.type == sf::Event::Closed || (ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Escape))
 			window->close();
 				
 		if (!isEnd) {
