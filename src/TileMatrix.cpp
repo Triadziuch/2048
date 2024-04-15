@@ -3,8 +3,8 @@
 
 void TileMatrix::initTextures()
 {
-	for (int i = 1, k = 0; i < 13; i++, ++k)
-		m_textures[k] = &AssetManager::GetTexture("bin/Textures/" + std::to_string(static_cast<int>(pow(2.f, static_cast<double>(i)))) + ".png");
+	for (int i = 1, k = 0; i < 15; i++, ++k)
+		m_textures[k] = &AssetManager::GetTexture("assets/Textures/" + std::to_string(static_cast<int>(pow(2.f, static_cast<double>(i)))) + ".png");
 }
 
 int TileMatrix::findID(int type) const

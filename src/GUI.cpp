@@ -99,9 +99,9 @@ GUI::~GUI()
 
 void GUI::initText()
 {
-	m_font = &AssetManager::GetFont("bin/Fonts/ClearSans-Bold.ttf");
+	m_font = &AssetManager::GetFont("assets/Fonts/ClearSans-Bold.ttf");
 	if (!m_font)
-		printf("Couldn't load m_font: bin/Fonts/ClearSans-Bold.ttf\n");
+		printf("Couldn't load m_font: assets/Fonts/ClearSans-Bold.ttf\n");
 
 	m_newGameText.setFont(*m_font);
 	m_bestScoreHeaderText.setFont(*m_font);
@@ -161,13 +161,13 @@ void GUI::initText()
 
 void GUI::initSprites()
 {
-	m_newGameTexture = &AssetManager::GetTexture("bin/Textures/button_newgame.png");
+	m_newGameTexture = &AssetManager::GetTexture("assets/Textures/button_newgame.png");
 	if (!m_newGameTexture)
-		printf("Couldn't load texture: bin//Textures/button_newgame.png\n");
+		printf("Couldn't load texture: assets//Textures/button_newgame.png\n");
 
-	m_scoreTexture = &AssetManager::GetTexture("bin/Textures/button_score.png");
+	m_scoreTexture = &AssetManager::GetTexture("assets/Textures/button_score.png");
 	if (!m_scoreTexture)
-		printf("Couldn't load texture: bin//Textures/button_score.png\n");
+		printf("Couldn't load texture: assets//Textures/button_score.png\n");
 
 	m_newGameButtonSprite.setTexture(*m_newGameTexture);
 	m_bestScoreButtonSprite.setTexture(*m_scoreTexture);
