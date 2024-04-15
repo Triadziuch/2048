@@ -17,11 +17,11 @@ struct MoveInstructions {
 class TileMatrix {
 private:
 	// Private variables
-	constexpr static int m_matrixWidth = 4, m_matrixHeight = 4, m_maxTiles = m_matrixWidth * m_matrixHeight, m_maxType = 4096;
+	constexpr static int m_matrixWidth = 4, m_matrixHeight = 4, m_maxTiles = m_matrixWidth * m_matrixHeight, m_maxType = 16384;
 	const float* m_scale{}, * m_outerEdgeWidth{}, * m_innerEdgeWidth{}, * m_tileWidth{};
 
 	Tile* m_matrix[4][4]{ {} };
-	sf::Texture* m_textures[12]{};
+	sf::Texture* m_textures[14]{};
 	sf::Vector2f m_playgroundPosition{};
 
 	const float m_timeSpawningMax = 0.2f;

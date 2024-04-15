@@ -19,7 +19,7 @@ private:
 
 	const std::string m_newGameString{ "New Game" }, m_bestScoreString{ "BEST" }, m_scoreString{ "SCORE" },
 					  m_titleString{ "2048" }, m_gameOverString{ "Game over!" };
-	const std::string m_bestScoreFilename{ "bin/best_score.txt" };
+	const std::string m_bestScoreFilename{ "assets/best_score.txt" };
 
 	sf::Font *m_font;
 	sf::Text m_newGameText, m_bestScoreHeaderText, m_scoreHeaderText,
