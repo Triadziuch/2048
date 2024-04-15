@@ -57,7 +57,6 @@
     <ClInclude Include="src\MovementManager\VertexArray2.h">
       <Filter>Pliki nagłówków\MovementManager</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -105,12 +104,5 @@
     <ClCompile Include="src\MovementManager\VertexArray2.cpp">
       <Filter>Pliki źródłowe\MovementManager</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="2048.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="Textures\2048.bmp" />
-    <Image Include="Textures\icon.ico" />
   </ItemGroup>
 </Project>
