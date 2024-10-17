@@ -20,8 +20,19 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\AssetManager.h" />
+    <ClInclude Include="src\controller\ControllerFactory.h" />
+    <ClInclude Include="src\controller\ControllerHandler.h" />
+    <ClInclude Include="src\controller\IBaseController.h" />
+    <ClInclude Include="src\controller\IControllerFactory.h" />
+    <ClInclude Include="src\controller\GameController.h" />
+    <ClInclude Include="src\DataHandler.hpp" />
+    <ClInclude Include="src\event\EventObserver.h" />
+    <ClInclude Include="src\event\IEventObserver.h" />
     <ClInclude Include="src\Game.h" />
     <ClInclude Include="src\GUI.h" />
+    <ClInclude Include="src\model\BaseModel.h" />
+    <ClInclude Include="src\model\ModelHandler.h" />
+    <ClInclude Include="src\model\GameModel.h" />
     <ClInclude Include="src\MovementManager\easeFunctions.h" />
     <ClInclude Include="src\MovementManager\MovementContainer.h" />
     <ClInclude Include="src\MovementManager\MovementManager.h" />
@@ -29,16 +40,27 @@
     <ClInclude Include="src\MovementManager\transformationInfo.h" />
     <ClInclude Include="src\MovementManager\TransformationRoutine.h" />
     <ClInclude Include="src\MovementManager\VertexArray2.h" />
+    <ClInclude Include="src\pattern\Observator.hpp" />
     <ClInclude Include="src\Playground.h" />
     <ClInclude Include="src\StandardCursor.h" />
     <ClInclude Include="src\Tile.h" />
     <ClInclude Include="src\TileMatrix.h" />
+    <ClInclude Include="src\view\BaseView.h" />
+    <ClInclude Include="src\view\GameView.h" />
+    <ClInclude Include="src\view\GameViewTwo.h" />
+    <ClInclude Include="src\view\ViewHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp" />
+    <ClCompile Include="src\controller\ControllerHandler.cpp" />
+    <ClCompile Include="src\controller\GameController.cpp" />
+    <ClCompile Include="src\event\EventObserver.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\model\BaseModel.cpp" />
+    <ClCompile Include="src\model\ModelHandler.cpp" />
+    <ClCompile Include="src\model\GameModel.cpp" />
     <ClCompile Include="src\MovementManager\easeFunctions.cpp" />
     <ClCompile Include="src\MovementManager\MovementContainer.cpp" />
     <ClCompile Include="src\MovementManager\MovementManager.cpp" />
@@ -50,6 +72,10 @@
     <ClCompile Include="src\StandardCursor.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\TileMatrix.cpp" />
+    <ClCompile Include="src\view\BaseView.cpp" />
+    <ClCompile Include="src\view\GameView.cpp" />
+    <ClCompile Include="src\view\GameViewTwo.cpp" />
+    <ClCompile Include="src\view\ViewHandler.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

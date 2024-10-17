@@ -13,6 +13,21 @@
     <Filter Include="Pliki źródłowe\MovementManager">
       <UniqueIdentifier>{1cc876b3-1d9e-4613-8b26-8a786c6cd0ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{95be4986-3711-463f-a181-4301a657b8a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Event">
+      <UniqueIdentifier>{46f428e7-b61e-472f-a23d-2633ef80d0b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View">
+      <UniqueIdentifier>{be673d0d-4d50-4ae4-879c-36186f03826c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{56c152fd-6d81-4d30-8a27-521847c5b1a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pattern">
+      <UniqueIdentifier>{17d1e7ae-4fdb-4404-bb2d-68dd596e9347}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -56,6 +71,54 @@
     </ClInclude>
     <ClInclude Include="src\MovementManager\VertexArray2.h">
       <Filter>Pliki nagłówków\MovementManager</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controller\ControllerFactory.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controller\ControllerHandler.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controller\IBaseController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controller\IControllerFactory.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="src\controller\GameController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="src\event\EventObserver.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\event\IEventObserver.h">
+      <Filter>Event</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\ModelHandler.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\GameModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model\BaseModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\GameViewTwo.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\ViewHandler.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\BaseView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\GameView.h">
+      <Filter>View</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DataHandler.hpp">
+      <Filter>Pliki nagłówków</Filter>
+    </ClInclude>
+    <ClInclude Include="src\pattern\Observator.hpp">
+      <Filter>Pattern</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -103,6 +166,36 @@
     </ClCompile>
     <ClCompile Include="src\MovementManager\VertexArray2.cpp">
       <Filter>Pliki źródłowe\MovementManager</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controller\ControllerHandler.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controller\GameController.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\event\EventObserver.cpp">
+      <Filter>Event</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\GameModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\BaseModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model\ModelHandler.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\GameViewTwo.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\ViewHandler.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\BaseView.cpp">
+      <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\GameView.cpp">
+      <Filter>View</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
