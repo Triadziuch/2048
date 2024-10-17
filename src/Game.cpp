@@ -9,6 +9,7 @@ void Game::initWindow()
 	sf::Image icon;
 	icon.loadFromFile("assets/Textures/appicon.png");
 	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+
 	//window->setFramerateLimit(FRAMERATE);
 	//window->setVerticalSyncEnabled(VERTICAL_SYNC);
 }
