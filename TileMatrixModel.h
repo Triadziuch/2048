@@ -4,6 +4,7 @@
 #include "TileModel.h"
 #include "src/AssetManager.h"
 #include "src/event/EventObserver.h"
+#include "src/model/BaseModel.h"
 
 struct MoveInstructions {
 	sf::Vector2i m_newPos, m_oldPos;
@@ -15,7 +16,7 @@ struct MoveInstructions {
 	const sf::Vector2i& getOldPos() const { return m_oldPos; }
 };
 
-class TileMatrixModel : public EventObserver {
+class TileMatrixModel : public BaseModel {
 private:
 	// Private variables
 	constexpr static int m_matrixWidth = 4, m_matrixHeight = 4, m_maxTiles = m_matrixWidth * m_matrixHeight, m_maxType = 16384;

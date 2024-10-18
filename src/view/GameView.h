@@ -4,6 +4,7 @@
 #include "BaseView.h"
 #include "../AssetManager.h"
 #include "../TileMatrix.h"
+#include "../GUI.h"
 
 class StudentForm {
 public:

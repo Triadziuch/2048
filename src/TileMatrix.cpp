@@ -33,10 +33,10 @@ int TileMatrix::mergeLeft(const sf::Vector2i& pos)
 	if (tile.getType() == m_maxType) return -1;
 
 	// Merge if both are moving
-	if (m_moveInstructions.size() != 0) {
-		Tile& neighbourMovingTile = *m_matrix[m_moveInstructions.back()->getOldPos().x][m_moveInstructions.back()->getOldPos().y];
+	if (m_MoveInstructions1.size() != 0) {
+		Tile& neighbourMovingTile = *m_matrix[m_MoveInstructions1.back()->getOldPos().x][m_MoveInstructions1.back()->getOldPos().y];
 
-		if (m_moveInstructions.back()->getOldPos().y == pos.y &&
+		if (m_MoveInstructions1.back()->getOldPos().y == pos.y &&
 			neighbourMovingTile.getType() == tile.getType() &&
 			neighbourMovingTile.getMerging() == false &&
 			tile.getMerging() == false) {
@@ -46,7 +46,7 @@ int TileMatrix::mergeLeft(const sf::Vector2i& pos)
 			m_mergedTiles = true;
 			neighbourMovingTile.setIsMerging(true);
 			tile.setIsMerging(true);
-			return m_moveInstructions.back()->getNewPos().x;
+			return m_MoveInstructions1.back()->getNewPos().x;
 		}
 	}
 
@@ -75,10 +75,10 @@ int TileMatrix::mergeRight(const sf::Vector2i& pos)
 	if (tile.getType() == m_maxType) return -1;
 
 	// Merge if both are moving
-	if (m_moveInstructions.size() != 0) {
-		Tile& neighbourMovingTile = *m_matrix[m_moveInstructions.back()->getOldPos().x][m_moveInstructions.back()->getOldPos().y];
+	if (m_MoveInstructions1.size() != 0) {
+		Tile& neighbourMovingTile = *m_matrix[m_MoveInstructions1.back()->getOldPos().x][m_MoveInstructions1.back()->getOldPos().y];
 
-		if (m_moveInstructions.back()->getOldPos().y == pos.y &&
+		if (m_MoveInstructions1.back()->getOldPos().y == pos.y &&
 			neighbourMovingTile.getType() == tile.getType() &&
 			neighbourMovingTile.getMerging() == false &&
 			tile.getMerging() == false) {
@@ -88,7 +88,7 @@ int TileMatrix::mergeRight(const sf::Vector2i& pos)
 			m_mergedTiles = true;
 			neighbourMovingTile.setIsMerging(true);
 			tile.setIsMerging(true);
-			return m_moveInstructions.back()->getNewPos().x;
+			return m_MoveInstructions1.back()->getNewPos().x;
 		}
 	}
 
@@ -117,10 +117,10 @@ int TileMatrix::mergeUp(const sf::Vector2i& pos)
 	if (tile.getType() == m_maxType) return -1;
 
 	// Merge if both are moving
-	if (m_moveInstructions.size() != 0) {
-		Tile& neighbourMovingTile = *m_matrix[m_moveInstructions.back()->getOldPos().x][m_moveInstructions.back()->getOldPos().y];
+	if (m_MoveInstructions1.size() != 0) {
+		Tile& neighbourMovingTile = *m_matrix[m_MoveInstructions1.back()->getOldPos().x][m_MoveInstructions1.back()->getOldPos().y];
 
-		if (m_moveInstructions.back()->getOldPos().x == pos.x &&
+		if (m_MoveInstructions1.back()->getOldPos().x == pos.x &&
 			neighbourMovingTile.getType() == tile.getType() &&
 			neighbourMovingTile.getMerging() == false &&
 			tile.getMerging() == false) {
@@ -129,7 +129,7 @@ int TileMatrix::mergeUp(const sf::Vector2i& pos)
 			m_mergedTiles = true;
 			neighbourMovingTile.setIsMerging(true);
 			tile.setIsMerging(true);
-			return m_moveInstructions.back()->getNewPos().y;
+			return m_MoveInstructions1.back()->getNewPos().y;
 		}
 	}
 
@@ -158,10 +158,10 @@ int TileMatrix::mergeDown(const sf::Vector2i& pos)
 	if (tile.getType() == m_maxType) return -1;
 
 	// Merge if both are moving
-	if (m_moveInstructions.size() != 0) {
-		Tile& neighbourMovingTile = *m_matrix[m_moveInstructions.back()->getOldPos().x][m_moveInstructions.back()->getOldPos().y];
+	if (m_MoveInstructions1.size() != 0) {
+		Tile& neighbourMovingTile = *m_matrix[m_MoveInstructions1.back()->getOldPos().x][m_MoveInstructions1.back()->getOldPos().y];
 
-		if (m_moveInstructions.back()->getOldPos().x == pos.x &&
+		if (m_MoveInstructions1.back()->getOldPos().x == pos.x &&
 			neighbourMovingTile.getType() == tile.getType() &&
 			neighbourMovingTile.getMerging() == false &&
 			tile.getMerging() == false) {
@@ -170,7 +170,7 @@ int TileMatrix::mergeDown(const sf::Vector2i& pos)
 			m_mergedTiles = true;
 			neighbourMovingTile.setIsMerging(true);
 			tile.setIsMerging(true);
-			return m_moveInstructions.back()->getNewPos().y;
+			return m_MoveInstructions1.back()->getNewPos().y;
 		}
 	}
 
@@ -271,7 +271,7 @@ void TileMatrix::moveLeft()
 				if (distance > 0) {
 					const float pixel_distance = static_cast<float>(distance) * (*m_innerEdgeWidth + *m_tileWidth);
 					m_matrix[i][j]->smoothMove(sf::Vector2f(-pixel_distance, 0.f), m_timeMovingMax);
-					addMoveInstructions(new_pos, sf::Vector2i{ i, j });
+					addMoveInstructions1(new_pos, sf::Vector2i{ i, j });
 				}
 			}
 }
@@ -288,7 +288,7 @@ void TileMatrix::moveRight()
 				if (distance > 0) {
 					const float pixel_distance = static_cast<float>(distance) * (*m_innerEdgeWidth + *m_tileWidth);
 					m_matrix[i][j]->smoothMove(sf::Vector2f(pixel_distance, 0.f), m_timeMovingMax);
-					addMoveInstructions(new_pos, sf::Vector2i{ i, j });
+					addMoveInstructions1(new_pos, sf::Vector2i{ i, j });
 				}
 			}
 }
@@ -305,7 +305,7 @@ void TileMatrix::moveUp()
 				if (distance > 0) {
 					const float pixel_distance = static_cast<float>(distance) * (*m_innerEdgeWidth + *m_tileWidth);
 					m_matrix[i][j]->smoothMove(sf::Vector2f(0.f, -pixel_distance), m_timeMovingMax);
-					addMoveInstructions(new_pos, sf::Vector2i{ i, j });
+					addMoveInstructions1(new_pos, sf::Vector2i{ i, j });
 				}
 			}
 }
@@ -322,22 +322,22 @@ void TileMatrix::moveDown()
 				if (distance > 0) {
 					const float pixel_distance = static_cast<float>(distance) * (*m_innerEdgeWidth + *m_tileWidth);
 					m_matrix[i][j]->smoothMove(sf::Vector2f(0.f, pixel_distance), m_timeMovingMax);
-					addMoveInstructions(new_pos, sf::Vector2i{ i, j });
+					addMoveInstructions1(new_pos, sf::Vector2i{ i, j });
 				}
 			}
 }
 
-void TileMatrix::addMoveInstructions(const sf::Vector2i& newPos, const sf::Vector2i& oldPos)
+void TileMatrix::addMoveInstructions1(const sf::Vector2i& newPos, const sf::Vector2i& oldPos)
 {
 	m_state = Tstate::MOVING;
 	m_matrix[oldPos.x][oldPos.y]->setIsMoving(true);
-	m_moveInstructions.push_back(new MoveInstructions{ newPos, oldPos, m_mergedTiles });
+	m_MoveInstructions1.push_back(new MoveInstructions1{ newPos, oldPos, m_mergedTiles });
 	m_mergedTiles = false;
 }
 
 bool TileMatrix::willBeOccupied(const sf::Vector2i& pos) const
 {
-	for (const auto& instruction : m_moveInstructions)
+	for (const auto& instruction : m_MoveInstructions1)
 		if (instruction->getNewPos() == pos)
 			return true;
 	return false;
@@ -348,11 +348,11 @@ void TileMatrix::endMove()
 	if (m_state == Tstate::MOVING) {
 
 		m_addedScore = 0;
-		for (size_t i = 0; i < m_moveInstructions.size(); ++i) {
-			if (m_moveInstructions[i]->m_merge) {
+		for (size_t i = 0; i < m_MoveInstructions1.size(); ++i) {
+			if (m_MoveInstructions1[i]->m_merge) {
 				m_state = Tstate::MERGING;
-				const sf::Vector2i new_pos = m_moveInstructions[i]->getNewPos();
-				const sf::Vector2i old_pos = m_moveInstructions[i]->getOldPos();
+				const sf::Vector2i new_pos = m_MoveInstructions1[i]->getNewPos();
+				const sf::Vector2i old_pos = m_MoveInstructions1[i]->getOldPos();
 				delete m_matrix[old_pos.x][old_pos.y];
 				m_matrix[old_pos.x][old_pos.y] = nullptr;
 
@@ -364,8 +364,8 @@ void TileMatrix::endMove()
 				m_addedScore += m_tilesToMerge.back()->getType() * 2;
 			}
 			else {
-				const sf::Vector2i new_pos = m_moveInstructions[i]->getNewPos();
-				const sf::Vector2i old_pos = m_moveInstructions[i]->getOldPos();
+				const sf::Vector2i new_pos = m_MoveInstructions1[i]->getNewPos();
+				const sf::Vector2i old_pos = m_MoveInstructions1[i]->getOldPos();
 				m_matrix[new_pos.x][new_pos.y] = m_matrix[old_pos.x][old_pos.y];
 				m_matrix[old_pos.x][old_pos.y] = nullptr;
 
@@ -373,7 +373,7 @@ void TileMatrix::endMove()
 				m_matrix[new_pos.x][new_pos.y]->setIsMerging(false);
 			}
 		}
-		m_moveInstructions.clear();
+		m_MoveInstructions1.clear();
 
 		if (m_state == Tstate::MOVING) {
 			m_state = Tstate::IDLE;
@@ -484,7 +484,7 @@ void TileMatrix::addTile(const sf::Vector2i& pos, const int type)
 
 void TileMatrix::clearBoard()
 {
-	m_moveInstructions.clear();
+	m_MoveInstructions1.clear();
 
 	for (int i = 0; i < m_matrixHeight; ++i)
 		for (int j = 0; j < m_matrixWidth; ++j) {

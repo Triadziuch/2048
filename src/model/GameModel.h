@@ -4,7 +4,7 @@
 #include <functional>
 #include <list>
 #include "BaseModel.h"
-#include "../Playground.h"
+#include "../TileMatrixModel.h"
 
 class GameModel : public BaseModel {
 private:

@@ -255,6 +255,9 @@ void TileMatrixModel::moveLeft()
 					addMoveInstructions(new_pos, sf::Vector2i{ i, j });
 				}
 			}
+
+	if (!m_moveInstructions.empty())
+		this->notify("STARTED_MOVE");
 }
 
 void TileMatrixModel::moveRight()
@@ -270,6 +273,9 @@ void TileMatrixModel::moveRight()
 					addMoveInstructions(new_pos, sf::Vector2i{ i, j });
 				}
 			}
+
+	if (!m_moveInstructions.empty())
+		this->notify("STARTED_MOVE");
 }
 
 void TileMatrixModel::moveUp()
@@ -285,6 +291,9 @@ void TileMatrixModel::moveUp()
 					addMoveInstructions(new_pos, sf::Vector2i{ i, j });
 				}
 			}
+	
+	if (!m_moveInstructions.empty())
+		this->notify("STARTED_MOVE");
 }
 
 void TileMatrixModel::moveDown()
@@ -300,6 +309,9 @@ void TileMatrixModel::moveDown()
 					addMoveInstructions(new_pos, sf::Vector2i{ i, j });
 				}
 			}
+	
+	if (!m_moveInstructions.empty())
+		this->notify("STARTED_MOVE");
 }
 
 void TileMatrixModel::addMoveInstructions(const sf::Vector2i& newPos, const sf::Vector2i& oldPos)
@@ -354,6 +366,9 @@ void TileMatrixModel::endMove()
 	}
 
 	spawn();
+
+	if (!m_tilesToMerge.empty())
+		this->notify("STARGED_MERGE");
 }
 
 void TileMatrixModel::endMerge()
@@ -365,7 +380,7 @@ void TileMatrixModel::endMerge()
 	m_state = Tstate::IDLE;
 }
 
-TileMatrixModel::TileMatrixModel() { this->notify(); }
+TileMatrixModel::TileMatrixModel() : BaseModel() {}
 
 TileMatrixModel::~TileMatrixModel()
 {
@@ -393,6 +408,8 @@ void TileMatrixModel::spawn(const int amount)
 
 		addTile(pos);
 	}
+
+	this->notify("TILE_SPAWN");
 }
 
 void TileMatrixModel::addTile(const sf::Vector2i& pos, const int type)
@@ -454,6 +471,8 @@ bool TileMatrixModel::isGameOver()
 
 		endMove();
 		endMerge();
+
+		this->notify("GAME_OVER");
 		return true;
 	}
 

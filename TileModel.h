@@ -12,9 +12,6 @@ public:
 	TileModel(const int type);
 	~TileModel();
 
-	// Update functions
-	void update(const float dt);
-
 	// Functions
 	void startSpawning();
 	void startMerging();

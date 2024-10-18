@@ -1,8 +1,4 @@
-#include <string>
-#include "../model/GameModel.h"
-#include "../view/GameViewTwo.h"
 #include "GameController.h"
-#include "../Game.h"
 
 // Initialization functions 
 void GameController::initWindow()
@@ -113,10 +109,10 @@ void GameController::setModelHandler(std::shared_ptr<ModelHandler> modelHandler)
 	this->_modelHandler = modelHandler;
 	this->_gameModel = this->_modelHandler->getModel<GameModel>("game");
 	this->_gameModel->connect([&] () {
-            std::cout << "[GameController] GameModel has been updated." << std::endl;
-            //std::cout << "[GameController] GameModel id: " << this->_gameModel->getId() << std::endl;
-            //std::cout << "[GameController] GameModel name: " << this->_gameModel->getName() << std::endl;
-            std::cout << std::endl;
+			std::cout << "[GameController] GameModel has been updated." << std::endl;
+			//std::cout << "[GameController] GameModel id: " << this->_gameModel->getId() << std::endl;
+			//std::cout << "[GameController] GameModel name: " << this->_gameModel->getName() << std::endl;
+			std::cout << std::endl;
 		return false;
 	});
 }
@@ -125,12 +121,32 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 	printf("Game View has been set.\n");
 	this->_viewHandler = viewHandler;
 	this->_gameModel->connect([&] () {
-		std::cout << "[GameController]	GameModel has been updated" << std::endl;
-		std::cout << "[GameController]	Updating the GameViewTwo" << std::endl;
-		std::cout << std::endl;
-		this->_viewHandler->getView<GameViewTwo>("game_2")->notify("update_game");
+			std::cout << "[GameController]	GameModel has been updated" << std::endl;
+			std::cout << "[GameController]	Updating the GameViewTwo" << std::endl;
+			std::cout << std::endl;
+			this->_viewHandler->getView<GameViewTwo>("game_2")->notify("update_game");
 		return (false);
 	});
+
+	this->_gameModel->connect("TILE_SPAWN", [&]() {
+			printf("[GameController] GameModel spawned new tile.");
+		return false;
+		});
+
+	this->_gameModel->connect("STARTED_MOVE", [&]() {
+			printf("[GameController] GameModel has started move.");
+		return false;
+		});
+
+	this->_gameModel->connect("STARTED_MERGE", [&]() {
+			printf("[GameController] GameModel has started merge.");
+		return false;
+		});
+
+	this->_gameModel->connect("GAME_OVER", [&]() {
+			printf("[GameController] GameModel has informed about game over.");
+		return false;
+		});
 
 	this->_gameView = this->_viewHandler->getView<GameView>("game_1");
 	this->_gameView->connect("form_submit", [&] () {

@@ -4,11 +4,11 @@
 #include "Tile.h"
 #include "AssetManager.h"
 
-struct MoveInstructions {
+struct MoveInstructions1 {
 	sf::Vector2i m_newPos, m_oldPos;
 	bool m_merge;
 
-	MoveInstructions(sf::Vector2i new_pos, sf::Vector2i old_pos, bool merge = false): m_newPos{ new_pos }, m_oldPos{ old_pos }, m_merge{ merge } {}
+	MoveInstructions1(sf::Vector2i new_pos, sf::Vector2i old_pos, bool merge = false): m_newPos{ new_pos }, m_oldPos{ old_pos }, m_merge{ merge } {}
 
 	const sf::Vector2i& getNewPos() const { return m_newPos; }
 	const sf::Vector2i& getOldPos() const { return m_oldPos; }
@@ -32,7 +32,7 @@ private:
 	float m_timeMerging = 0.f;
 	const float m_timeMergingMax = 0.2f;
 
-	std::vector <MoveInstructions*>	m_moveInstructions;
+	std::vector <MoveInstructions1*>	m_MoveInstructions1;
 	std::vector <Tile*> m_tilesToMerge;
 	
 	int m_addedScore{};
@@ -83,7 +83,7 @@ public:
 	void moveRight();
 	void moveUp();
 	void moveDown();
-	void addMoveInstructions(const sf::Vector2i& newPos, const sf::Vector2i& oldPos);
+	void addMoveInstructions1(const sf::Vector2i& newPos, const sf::Vector2i& oldPos);
 
 	// Tile manipulation functions
 	void spawn(const int amount = 1);

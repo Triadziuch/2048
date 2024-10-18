@@ -4,7 +4,7 @@
 void GameView::initAssets()
 {
     for (int i = 1; i < 13; i++)
-        AssetManager::GetTexture("assets/Textures/" + to_string(static_cast<int>(pow(2, i))) + ".png");
+        AssetManager::GetTexture("assets/Textures/" + std::to_string(static_cast<int>(pow(2, i))) + ".png");
     AssetManager::GetTexture("assets/Textures/button_newgame.png");
     AssetManager::GetTexture("assets/Textures/button_score.png");
 

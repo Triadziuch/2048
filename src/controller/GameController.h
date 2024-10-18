@@ -3,9 +3,10 @@
 #include <string>
 #include "../model/GameModel.h"
 #include "../view/GameView.h"
+#include "../view/GameViewTwo.h"
 #include "../view/ViewHandler.h"
 #include "IBaseController.h"
-#include "../Game.h"
+#include "../StandardCursor.h"
 
 class GameController : public IBaseController {
 private:
@@ -15,7 +16,7 @@ private:
 	std::shared_ptr<GameView> _gameView;
 
 	// Window variables
-	const string WINDOW_TITLE = "2048";
+	const std::string WINDOW_TITLE = "2048";
 	const unsigned int FRAMERATE = 60;
 	const unsigned int WINDOW_WIDTH = 1280;
 	const unsigned int WINDOW_HEIGHT = 720;

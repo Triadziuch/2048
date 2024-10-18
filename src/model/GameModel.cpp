@@ -4,10 +4,31 @@
 
 GameModel::GameModel() : BaseModel() {
 	m_tileMatrix = new TileMatrixModel();
-	m_tileMatrix->connect([&] () {
-		printf("[GameModel]: TileMatrixModel has been updated.\n");
-		this->notify();
+	
+	m_tileMatrix->connect("TILE_SPAWN", [&]() {
+			printf("[GameModel]: TileMatrixModel spawned new tile.\n");
+			this->notify("TILE_SPAWN");
+		return false;
 		});
+
+	m_tileMatrix->connect("STARTED_MOVE", [&]() {
+			printf("[GameModel]: TileMatrixModel has started move.\n");
+			this->notify("STARTED_MOVE");
+		return false;
+		});
+
+	m_tileMatrix->connect("STARTED_MERGE", [&]() {
+			printf("[GameModel]: TileMatrixModel has started merge.\n");
+			this->notify("STARTED_MERGE");
+		return false;
+		});
+
+	m_tileMatrix->connect("GAME_OVER", [&]() {
+			printf("[GameModel]: TileMatrixModel has informed about game over.\n");
+			this->notify("GAME_OVER");
+		return false;
+		});
+
 	m_tileMatrix->spawn(2);
 
 }
