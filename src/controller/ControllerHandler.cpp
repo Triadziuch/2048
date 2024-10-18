@@ -27,7 +27,17 @@ ControllerHandler::ControllerHandler(std::shared_ptr<ModelHandler> modelHandler,
     this->_viewHandler = viewHandler;
     this->_currentController = nullptr;
     this->_data = {
-            {"/", std::shared_ptr<ControllerFactory<GameController>>(new ControllerFactory<GameController>())}
+            {"-", std::shared_ptr<ControllerFactory<GameController>>(new ControllerFactory<GameController>())}
     };
-    this->changeRoute("/", "");
+    this->changeRoute("-", "Game");
+
+    while (true) {
+        std::string nextController = this->_currentController->run();
+
+        if (nextController == "EXIT")
+            break;
+    }
+    
+
+    // tutaj daæ jakiegoœ while który bêdzie sprawdza³ jaki string zwraca run i na tej podstawie odpala³ odpowiedni kontroler
 }

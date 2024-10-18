@@ -49,6 +49,8 @@
     <ClInclude Include="src\view\GameView.h" />
     <ClInclude Include="src\view\GameViewTwo.h" />
     <ClInclude Include="src\view\ViewHandler.h" />
+    <ClInclude Include="TileMatrixModel.h" />
+    <ClInclude Include="TileModel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AssetManager.cpp" />
@@ -76,6 +78,8 @@
     <ClCompile Include="src\view\GameView.cpp" />
     <ClCompile Include="src\view\GameViewTwo.cpp" />
     <ClCompile Include="src\view\ViewHandler.cpp" />
+    <ClCompile Include="TileMatrixModel.cpp" />
+    <ClCompile Include="TileModel.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

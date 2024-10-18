@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Playground.h"
 #include "StandardCursor.h"
 #include "AssetManager.h"

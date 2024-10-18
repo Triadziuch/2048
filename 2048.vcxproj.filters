@@ -120,6 +120,12 @@
     <ClInclude Include="src\pattern\Observator.hpp">
       <Filter>Pattern</Filter>
     </ClInclude>
+    <ClInclude Include="TileMatrixModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="TileModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -196,6 +202,12 @@
     </ClCompile>
     <ClCompile Include="src\view\GameView.cpp">
       <Filter>View</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMatrixModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="TileModel.cpp">
+      <Filter>Model</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

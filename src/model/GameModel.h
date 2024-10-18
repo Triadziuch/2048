@@ -4,17 +4,22 @@
 #include <functional>
 #include <list>
 #include "BaseModel.h"
+#include "../Playground.h"
 
 class GameModel : public BaseModel {
 private:
-    std::string _id;
-    std::string _name;
+    // Background variables
+    bool m_isGameOver{ false };
+
+    int m_score{};
+    TileMatrixModel* m_tileMatrix{};
 
 public:
     GameModel();
 
-    const std::string &getName() const;
-    void setName(const std::string &name);
-    const std::string &getId() const;
-    void setId(const std::string &id);
+    void update(float dt);
+    void updateScore();
+
+    void move(const sf::Keyboard::Key key);
+    void clearBoard();
 };

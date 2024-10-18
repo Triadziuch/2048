@@ -14,8 +14,8 @@ const std::string & GameViewTwo::getViewPath() const {
 
 void GameViewTwo::addGame(GameModel &gameModel) {
     std::cout << "[GameViewTwo] Added new game to the view." << std::endl;
-    std::cout << "[GameViewTwo] id: " << gameModel.getId() << std::endl;
-    std::cout << "[GameViewTwo] name: " << gameModel.getName() << std::endl;
+    //std::cout << "[GameViewTwo] id: " << gameModel.getId() << std::endl;
+    //std::cout << "[GameViewTwo] name: " << gameModel.getName() << std::endl;
     std::cout << std::endl;
 
     gameModel.connect([&]() {

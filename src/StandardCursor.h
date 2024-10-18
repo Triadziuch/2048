@@ -1,3 +1,5 @@
+#pragma once
+
 #include <Windows.h>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
