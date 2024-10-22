@@ -47,6 +47,18 @@ void GameController::update()
 
 	if (!isEnd) {
 		updatePollEvents();
+		
+		if (isMoving) {
+			this->_gameView->updateMove(dt);
+			this->_gameView->render(*window);
+			this->window->display();
+		}
+
+		if (isSpawning) {
+			this->_gameView->updateSpawning(dt);
+			this->_gameView->render(*window);
+			this->window->display();
+		}
 
 		/*playground->update(dt);
 		if (!isGameOver) {
@@ -71,7 +83,7 @@ void GameController::updatePollEvents()
 			window->close();
 
 		if (!isEnd) {
-			if (!isGameOver)
+			if (!isGameOver && !isMoving && !isSpawning)
 				if (ev.type == sf::Event::KeyPressed) {
 					_gameModel->move(ev.key.code);
 				}
@@ -122,41 +134,59 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 	this->_viewHandler = viewHandler;
 	this->_gameModel->connect([&] () {
 			std::cout << "[GameController]	GameModel has been updated" << std::endl;
-			std::cout << "[GameController]	Updating the GameViewTwo" << std::endl;
+			std::cout << "[GameController]	Updating the GameView" << std::endl;
 			std::cout << std::endl;
-			this->_viewHandler->getView<GameViewTwo>("game_2")->notify("update_game");
+			_gameView->notify("update_game");
 		return (false);
 	});
 
-	this->_gameModel->connect("TILE_SPAWN", [&]() {
-			printf("[GameController] GameModel spawned new tile.");
-		return false;
-		});
-
 	this->_gameModel->connect("STARTED_MOVE", [&]() {
-			printf("[GameController] GameModel has started move.");
+			printf("[GameController] GameModel has started move.\n");
+			_gameView->syncMatrix(this->_gameModel->getMatrix());
+			_gameView->syncMoveInstructions(this->_gameModel->getMoveInstructions());
+			_gameView->startMove();
+			//_gameView->render(*window);
+			//window->display();
 		return false;
 		});
 
-	this->_gameModel->connect("STARTED_MERGE", [&]() {
-			printf("[GameController] GameModel has started merge.");
+	this->_gameModel->connect("STARTED_SPAWN", [&]() {
+		printf("[GameController] GameModel has started spawning new tile.\n");
+		_gameView->syncMatrix(this->_gameModel->getMatrix());
+		_gameView->startSpawn(this->_gameModel->getSpawnInstructions());
+		_gameView->startMerge(this->_gameModel->getMergeInstructions());
 		return false;
 		});
 
 	this->_gameModel->connect("GAME_OVER", [&]() {
-			printf("[GameController] GameModel has informed about game over.");
+			printf("[GameController] GameModel has informed about game over.\n");
 		return false;
 		});
 
 	this->_gameView = this->_viewHandler->getView<GameView>("game_1");
-	this->_gameView->connect("form_submit", [&] () {
-		std::cout << "[GameController] Game 1 View Form has been submit." << std::endl;
-		const auto &form = this->_gameView->getForm();
-		std::cout << "[GameController] Game Form name: " << form.name << std::endl;
-		std::cout << "[GameController] Game Form age: " << std::to_string(form.age) << std::endl;
-		std::cout << std::endl;
-		//this->_gameModel->setName(form.name);
-		//this->_gameModel->setId(std::to_string(form.age)); // yes id != age, but it's just an example !
-        return (false);
-    });
+	this->_gameView->connect("started_move", [&] () {
+		std::cout << "[GameController] GameView has started move animation." << std::endl;
+		isMoving = true;
+		return (false);
+		});
+
+	this->_gameView->connect("finished_move", [&]() {
+		std::cout << "[GameController] GameView has finished move animation." << std::endl;
+		isMoving = false;
+		this->_gameModel->endMove();
+		return (false);
+		});
+
+	this->_gameView->connect("started_spawning", [&]() {
+		std::cout << "[GameController] GameView has started spawn animation." << std::endl;
+		isSpawning = true;
+		return (false);
+		});
+
+	this->_gameView->connect("finished_spawning", [&]() {
+		std::cout << "[GameController] GameView has finished spawn animation." << std::endl;
+		isSpawning = false;
+		this->_gameModel->endMerge();
+		return (false);
+		});
 }

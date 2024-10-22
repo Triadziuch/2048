@@ -22,8 +22,8 @@ int TileMatrixModel::mergeLeft(const sf::Vector2i& pos)
 
 		if (m_moveInstructions.back()->getOldPos().y == pos.y &&
 			neighbourMovingTile.getType() == tile.getType() &&
-			neighbourMovingTile.getMerging() == false &&
-			tile.getMerging() == false) {
+			neighbourMovingTile.getIsMerging() == false &&
+			tile.getIsMerging() == false) {
 
 			checkWin(tile);
 
@@ -37,7 +37,7 @@ int TileMatrixModel::mergeLeft(const sf::Vector2i& pos)
 	// Merge if only one is moving
 	for (int i = pos.x - 1; i >= 0; --i)
 		if (m_matrix[i][pos.y] != nullptr) {
-			if (m_matrix[i][pos.y]->getType() == tile.getType() && !m_matrix[i][pos.y]->getMerging() && !tile.getMerging()) {
+			if (m_matrix[i][pos.y]->getType() == tile.getType() && !m_matrix[i][pos.y]->getIsMerging() && !tile.getIsMerging()) {
 
 				checkWin(tile);
 				m_mergedTiles = true;
@@ -64,8 +64,8 @@ int TileMatrixModel::mergeRight(const sf::Vector2i& pos)
 
 		if (m_moveInstructions.back()->getOldPos().y == pos.y &&
 			neighbourMovingTile.getType() == tile.getType() &&
-			neighbourMovingTile.getMerging() == false &&
-			tile.getMerging() == false) {
+			neighbourMovingTile.getIsMerging() == false &&
+			tile.getIsMerging() == false) {
 
 			checkWin(tile);
 
@@ -79,7 +79,7 @@ int TileMatrixModel::mergeRight(const sf::Vector2i& pos)
 	// Merge if only one is moving
 	for (int i = pos.x + 1; i < m_matrixWidth; ++i)
 		if (m_matrix[i][pos.y] != nullptr) {
-			if (m_matrix[i][pos.y]->getType() == tile.getType() && !m_matrix[i][pos.y]->getMerging() && !tile.getMerging()) {
+			if (m_matrix[i][pos.y]->getType() == tile.getType() && !m_matrix[i][pos.y]->getIsMerging() && !tile.getIsMerging()) {
 				
 				checkWin(tile);
 				m_mergedTiles = true;
@@ -106,8 +106,8 @@ int TileMatrixModel::mergeUp(const sf::Vector2i& pos)
 
 		if (m_moveInstructions.back()->getOldPos().x == pos.x &&
 			neighbourMovingTile.getType() == tile.getType() &&
-			neighbourMovingTile.getMerging() == false &&
-			tile.getMerging() == false) {
+			neighbourMovingTile.getIsMerging() == false &&
+			tile.getIsMerging() == false) {
 
 			checkWin(tile);
 			m_mergedTiles = true;
@@ -120,7 +120,7 @@ int TileMatrixModel::mergeUp(const sf::Vector2i& pos)
 	// Merge if only one is moving
 	for (int i = pos.y - 1; i >= 0; --i)
 		if (m_matrix[pos.x][i] != nullptr) {
-			if (m_matrix[pos.x][i]->getType() == tile.getType() && !m_matrix[pos.x][i]->getMerging() && !tile.getMerging()) {
+			if (m_matrix[pos.x][i]->getType() == tile.getType() && !m_matrix[pos.x][i]->getIsMerging() && !tile.getIsMerging()) {
 				
 				checkWin(tile);
 				m_mergedTiles = true;
@@ -147,8 +147,8 @@ int TileMatrixModel::mergeDown(const sf::Vector2i& pos)
 
 		if (m_moveInstructions.back()->getOldPos().x == pos.x &&
 			neighbourMovingTile.getType() == tile.getType() &&
-			neighbourMovingTile.getMerging() == false &&
-			tile.getMerging() == false) {
+			neighbourMovingTile.getIsMerging() == false &&
+			tile.getIsMerging() == false) {
 
 			checkWin(tile);
 			m_mergedTiles = true;
@@ -161,7 +161,7 @@ int TileMatrixModel::mergeDown(const sf::Vector2i& pos)
 	// Merge if only one is moving
 	for (int i = pos.y + 1; i < m_matrixHeight; ++i)
 		if (m_matrix[pos.x][i] != nullptr) {
-			if (m_matrix[pos.x][i]->getType() == tile.getType() && !m_matrix[pos.x][i]->getMerging() && !tile.getMerging()) {
+			if (m_matrix[pos.x][i]->getType() == tile.getType() && !m_matrix[pos.x][i]->getIsMerging() && !tile.getIsMerging()) {
 				
 				checkWin(tile);
 				m_mergedTiles = true;
@@ -244,7 +244,7 @@ int TileMatrixModel::findFreeDown(const sf::Vector2i& pos)
 
 void TileMatrixModel::moveLeft()
 {
-	endMerge();
+	//endMerge();
 	for (int j = 0; j < m_matrixHeight; ++j)
 		for (int i = 0; i < m_matrixWidth; ++i)
 			if (m_matrix[i][j] != nullptr) {
@@ -262,7 +262,7 @@ void TileMatrixModel::moveLeft()
 
 void TileMatrixModel::moveRight()
 {
-	endMerge();
+	//endMerge();
 	for (int j = 0; j < m_matrixHeight; ++j)
 		for (int i = m_matrixWidth - 1; i >= 0; --i)
 			if (m_matrix[i][j] != nullptr) {
@@ -280,7 +280,7 @@ void TileMatrixModel::moveRight()
 
 void TileMatrixModel::moveUp()
 {
-	endMerge();
+	//endMerge();
 	for (int i = 0; i < m_matrixWidth; ++i)
 		for (int j = 0; j < m_matrixHeight; ++j)
 			if (m_matrix[i][j] != nullptr) {
@@ -298,7 +298,7 @@ void TileMatrixModel::moveUp()
 
 void TileMatrixModel::moveDown()
 {
-	endMerge();
+	//endMerge();
 	for (int i = 0; i < m_matrixWidth; ++i)
 		for (int j = m_matrixHeight - 1; j >= 0; --j)
 			if (m_matrix[i][j] != nullptr) {
@@ -334,6 +334,7 @@ bool TileMatrixModel::willBeOccupied(const sf::Vector2i& pos) const
 void TileMatrixModel::endMove()
 {
 	m_addedScore = 0;
+
 	for (size_t i = 0; i < m_moveInstructions.size(); ++i) {
 		if (m_moveInstructions[i]->m_merge) {
 			m_state = Tstate::MERGING;
@@ -342,12 +343,11 @@ void TileMatrixModel::endMove()
 			delete m_matrix[old_pos.x][old_pos.y];
 			m_matrix[old_pos.x][old_pos.y] = nullptr;
 
-			m_tilesToMerge.push_back(m_matrix[new_pos.x][new_pos.y]);
-			m_matrix[new_pos.x][new_pos.y] = new TileModel(m_tilesToMerge.back()->getType() * 2);
-			m_matrix[new_pos.x][new_pos.y]->startMerging();
+			m_mergeInstructions.emplace_back(new MergeInstruction{ new_pos, m_matrix[new_pos.x][new_pos.y] });
+			m_matrix[new_pos.x][new_pos.y] = new TileModel(m_mergeInstructions.back()->tile->getType() * 2);
 			--m_tiles;
 
-			m_addedScore += m_tilesToMerge.back()->getType() * 2;
+			m_addedScore += m_mergeInstructions.back()->tile->getType() * 2;
 		}
 		else {
 			const sf::Vector2i new_pos = m_moveInstructions[i]->getNewPos();
@@ -367,15 +367,14 @@ void TileMatrixModel::endMove()
 
 	spawn();
 
-	if (!m_tilesToMerge.empty())
-		this->notify("STARGED_MERGE");
+	printf("\n\t\tAdded score: %d\n\n", m_addedScore);
 }
 
 void TileMatrixModel::endMerge()
 {
-	for (size_t i = 0; i < m_tilesToMerge.size(); ++i)
-		delete m_tilesToMerge[i];
-	m_tilesToMerge.clear();
+	for (size_t i = 0; i < m_mergeInstructions.size(); ++i)
+		delete m_mergeInstructions[i];
+	m_mergeInstructions.clear();
 
 	m_state = Tstate::IDLE;
 }
@@ -390,16 +389,10 @@ TileMatrixModel::~TileMatrixModel()
 				delete m_matrix[i][j];
 }
 
-void TileMatrixModel::update(float dt)
-{
-	for (size_t i = 0; i < m_matrixHeight; ++i)
-		for (size_t j = 0; j < m_matrixWidth; ++j)
-			if (m_matrix[i][j])
-				m_matrix[i][j]->update(dt);
-}
-
 void TileMatrixModel::spawn(const int amount)
 {
+	m_spawnInstructions.clear();
+
 	for (int i = 0; i < amount; ++i) {
 		sf::Vector2i pos{ rand() % 4, rand() % 4 };
 
@@ -409,7 +402,7 @@ void TileMatrixModel::spawn(const int amount)
 		addTile(pos);
 	}
 
-	this->notify("TILE_SPAWN");
+	this->notify("STARTED_SPAWN");	
 }
 
 void TileMatrixModel::addTile(const sf::Vector2i& pos, const int type)
@@ -418,7 +411,7 @@ void TileMatrixModel::addTile(const sf::Vector2i& pos, const int type)
 		printf("TileMatrixModel::addTile ERROR: Tile spawning position out of bounds\n");
 	else {
 		m_matrix[pos.x][pos.y] = new TileModel(type);
-		//m_matrix[pos.x][pos.y]->startSpawning(); to na koñcu funkcji i zwracamy blok do spawn a ze spawn do wywo³uj¹cej nadrzêdnej
+		this->m_spawnInstructions.emplace_back(new SpawnInstruction(pos, type));
 		++m_tiles;
 
 		m_isGameOver = isGameOver();
@@ -469,9 +462,8 @@ bool TileMatrixModel::isGameOver()
 				m_matrix[i][j]->startGameOver();
 			}
 
-		endMove();
-		endMerge();
-
+		//endMove();
+		//endMerge();
 		this->notify("GAME_OVER");
 		return true;
 	}
@@ -493,6 +485,26 @@ bool TileMatrixModel::getIsGameOver() const
 int TileMatrixModel::getAddedScore() const
 {
 	return m_addedScore;
+}
+
+const std::vector<MoveInstructions*> &TileMatrixModel::getMoveInstructions() const
+{
+	return m_moveInstructions;
+}
+
+const std::vector<SpawnInstruction*>& TileMatrixModel::getSpawnInstructions() const
+{
+	return m_spawnInstructions;
+}
+
+const std::vector<MergeInstruction*>& TileMatrixModel::getMergeInstructions() const
+{
+	return m_mergeInstructions;
+}
+
+TileModel* const (&TileMatrixModel::getMatrix() const)[4][4]
+{
+	return m_matrix;
 }
 
 void TileMatrixModel::setAddedScore(const int value)

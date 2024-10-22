@@ -11,9 +11,27 @@ struct MoveInstructions {
 	bool m_merge;
 
 	MoveInstructions(sf::Vector2i new_pos, sf::Vector2i old_pos, bool merge = false) : m_newPos{ new_pos }, m_oldPos{ old_pos }, m_merge{ merge } {}
+	//MoveInstructions(const MoveInstructions& obj) : m_newPos{ obj.m_newPos }, m_oldPos{ obj.m_oldPos }, m_merge{ obj.m_merge } {};
 
 	const sf::Vector2i& getNewPos() const { return m_newPos; }
 	const sf::Vector2i& getOldPos() const { return m_oldPos; }
+};
+
+struct SpawnInstruction {
+	sf::Vector2i pos;
+	int type;
+
+	SpawnInstruction(const sf::Vector2i& position, const int& type) : pos{ position }, type{ type } {}
+};
+
+struct MergeInstruction {
+	sf::Vector2i pos;
+	const TileModel* tile = nullptr;
+
+	MergeInstruction(const sf::Vector2i& position, const TileModel* tile) : pos{ position }, tile{ tile } {}
+	~MergeInstruction() {
+		delete tile;
+	}
 };
 
 class TileMatrixModel : public BaseModel {
@@ -24,7 +42,8 @@ private:
 	TileModel* m_matrix[4][4]{ {} };
 
 	std::vector <MoveInstructions*>	m_moveInstructions;
-	std::vector <TileModel*> m_tilesToMerge;
+	std::vector <SpawnInstruction*> m_spawnInstructions;
+	std::vector <MergeInstruction*> m_mergeInstructions;
 
 	int m_addedScore{};
 	unsigned m_tiles{};
@@ -47,8 +66,7 @@ private:
 
 	bool willBeOccupied(const sf::Vector2i& pos) const;
 
-	void endMove();
-	void endMerge();
+	
 
 public:
 	enum Tstate { IDLE, MOVING, MERGING };
@@ -57,9 +75,6 @@ public:
 	// Constructors / Destructors
 	TileMatrixModel();
 	virtual ~TileMatrixModel();
-
-	// Update functions
-	void update(float dt);
 
 	// Move functions
 	void moveLeft();
@@ -74,11 +89,19 @@ public:
 	void clearBoard();
 	bool isGameOver();
 
+	void endMove();
+	void endMerge();
+
 	// Accessors / Mutators
 	bool getIsMoving() const;
-
 	bool getIsGameOver() const;
 	int getAddedScore() const;
+
+	const std::vector<MoveInstructions*>& getMoveInstructions() const;
+	const std::vector<SpawnInstruction*>& getSpawnInstructions() const;
+	const std::vector<MergeInstruction*>& getMergeInstructions() const;
+
+	TileModel* const (&getMatrix() const)[4][4];
 
 	void setAddedScore(const int score);
 };

@@ -5,21 +5,16 @@
 GameModel::GameModel() : BaseModel() {
 	m_tileMatrix = new TileMatrixModel();
 	
-	m_tileMatrix->connect("TILE_SPAWN", [&]() {
-			printf("[GameModel]: TileMatrixModel spawned new tile.\n");
-			this->notify("TILE_SPAWN");
+	m_tileMatrix->connect("STARTED_SPAWN", [&]() {
+			printf("[GameModel]: TileMatrixModel has started spawning new tile.\n");
+			this->notify("STARTED_SPAWN");
 		return false;
 		});
 
 	m_tileMatrix->connect("STARTED_MOVE", [&]() {
 			printf("[GameModel]: TileMatrixModel has started move.\n");
 			this->notify("STARTED_MOVE");
-		return false;
-		});
-
-	m_tileMatrix->connect("STARTED_MERGE", [&]() {
-			printf("[GameModel]: TileMatrixModel has started merge.\n");
-			this->notify("STARTED_MERGE");
+			//m_tileMatrix->endMove();
 		return false;
 		});
 
@@ -35,7 +30,6 @@ GameModel::GameModel() : BaseModel() {
 
 void GameModel::update(float dt)
 {
-	m_tileMatrix->update(dt);
 	updateScore();
 
 	if (m_tileMatrix->getIsGameOver()) {
@@ -75,6 +69,36 @@ void GameModel::move(const sf::Keyboard::Key key)
 		m_tileMatrix->moveRight();
 		break;
 	}
+}
+
+void GameModel::endMove()
+{
+	this->m_tileMatrix->endMove();
+}
+
+void GameModel::endMerge()
+{
+	this->m_tileMatrix->endMerge();
+}
+
+TileModel* const (&GameModel::getMatrix() const)[4][4]
+{
+	return this->m_tileMatrix->getMatrix();
+}
+
+const std::vector<MoveInstructions*>& GameModel::getMoveInstructions() const
+{
+	return this->m_tileMatrix->getMoveInstructions();
+}
+
+const std::vector<SpawnInstruction*>& GameModel::getSpawnInstructions() const
+{
+	return this->m_tileMatrix->getSpawnInstructions();
+}
+
+const std::vector<MergeInstruction*>& GameModel::getMergeInstructions() const
+{
+	return this->m_tileMatrix->getMergeInstructions();
 }
 
 void GameModel::clearBoard()

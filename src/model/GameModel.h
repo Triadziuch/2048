@@ -21,5 +21,12 @@ public:
     void updateScore();
 
     void move(const sf::Keyboard::Key key);
+    void endMove();
+    void endMerge();
+
+    TileModel* const (&getMatrix() const)[4][4];
+    const std::vector<MoveInstructions*>& getMoveInstructions() const;
+    const std::vector<SpawnInstruction*>& getSpawnInstructions() const;
+    const std::vector<MergeInstruction*>& getMergeInstructions() const;
     void clearBoard();
 };

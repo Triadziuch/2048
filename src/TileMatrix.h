@@ -32,7 +32,7 @@ private:
 	float m_timeMerging = 0.f;
 	const float m_timeMergingMax = 0.2f;
 
-	std::vector <MoveInstructions1*>	m_MoveInstructions1;
+	std::vector <MoveInstructions1*> m_MoveInstructions1;
 	std::vector <Tile*> m_tilesToMerge;
 	
 	int m_addedScore{};

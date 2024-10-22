@@ -14,7 +14,6 @@ public:
 
 	// Functions
 	void startSpawning();
-	void startMerging();
 
 	void startGameOver();
 	void startWin();
@@ -28,6 +27,6 @@ public:
 	// Accessors
 	int getType() const;
 	bool getIsMoving() const;
-	bool getMerging() const;
+	bool getIsMerging() const;
 	bool getSpawning() const;
 };

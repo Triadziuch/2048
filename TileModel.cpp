@@ -13,12 +13,6 @@ void TileModel::startSpawning()
 	m_isSpawning = true;
 }
 
-void TileModel::startMerging()
-{
-	//m_movementManager->linkScalingRoutine(m_sprite, "TILE_MERGING");
-	//m_movementManager->startScalingRoutine(m_sprite, "TILE_MERGING");
-}
-
 void TileModel::startGameOver()
 {
 	m_isSpawning = false;
@@ -60,7 +54,7 @@ bool TileModel::getIsMoving() const
 	return m_isMoving;
 }
 
-bool TileModel::getMerging() const
+bool TileModel::getIsMerging() const
 {
 	return m_isMerging;
 }

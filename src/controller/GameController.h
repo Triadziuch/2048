@@ -34,6 +34,9 @@ private:
 	sf::Clock dt_clock;
 	float dt;
 
+	// Is Variables
+	bool isMoving = false, isSpawning = false;
+
 	// Initialization functions 
 	void initWindow();
 	void initVariables();
