@@ -10,6 +10,7 @@
 
 class GameController : public IBaseController {
 private:
+	// MVC Model and View variables
 	std::shared_ptr<ModelHandler> _modelHandler;
 	std::shared_ptr<ViewHandler> _viewHandler;
 	std::shared_ptr<GameModel> _gameModel;
@@ -26,16 +27,15 @@ private:
 	sf::Vector2f mouse_pos_view;
 	sf::RenderWindow* window;
 
-	// Other variables
-	bool isEnd = false;
-	bool isGameOver = false;
-
 	// Clock variables
 	sf::Clock dt_clock;
 	float dt;
 
 	// Is Variables
-	bool isMoving = false, isSpawning = false;
+	bool isMoving = false;
+	bool isSpawning = false;
+	bool isEnd = false;
+	bool isGameOver = false;
 
 	// Initialization functions 
 	void initWindow();
@@ -47,12 +47,18 @@ public:
 	GameController();
 	~GameController();
 
-	const std::string run() override;
-	const std::string gameLoop();
-	void update();
-	void updatePollEvents();
-	void render();
-
+	// Model and View handling
 	void setModelHandler(std::shared_ptr<ModelHandler> modelHandler) override;
 	void setViewHandler(std::shared_ptr<ViewHandler> viewHandler) override;
+
+	// Public funcitons
+	const std::string run() override;
+	const std::string gameLoop();
+
+	// Update functions
+	void update();
+	void updatePollEvents();
+	
+	// Render function
+	void render();
 };

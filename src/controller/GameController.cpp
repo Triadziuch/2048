@@ -15,6 +15,8 @@ void GameController::initVariables()
 	srand(static_cast<unsigned>(time(nullptr)));
 }
 
+
+
 // Constructors / Destructors
 GameController::GameController() {
 	initWindow();
@@ -25,9 +27,82 @@ GameController::~GameController() {
 	delete window;
 }
 
+
+
+// Model and View handling
+void GameController::setModelHandler(std::shared_ptr<ModelHandler> modelHandler) {
+	printf("Game Model has been set.\n");
+
+	this->_modelHandler = modelHandler;
+	this->_gameModel = this->_modelHandler->getModel<GameModel>("game");
+	this->_gameModel->connect([&]() {
+		std::cout << "[GameController] GameModel has been updated." << std::endl;
+		//std::cout << "[GameController] GameModel id: " << this->_gameModel->getId() << std::endl;
+		//std::cout << "[GameController] GameModel name: " << this->_gameModel->getName() << std::endl;
+		std::cout << std::endl;
+		return false;
+		});
+}
+
+void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
+	printf("Game View has been set.\n");
+	this->_viewHandler = viewHandler;
+	this->_gameModel->connect([&]() {
+		_gameView->notify("update_game");
+		return false;
+		});
+
+	this->_gameModel->connect("STARTED_MOVE", [&]() {
+		_gameView->syncMatrix(this->_gameModel->getMatrix());
+		_gameView->syncMoveInstructions(this->_gameModel->getMoveInstructions());
+		_gameView->startMove();
+		return false;
+		});
+
+	this->_gameModel->connect("STARTED_SPAWN", [&]() {
+		_gameView->syncMatrix(this->_gameModel->getMatrix());
+		_gameView->startSpawn(this->_gameModel->getSpawnInstructions());
+		_gameView->startMerge(this->_gameModel->getMergeInstructions());
+		return false;
+		});
+
+	this->_gameModel->connect("GAME_OVER", [&]() {
+		printf("[GameController] GameModel has informed about game over.\n");
+		return false;
+		});
+
+	this->_gameView = this->_viewHandler->getView<GameView>("game_1");
+	this->_gameView->connect("started_move", [&]() {
+		isMoving = true;
+		return (false);
+		});
+
+	this->_gameView->connect("finished_move", [&]() {
+		isMoving = false;
+		this->_gameModel->endMove();
+		return false;
+		});
+
+	this->_gameView->connect("started_spawning", [&]() {
+		isSpawning = true;
+		return false;
+		});
+
+	this->_gameView->connect("finished_spawning", [&]() {
+		isSpawning = false;
+		this->_gameModel->endMerge();
+		return false;
+		});
+}
+
+
+
+// Public funcitons
 const std::string GameController::run()
 {
-	printf("RUN\n");
+	_gameView->syncMatrix(this->_gameModel->getMatrix());
+	this->render();
+
 	return this->gameLoop();
 }
 
@@ -35,12 +110,14 @@ const std::string GameController::gameLoop()
 {
 	while (window->isOpen()) {
 		update();
-		render();
 	}
 
 	return "EXIT";
 }
 
+
+
+// Update functions
 void GameController::update()
 {
 	dt = dt_clock.restart().asSeconds();
@@ -50,14 +127,12 @@ void GameController::update()
 		
 		if (isMoving) {
 			this->_gameView->updateMove(dt);
-			this->_gameView->render(*window);
-			this->window->display();
+			this->render();
 		}
 
 		if (isSpawning) {
 			this->_gameView->updateSpawning(dt);
-			this->_gameView->render(*window);
-			this->window->display();
+			this->render();
 		}
 
 		/*playground->update(dt);
@@ -79,12 +154,15 @@ void GameController::updatePollEvents()
 
 	if (window->pollEvent(ev)) {
 
-		if ((ev.Event::type == sf::Event::Closed) || (ev.Event::KeyPressed && ev.Event::key.code == sf::Keyboard::Escape))
+		if ((ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Escape) || (ev.type == sf::Event::Closed))
 			window->close();
 
 		if (!isEnd) {
-			if (!isGameOver && !isMoving && !isSpawning)
+			if (!isGameOver && !isMoving)
 				if (ev.type == sf::Event::KeyPressed) {
+					if (isSpawning)
+						_gameView->endSpawn();
+
 					_gameModel->move(ev.key.code);
 				}
 
@@ -111,82 +189,11 @@ void GameController::updatePollEvents()
 	}
 }
 
+
+
+// Render function
 void GameController::render()
 {
-}
-
-void GameController::setModelHandler(std::shared_ptr<ModelHandler> modelHandler) {
-	printf("Game Model has been set.\n");
-
-	this->_modelHandler = modelHandler;
-	this->_gameModel = this->_modelHandler->getModel<GameModel>("game");
-	this->_gameModel->connect([&] () {
-			std::cout << "[GameController] GameModel has been updated." << std::endl;
-			//std::cout << "[GameController] GameModel id: " << this->_gameModel->getId() << std::endl;
-			//std::cout << "[GameController] GameModel name: " << this->_gameModel->getName() << std::endl;
-			std::cout << std::endl;
-		return false;
-	});
-}
-
-void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
-	printf("Game View has been set.\n");
-	this->_viewHandler = viewHandler;
-	this->_gameModel->connect([&] () {
-			std::cout << "[GameController]	GameModel has been updated" << std::endl;
-			std::cout << "[GameController]	Updating the GameView" << std::endl;
-			std::cout << std::endl;
-			_gameView->notify("update_game");
-		return (false);
-	});
-
-	this->_gameModel->connect("STARTED_MOVE", [&]() {
-			printf("[GameController] GameModel has started move.\n");
-			_gameView->syncMatrix(this->_gameModel->getMatrix());
-			_gameView->syncMoveInstructions(this->_gameModel->getMoveInstructions());
-			_gameView->startMove();
-			//_gameView->render(*window);
-			//window->display();
-		return false;
-		});
-
-	this->_gameModel->connect("STARTED_SPAWN", [&]() {
-		printf("[GameController] GameModel has started spawning new tile.\n");
-		_gameView->syncMatrix(this->_gameModel->getMatrix());
-		_gameView->startSpawn(this->_gameModel->getSpawnInstructions());
-		_gameView->startMerge(this->_gameModel->getMergeInstructions());
-		return false;
-		});
-
-	this->_gameModel->connect("GAME_OVER", [&]() {
-			printf("[GameController] GameModel has informed about game over.\n");
-		return false;
-		});
-
-	this->_gameView = this->_viewHandler->getView<GameView>("game_1");
-	this->_gameView->connect("started_move", [&] () {
-		std::cout << "[GameController] GameView has started move animation." << std::endl;
-		isMoving = true;
-		return (false);
-		});
-
-	this->_gameView->connect("finished_move", [&]() {
-		std::cout << "[GameController] GameView has finished move animation." << std::endl;
-		isMoving = false;
-		this->_gameModel->endMove();
-		return (false);
-		});
-
-	this->_gameView->connect("started_spawning", [&]() {
-		std::cout << "[GameController] GameView has started spawn animation." << std::endl;
-		isSpawning = true;
-		return (false);
-		});
-
-	this->_gameView->connect("finished_spawning", [&]() {
-		std::cout << "[GameController] GameView has finished spawn animation." << std::endl;
-		isSpawning = false;
-		this->_gameModel->endMerge();
-		return (false);
-		});
+	this->_gameView->render(*window);
+	this->window->display();
 }

@@ -16,27 +16,27 @@ private:
 	sf::Texture* m_tileTextures[14];
 	sf::Sprite m_sprite{};
 	sf::Vector2f windowSize{ 1280.f, 720.f };
-
+	sf::Vector2f m_playgroundPosition{};
 	const float m_playgroundPadding{ 100.f };
 	float m_scale{ 1.f }, m_outerEdgeWidth{ 37.f }, m_innerEdgeWidth{ 36.f }, m_tileWidth{ 215.f };
 	bool m_isGameOver{ false };
 
 	int m_score{};
-	Tile* tiles[4][4]{ {} };
-
-	sf::Vector2f m_playgroundPosition{};
+	
+	// Animation time variables
 	const float m_timeSpawningMax = 0.2f;
-
 	float m_timeMoving = 0.f;
 	const float m_timeMovingMax = 0.2f;
-
 	float m_timeMerging = 0.f;
 	const float m_timeMergingMax = 0.2f;
 
 	// Movement manager
-	MovementManager* m_movementManager;
-	MovementContainer* m_movementContainer;
+	MovementManager* m_movementManager;		// Used for tile movement
+	MovementContainer* m_movementContainer;	// Used for tile spawning and merging animations
 
+
+
+	Tile* tiles[4][4]{ {} };
 	TileModel* const (*m_matrix)[4];
 	const std::vector <MoveInstructions*> *m_moveInstructions;
 	const std::vector <SpawnInstruction*> *m_spawnInstructions;
@@ -47,31 +47,35 @@ private:
 	GUI* m_gui{};
 
 	// Initialization functions
+	void initVariables();
 	void initAssets();
+	void initAnimations();
+
+	// Utility functions
+	sf::Vector2f calculateTilePos(const sf::Vector2i& pos) const;
+	int findID(int type) const;
 
 	// Private functions
 	void drawMatrixCMD();
 	void updateTiles();
-	//void startMove();
-	
-	sf::Vector2f calculateTilePos(const sf::Vector2i& pos) const;
-
-	int findID(int type) const;
 
 public:
+	// Constructors / Destructors
 	GameView();
 	~GameView();
 
-    const std::string &getViewPath() const override;
-
+	// Public functions
 	void syncMatrix(TileModel* const (&matrix)[4][4]);
-	void syncMoveInstructions(const std::vector<MoveInstructions*>& moveInstructions);
-	void startMove();
-	void startSpawn(const std::vector<SpawnInstruction*>& m_spawnInstructions);
-	void startMerge(const std::vector<MergeInstruction*>& m_mergeInstructions);
 
+	void startMove(const std::vector<MoveInstructions*>& moveInstructions);
+	void startMerge(const std::vector<MergeInstruction*>& mergeInstructions);
+	void startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions);
+	void endSpawn();
+
+	// Update functions
 	void updateMove(float dt);
 	void updateSpawning(float dt);
 
+	// Render functions
 	void render(sf::RenderTarget& window);
 };
