@@ -6,12 +6,11 @@
 #include "src/event/EventObserver.h"
 #include "src/model/BaseModel.h"
 
-struct MoveInstructions {
+struct MoveInstruction {
 	sf::Vector2i m_newPos, m_oldPos;
 	bool m_merge;
 
-	MoveInstructions(sf::Vector2i new_pos, sf::Vector2i old_pos, bool merge = false) : m_newPos{ new_pos }, m_oldPos{ old_pos }, m_merge{ merge } {}
-	//MoveInstructions(const MoveInstructions& obj) : m_newPos{ obj.m_newPos }, m_oldPos{ obj.m_oldPos }, m_merge{ obj.m_merge } {};
+	MoveInstruction(sf::Vector2i new_pos, sf::Vector2i old_pos, bool merge = false) : m_newPos{ new_pos }, m_oldPos{ old_pos }, m_merge{ merge } {}
 
 	const sf::Vector2i& getNewPos() const { return m_newPos; }
 	const sf::Vector2i& getOldPos() const { return m_oldPos; }
@@ -29,9 +28,7 @@ struct MergeInstruction {
 	const TileModel* tile = nullptr;
 
 	MergeInstruction(const sf::Vector2i& position, const TileModel* tile) : pos{ position }, tile{ tile } {}
-	~MergeInstruction() {
-		delete tile;
-	}
+	~MergeInstruction() { delete tile; }
 };
 
 class TileMatrixModel : public BaseModel {
@@ -41,7 +38,7 @@ private:
 
 	TileModel* m_matrix[4][4]{ {} };
 
-	std::vector <MoveInstructions*>	m_moveInstructions;
+	std::vector <MoveInstruction*>	m_moveInstructions;
 	std::vector <SpawnInstruction*> m_spawnInstructions;
 	std::vector <MergeInstruction*> m_mergeInstructions;
 
@@ -50,23 +47,22 @@ private:
 
 	bool m_isGameOver{}, m_isWin{}, m_mergedTiles{};
 
-	// Initialize textures
+	// Utility functions
 	int findID(int type) const;
 	void checkWin(const TileModel& tile);
+	bool willBeOccupied(const sf::Vector2i& pos) const;
 
-	int findFreeLeft(const sf::Vector2i& pos);
-	int findFreeRight(const sf::Vector2i& pos);
-	int findFreeUp(const sf::Vector2i& pos);
-	int findFreeDown(const sf::Vector2i& pos);
-
+	// Merging functions
 	int mergeLeft(const sf::Vector2i& pos);
 	int mergeRight(const sf::Vector2i& pos);
 	int mergeUp(const sf::Vector2i& pos);
 	int mergeDown(const sf::Vector2i& pos);
 
-	bool willBeOccupied(const sf::Vector2i& pos) const;
-
-	
+	// Finding free space functions
+	int findFreeLeft(const sf::Vector2i& pos);
+	int findFreeRight(const sf::Vector2i& pos);
+	int findFreeUp(const sf::Vector2i& pos);
+	int findFreeDown(const sf::Vector2i& pos);
 
 public:
 	enum Tstate { IDLE, MOVING, MERGING };
@@ -83,25 +79,22 @@ public:
 	void moveDown();
 	void addMoveInstructions(const sf::Vector2i& newPos, const sf::Vector2i& oldPos);
 
-	// Tile manipulation functions
+	void endMove();
+	void endMerge();
+
 	void spawn(const int amount = 1);
 	void addTile(const sf::Vector2i& pos, const int type = 2);
 	void clearBoard();
 	bool isGameOver();
 
-	void endMove();
-	void endMerge();
-
 	// Accessors / Mutators
-	bool getIsMoving() const;
-	bool getIsGameOver() const;
+	bool isMoving() const;
+	bool isGameOver() const;
 	int getAddedScore() const;
+	void setAddedScore(const int score);
 
-	const std::vector<MoveInstructions*>& getMoveInstructions() const;
+	TileBase* const (&getMatrix() const)[4][4];
+	const std::vector<MoveInstruction*>& getMoveInstructions() const;
 	const std::vector<SpawnInstruction*>& getSpawnInstructions() const;
 	const std::vector<MergeInstruction*>& getMergeInstructions() const;
-
-	TileModel* const (&getMatrix() const)[4][4];
-
-	void setAddedScore(const int score);
 };

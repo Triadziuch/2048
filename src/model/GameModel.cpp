@@ -1,7 +1,7 @@
 #include <string>
 #include "GameModel.h"
 
-
+// = = = = = Constructors / Destructors = = = = = // 
 GameModel::GameModel() : BaseModel() {
 	m_tileMatrix = new TileMatrixModel();
 	
@@ -14,7 +14,6 @@ GameModel::GameModel() : BaseModel() {
 	m_tileMatrix->connect("STARTED_MOVE", [&]() {
 			printf("[GameModel]: TileMatrixModel has started move.\n");
 			this->notify("STARTED_MOVE");
-			//m_tileMatrix->endMove();
 		return false;
 		});
 
@@ -24,21 +23,24 @@ GameModel::GameModel() : BaseModel() {
 		return false;
 		});
 
+	m_tileMatrix->connect("GAME_WON", [&]() {
+			printf("[GameModel]: TileMatrixModel has informed about winning a game.\n");
+			this->notify("GAME_WON");
+		return false;
+		});
+
 	m_tileMatrix->spawn(2);
 
 }
 
-void GameModel::update(float dt)
+GameModel::~GameModel()
 {
-	updateScore();
-
-	if (m_tileMatrix->getIsGameOver()) {
-		if (!m_isGameOver) {
-			m_isGameOver = true;
-		}
-	}
+	delete m_tileMatrix;
 }
 
+
+
+// = = = = = Public functions = = = = = // 
 void GameModel::updateScore()
 {
 	const int added_m_score = m_tileMatrix->getAddedScore();
@@ -48,8 +50,6 @@ void GameModel::updateScore()
 
 void GameModel::move(const sf::Keyboard::Key key)
 {
-	if (m_tileMatrix->getIsMoving()) return;
-
 	switch (key)
 	{
 	case sf::Keyboard::Key::Up:
@@ -78,15 +78,26 @@ void GameModel::endMove()
 
 void GameModel::endMerge()
 {
+	this->updateScore();
 	this->m_tileMatrix->endMerge();
 }
 
-TileModel* const (&GameModel::getMatrix() const)[4][4]
+void GameModel::clearBoard()
+{
+	//m_isGameOver = false;
+	m_tileMatrix->clearBoard();
+	m_tileMatrix->spawn(2);
+}
+
+
+
+// = = = = = Accessors / Mutators = = = = = // 
+TileBase* const (&GameModel::getMatrix() const)[4][4]
 {
 	return this->m_tileMatrix->getMatrix();
 }
 
-const std::vector<MoveInstructions*>& GameModel::getMoveInstructions() const
+const std::vector<MoveInstruction*>& GameModel::getMoveInstructions() const
 {
 	return this->m_tileMatrix->getMoveInstructions();
 }
@@ -99,11 +110,4 @@ const std::vector<SpawnInstruction*>& GameModel::getSpawnInstructions() const
 const std::vector<MergeInstruction*>& GameModel::getMergeInstructions() const
 {
 	return this->m_tileMatrix->getMergeInstructions();
-}
-
-void GameModel::clearBoard()
-{
-	m_isGameOver = false;
-	m_tileMatrix->clearBoard();
-	m_tileMatrix->spawn(2);
 }

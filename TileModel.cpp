@@ -1,35 +1,16 @@
 #pragma once
 #include "TileModel.h"
 
+TileBase::TileBase(const int type) : m_type{ type } {};
+
+
 // Constructors / Destructors
-TileModel::TileModel(const int type) : m_type(type) {}
-
-TileModel::~TileModel()
-{
-}
-
-void TileModel::startSpawning()
-{
-	m_isSpawning = true;
-}
+TileModel::TileModel(const int type) : TileBase{ type } {}
 
 void TileModel::startGameOver()
 {
-	m_isSpawning = false;
 	m_isMerging = false;
 	m_isGameOver = true;
-}
-
-void TileModel::startWin()
-{
-	m_isSpawning = false;
-	m_isMerging = false;
-	m_isWin = true;
-}
-
-void TileModel::stopWin()
-{
-	m_isWin = false;
 }
 
 // Mutators
@@ -44,22 +25,12 @@ void TileModel::setIsMerging(bool value)
 }
 
 // Accessors
-int TileModel::getType() const
-{
-	return m_type;
-}
-
-bool TileModel::getIsMoving() const
+bool TileModel::isMoving() const
 {
 	return m_isMoving;
 }
 
-bool TileModel::getIsMerging() const
+bool TileModel::isMerging() const
 {
 	return m_isMerging;
-}
-
-bool TileModel::getSpawning() const
-{
-	return m_isSpawning;
 }

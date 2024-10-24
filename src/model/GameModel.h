@@ -8,25 +8,25 @@
 
 class GameModel : public BaseModel {
 private:
-    // Background variables
-    bool m_isGameOver{ false };
-
-    int m_score{};
     TileMatrixModel* m_tileMatrix{};
+    int m_score{};
 
 public:
+    // Constructors / Destructors
     GameModel();
+    ~GameModel();
 
-    void update(float dt);
+    // Public functions
     void updateScore();
 
     void move(const sf::Keyboard::Key key);
     void endMove();
     void endMerge();
+    void clearBoard();
 
-    TileModel* const (&getMatrix() const)[4][4];
-    const std::vector<MoveInstructions*>& getMoveInstructions() const;
+    // Accessors / Mutators
+    TileBase* const (&getMatrix() const)[4][4];
+    const std::vector<MoveInstruction*>& getMoveInstructions() const;
     const std::vector<SpawnInstruction*>& getSpawnInstructions() const;
     const std::vector<MergeInstruction*>& getMergeInstructions() const;
-    void clearBoard();
 };

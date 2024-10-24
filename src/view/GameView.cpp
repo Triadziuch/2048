@@ -77,8 +77,8 @@ void GameView::drawMatrixCMD()
 	printf("\n\nMATRIX:\n");
 	for (int j = 0; j < 4; j++) {
 		for (int i = 0; i < 4; i++) {
-			if (m_matrix[i][j] != nullptr) {
-				printf("%-3d", m_matrix[i][j]->getType());
+			if (m_matrix[i][j]) {
+				printf("%-3d", *m_matrix[i][j]);
 			}
 			else
 				printf("%-3d", 0);
@@ -98,8 +98,8 @@ void GameView::updateTiles()
 
 	for (size_t j = 0; j < 4; ++j)
 		for (size_t i = 0; i < 4; ++i) {
-			if (m_matrix[i][j] != nullptr) {
-				tiles[i][j] = new Tile(m_matrix[i][j]->getType(), m_tileTextures[findID(m_matrix[i][j]->getType())], &m_scale, calculateTilePos(sf::Vector2i{ static_cast<int>(i), static_cast<int>(j) }), m_movementManager);
+			if (m_matrix[i][j]) {
+				tiles[i][j] = new Tile(*m_matrix[i][j], m_tileTextures[findID(*m_matrix[i][j])], &m_scale, calculateTilePos(sf::Vector2i{ static_cast<int>(i), static_cast<int>(j) }), m_movementManager);
 			}
 		}
 }
@@ -121,14 +121,14 @@ GameView::~GameView()
 
 
 // = = = = = Public functions = = = = = //
-void GameView::syncMatrix(TileModel* const (&matrix)[4][4])
+void GameView::syncMatrix(TileBase* const (&matrix)[4][4])
 {
 	this->m_matrix = matrix;
 	this->updateTiles();
 	this->drawMatrixCMD();
 }
 
-void GameView::startMove(const std::vector<MoveInstructions*>& moveInstructions)
+void GameView::startMove(const std::vector<MoveInstruction*>& moveInstructions)
 {
 	this->m_moveInstructions = &moveInstructions;
 
@@ -180,6 +180,11 @@ void GameView::endSpawn()
 	this->notify("finished_spawning");
 }
 
+const std::string& GameView::getViewPath() const
+{
+	return "gameView";
+}
+
 
 
 // = = = = = Update functions = = = = = //
@@ -222,7 +227,7 @@ void GameView::render(sf::RenderTarget& window)
 
 	if (m_mergeInstructions)
 		for (const auto& instruction : *m_mergeInstructions) {
-			int type = instruction->tile->getType();
+			int type = *instruction->tile;
 			sf::Vector2i pos = instruction->pos;
 			Tile tile(type, m_tileTextures[findID(type)], &m_scale, calculateTilePos(pos), m_movementManager);
 			tile.render(window);

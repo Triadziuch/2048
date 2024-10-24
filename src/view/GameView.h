@@ -37,10 +37,10 @@ private:
 
 
 	Tile* tiles[4][4]{ {} };
-	TileModel* const (*m_matrix)[4];
-	const std::vector <MoveInstructions*> *m_moveInstructions;
-	const std::vector <SpawnInstruction*> *m_spawnInstructions;
-	const std::vector <MergeInstruction*>* m_mergeInstructions = nullptr;
+	TileBase* const (*m_matrix)[4];
+	const std::vector <MoveInstruction*>* m_moveInstructions{};
+	const std::vector <SpawnInstruction*>* m_spawnInstructions{};
+	const std::vector <MergeInstruction*>* m_mergeInstructions{};
 
 	std::vector <TileModel*> m_tilesToMerge;
 
@@ -65,12 +65,14 @@ public:
 	~GameView();
 
 	// Public functions
-	void syncMatrix(TileModel* const (&matrix)[4][4]);
+	void syncMatrix(TileBase* const (&matrix)[4][4]);
 
-	void startMove(const std::vector<MoveInstructions*>& moveInstructions);
+	void startMove(const std::vector<MoveInstruction*>& moveInstructions);
 	void startMerge(const std::vector<MergeInstruction*>& mergeInstructions);
 	void startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions);
 	void endSpawn();
+
+	const std::string& getViewPath() const;
 
 	// Update functions
 	void updateMove(float dt);
