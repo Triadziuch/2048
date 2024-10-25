@@ -5,10 +5,22 @@
 #include "../AssetManager.h"
 #include "../TileMatrix.h"
 #include "../GUI.h"
+#include "../StandardCursor.h"
 
-class GameView : public BaseView {
+class GameViewGraphic : public BaseView {
 private:
 	AssetManager manager;
+
+	// Window variables
+	const std::string WINDOW_TITLE = "2048";
+	const unsigned int FRAMERATE = 60;
+	const unsigned int WINDOW_WIDTH = 1280;
+	const unsigned int WINDOW_HEIGHT = 720;
+	const bool VERTICAL_SYNC = true;
+	sf::StandardCursor::TYPE cursor_type = sf::StandardCursor::NORMAL;
+	sf::Vector2i mouse_pos_window;
+	sf::Vector2f mouse_pos_view;
+	sf::RenderWindow* window;
 
 	// Background variables
 	const sf::Color m_backgroundColor{ 250, 248, 239 };
@@ -47,6 +59,7 @@ private:
 	GUI* m_gui{};
 
 	// Initialization functions
+	void initWindow();
 	void initVariables();
 	void initAssets();
 	void initAnimations();
@@ -61,8 +74,8 @@ private:
 
 public:
 	// Constructors / Destructors
-	GameView();
-	~GameView();
+	GameViewGraphic();
+	~GameViewGraphic();
 
 	// Public functions
 	void syncMatrix(TileBase* const (&matrix)[4][4]);
@@ -73,11 +86,16 @@ public:
 	void endSpawn();
 
 	const std::string& getViewPath() const;
+	void openWindow();
+	void closeWindow();
 
 	// Update functions
 	void updateMove(float dt);
 	void updateSpawning(float dt);
 
+	// Accessors / Mutators
+	sf::RenderWindow* getWindow();
+
 	// Render functions
-	void render(sf::RenderTarget& window);
+	void render();
 };

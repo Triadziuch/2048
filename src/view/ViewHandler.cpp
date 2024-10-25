@@ -1,10 +1,10 @@
 #include "ViewHandler.h"
-#include "GameView.h"
-#include "GameViewTwo.h"
+#include "GameViewGraphic.h"
+#include "GameViewCMD.h"
 
 ViewHandler::ViewHandler() {
     this->_data = {
-            {"game_1", std::shared_ptr<BaseView>(new GameView())},
-            {"game_2", std::shared_ptr<BaseView>(new GameViewTwo())}
+            {"game_graphic", std::shared_ptr<BaseView>(new GameViewGraphic())},
+            {"game_cmd", std::shared_ptr<BaseView>(new GameViewCMD())}
     };
 }

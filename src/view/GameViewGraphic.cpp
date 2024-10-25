@@ -1,8 +1,17 @@
 #include <iostream>
-#include "GameView.h"
+#include "GameViewGraphic.h"
 
 // = = = = = Initialization funcitons = = = = = //
-void GameView::initAssets()
+void GameViewGraphic::initWindow()
+{
+	window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE, sf::Style::Titlebar | sf::Style::Close);
+
+	sf::Image icon;
+	icon.loadFromFile("assets/Textures/appicon.png");
+	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+}
+
+void GameViewGraphic::initAssets()
 {
 	for (int i = 1, k = 0; i < 15; ++i, ++k)
 		m_tileTextures[k] = &AssetManager::GetTexture("assets/Textures/" + std::to_string(static_cast<int>(pow(2.f, static_cast<double>(i)))) + ".png");
@@ -11,7 +20,8 @@ void GameView::initAssets()
     AssetManager::GetTexture("assets/Textures/button_score.png");
 }
 
-void GameView::initVariables()
+
+void GameViewGraphic::initVariables()
 {
 	// Playground sprite initialization
 	m_texture = &AssetManager::GetTexture("assets/Textures/playground.png");
@@ -37,7 +47,7 @@ void GameView::initVariables()
 	//m_gui = new GUI(windowSize, m_sprite.getGlobalBounds());
 }
 
-void GameView::initAnimations()
+void GameViewGraphic::initAnimations()
 {
 	auto routine = m_movementManager->createScalingRoutine("TILE_SPAWNING");
 	routine->addScaling(new scalingInfo(sf::Vector2f(0.1f, 0.1f) * m_scale, sf::Vector2f(1.f, 1.f) * m_scale, m_timeSpawningMax, easeFunctions::getFunction(easeFunctions::OUT_QUAD), false, 0.f, 0.f));
@@ -49,7 +59,7 @@ void GameView::initAnimations()
 
 
 // = = = = = Utility funcitons = = = = = //
-sf::Vector2f GameView::calculateTilePos(const sf::Vector2i& pos) const
+sf::Vector2f GameViewGraphic::calculateTilePos(const sf::Vector2i& pos) const
 {
 	sf::Vector2f tilePos{ m_playgroundPosition };
 
@@ -59,7 +69,7 @@ sf::Vector2f GameView::calculateTilePos(const sf::Vector2i& pos) const
 	return tilePos;
 }
 
-int GameView::findID(int type) const
+int GameViewGraphic::findID(int type) const
 {
 	int ID = 0;
 	while (type != 1) {
@@ -72,7 +82,7 @@ int GameView::findID(int type) const
 
 
 // = = = = = Private funcitons = = = = = //
-void GameView::drawMatrixCMD()
+void GameViewGraphic::drawMatrixCMD()
 {
 	printf("\n\nMATRIX:\n");
 	for (int j = 0; j < 4; j++) {
@@ -88,7 +98,7 @@ void GameView::drawMatrixCMD()
 	printf("\n\n");
 }
 
-void GameView::updateTiles()
+void GameViewGraphic::updateTiles()
 {
 	for (size_t j = 0; j < 4; ++j)
 		for (size_t i = 0; i < 4; ++i) {
@@ -107,13 +117,14 @@ void GameView::updateTiles()
 
 
 // = = = = = Constructors / Destructors = = = = = //
-GameView::GameView() {
+GameViewGraphic::GameViewGraphic() {
+	initWindow();
 	initAssets();
 	initVariables();
 	initAnimations();
 }
 
-GameView::~GameView()
+GameViewGraphic::~GameViewGraphic()
 {
 	delete m_gui;
 }
@@ -121,14 +132,14 @@ GameView::~GameView()
 
 
 // = = = = = Public functions = = = = = //
-void GameView::syncMatrix(TileBase* const (&matrix)[4][4])
+void GameViewGraphic::syncMatrix(TileBase* const (&matrix)[4][4])
 {
 	this->m_matrix = matrix;
 	this->updateTiles();
 	this->drawMatrixCMD();
 }
 
-void GameView::startMove(const std::vector<MoveInstruction*>& moveInstructions)
+void GameViewGraphic::startMove(const std::vector<MoveInstruction*>& moveInstructions)
 {
 	this->m_moveInstructions = &moveInstructions;
 
@@ -145,7 +156,7 @@ void GameView::startMove(const std::vector<MoveInstruction*>& moveInstructions)
 	this->notify("started_move");
 }
 
-void GameView::startMerge(const std::vector<MergeInstruction*>& mergeInstructions)
+void GameViewGraphic::startMerge(const std::vector<MergeInstruction*>& mergeInstructions)
 {
 	if (mergeInstructions.empty())
 		return;
@@ -159,7 +170,7 @@ void GameView::startMerge(const std::vector<MergeInstruction*>& mergeInstruction
 	this->notify("started_merging");
 }
 
-void GameView::startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions)
+void GameViewGraphic::startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions)
 {
 	this->m_spawnInstructions = &spawnInstructions;
 
@@ -170,25 +181,39 @@ void GameView::startSpawn(const std::vector<SpawnInstruction*>& spawnInstruction
 	this->notify("started_spawning");
 }
 
-void GameView::endSpawn()
+void GameViewGraphic::endSpawn()
 {
 	m_movementManager->update(1.f);
 
-	for (auto& instruction : *m_spawnInstructions) 
-		tiles[instruction->pos.x][instruction->pos.y]->update(1.f);
+	if (m_spawnInstructions)
+		for (auto& instruction : *m_spawnInstructions) 
+			tiles[instruction->pos.x][instruction->pos.y]->update(1.f);
 	
 	this->notify("finished_spawning");
 }
 
-const std::string& GameView::getViewPath() const
+const std::string& GameViewGraphic::getViewPath() const
 {
-	return "gameView";
+	return "gameViewGraphic";
+}
+
+void GameViewGraphic::openWindow()
+{
+	if (this->window == nullptr)
+		initWindow();
+}
+
+void GameViewGraphic::closeWindow()
+{
+	this->window->close();
+	delete this->window;
+	this->window = nullptr;
 }
 
 
 
 // = = = = = Update functions = = = = = //
-void GameView::updateMove(float dt)
+void GameViewGraphic::updateMove(float dt)
 {
 	this->m_movementManager->update(dt);
 	this->m_movementContainer->update(dt);
@@ -201,7 +226,7 @@ void GameView::updateMove(float dt)
 	}
 }
 
-void GameView::updateSpawning(float dt)
+void GameViewGraphic::updateSpawning(float dt)
 {
 	this->m_movementManager->update(dt);
 
@@ -217,24 +242,31 @@ void GameView::updateSpawning(float dt)
 	}
 }
 
+sf::RenderWindow* GameViewGraphic::getWindow()
+{
+	return window;
+}
+
 
 
 // = = = = = Render functions = = = = = //
-void GameView::render(sf::RenderTarget& window)
+void GameViewGraphic::render()
 {
-	window.clear(m_backgroundColor);
-	window.draw(m_sprite);
+	window->clear(m_backgroundColor);
+	window->draw(m_sprite);
 
 	if (m_mergeInstructions)
 		for (const auto& instruction : *m_mergeInstructions) {
 			int type = *instruction->tile;
 			sf::Vector2i pos = instruction->pos;
 			Tile tile(type, m_tileTextures[findID(type)], &m_scale, calculateTilePos(pos), m_movementManager);
-			tile.render(window);
+			tile.render(*window);
 		}
 
 	for (size_t j = 0; j < 4; ++j)
 		for (size_t i = 0; i < 4; ++i) 
 			if (tiles[i][j])
-				tiles[i][j]->render(window);
+				tiles[i][j]->render(*window);
+
+	window->display();
 }

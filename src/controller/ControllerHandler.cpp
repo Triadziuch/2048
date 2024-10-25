@@ -37,7 +37,4 @@ ControllerHandler::ControllerHandler(std::shared_ptr<ModelHandler> modelHandler,
         if (nextController == "EXIT")
             break;
     }
-    
-
-    // tutaj daæ jakiegoœ while który bêdzie sprawdza³ jaki string zwraca run i na tej podstawie odpala³ odpowiedni kontroler
 }

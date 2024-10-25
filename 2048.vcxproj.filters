@@ -102,7 +102,7 @@
     <ClInclude Include="src\model\BaseModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="src\view\GameViewTwo.h">
+    <ClInclude Include="src\view\GameViewCMD.h">
       <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="src\view\ViewHandler.h">
@@ -111,7 +111,7 @@
     <ClInclude Include="src\view\BaseView.h">
       <Filter>View</Filter>
     </ClInclude>
-    <ClInclude Include="src\view\GameView.h">
+    <ClInclude Include="src\view\GameViewGraphic.h">
       <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="src\DataHandler.hpp">
@@ -125,6 +125,9 @@
     </ClInclude>
     <ClInclude Include="TileModel.h">
       <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="IEventManager.h">
+      <Filter>Pliki nagłówków</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -191,7 +194,7 @@
     <ClCompile Include="src\model\ModelHandler.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\view\GameViewTwo.cpp">
+    <ClCompile Include="src\view\GameViewCMD.cpp">
       <Filter>View</Filter>
     </ClCompile>
     <ClCompile Include="src\view\ViewHandler.cpp">
@@ -200,7 +203,7 @@
     <ClCompile Include="src\view\BaseView.cpp">
       <Filter>View</Filter>
     </ClCompile>
-    <ClCompile Include="src\view\GameView.cpp">
+    <ClCompile Include="src\view\GameViewGraphic.cpp">
       <Filter>View</Filter>
     </ClCompile>
     <ClCompile Include="TileMatrixModel.cpp">
@@ -208,6 +211,9 @@
     </ClCompile>
     <ClCompile Include="TileModel.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="IEventManager.cpp">
+      <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
