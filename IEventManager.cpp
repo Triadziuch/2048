@@ -2,9 +2,11 @@
 #include "src/model/GameModel.h"
 #include "src/controller/GameController.h"
 
-GraphicEventManager::GraphicEventManager()
-{
-}
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_LEFT 75
+#define KEY_RIGHT 77
+#define KEY_ESCAPE 27
 
 void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
 {
@@ -26,20 +28,28 @@ void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameCon
 	}
 }
 
-CMDEventManager::CMDEventManager()
-{
-}
-
 void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
 {
-	char input;
-	std::cin >> input;
+	int input = 0;
+	input = _getch();
 
+	if (input == 0 || input == 224) {
+		input = _getch();
+
+		switch (input) {
+		case KEY_UP:    model->move(sf::Keyboard::W); break;
+		case KEY_DOWN:  model->move(sf::Keyboard::S); break;
+		case KEY_LEFT:  model->move(sf::Keyboard::A); break;
+		case KEY_RIGHT: model->move(sf::Keyboard::D); break;
+		}
+	}
 	switch (input) {
-	case 'a': model->move(sf::Keyboard::A); break;
-	case 'd': model->move(sf::Keyboard::D); break;
-	case 'w': model->move(sf::Keyboard::W); break;
-	case 's': model->move(sf::Keyboard::S); break;
-	case 'c': controller->switchView(); break;
+	case 'c':
+	case 'C':
+		controller->switchView();
+		break;
+	case KEY_ESCAPE:
+		controller->close();
+		break;
 	}
 }
