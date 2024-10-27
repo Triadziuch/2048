@@ -7,6 +7,10 @@
 #include "../view/ViewHandler.h"
 
 class IBaseController {
+protected:
+    bool isDebug{ false };
+    void printDebug(const std::string& info);
+
 public:
     virtual ~IBaseController() {}
     IBaseController() {}

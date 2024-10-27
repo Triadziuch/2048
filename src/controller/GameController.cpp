@@ -6,6 +6,9 @@ void GameController::initVariables()
 	srand(static_cast<unsigned>(time(nullptr)));
 	this->isGraphic = true;
 	this->_eventManager = new GraphicEventManager();
+
+	HWND hWnd = GetConsoleWindow();
+	ShowWindow(hWnd, SW_HIDE);
 }
 
 
@@ -15,26 +18,25 @@ GameController::GameController() {
 	initVariables();
 }
 
-GameController::~GameController() {
-}
+GameController::~GameController() {}
 
 
 
 // = = = = = Model and View handling  = = = = = //
 void GameController::setModelHandler(std::shared_ptr<ModelHandler> modelHandler) {
-	printf("Game Model has been set.\n");
+	printDebug("Game Model has been set.");
 
 	this->_modelHandler = modelHandler;
 	this->_gameModel = this->_modelHandler->getModel<GameModel>("game");
 	this->_gameModel->connect([&]() {
-		std::cout << "[GameController] GameModel has been updated." << std::endl;
-		std::cout << std::endl;
+			printDebug("[GameController] GameModel has been updated.");
 		return false;
 		});
 }
 
 void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
-	printf("Game View has been set.\n");
+	printDebug("Game View has been set.");
+
 	this->_viewHandler = viewHandler;
 	this->_gameModel->connect([&]() {
 			_gameView->notify("update_game");
@@ -55,31 +57,31 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 		});
 
 	this->_gameModel->connect("GAME_OVER", [&]() {
-			printf("[GameController] GameModel has informed about game over.\n");
+			printDebug("[GameController] GameModel has informed about game over.");
 		return false;
 		});
 
 	this->_gameModel->connect("GAME_WON", [&]() {
-			printf("[GameController] GameModel has informed about winning a game.\n");
+			printDebug("[GameController] GameModel has informed about winning a game.");
 		return false;
 		});
 
 	// CMD View
 	this->_gameView = this->_viewHandler->getView<GameViewCMD>("game_cmd");
 	this->_gameView->connect("started_move", [&]() {
-		this->_gameView->endSpawn();
-		isMoving = true;
-		return (false);
+			this->_gameView->endSpawn();
+			isMoving = true;
+		return false;
 		});
 
 	this->_gameView->connect("finished_move", [&]() {
-		isMoving = false;
-		this->_gameModel->endMove();
+			isMoving = false;
+			this->_gameModel->endMove();
 		return false;
 		});
 
 	this->_gameView->connect("started_spawning", [&]() {
-		isSpawning = true;
+			isSpawning = true;
 		return false;
 		});
 
@@ -94,7 +96,7 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 	this->_gameView->connect("started_move", [&]() {
 			this->_gameView->endSpawn();
 			isMoving = true;
-		return (false);
+		return false;
 		});
 
 	this->_gameView->connect("finished_move", [&]() {
@@ -117,13 +119,13 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 
 void GameController::switchView()
 {
-	printf("[GameController] Switched view\n");
-	printf("Graphic: %d\n", this->isGraphic);
+	printDebug("[GameController] Switched view. Graphic: " + this->isGraphic);
 	if (isGraphic) {
 		this->_gameView->closeWindow();
 		this->_gameView = this->_viewHandler->getView<GameViewCMD>("game_cmd");
 		delete _eventManager;
 		this->_eventManager = new CMDEventManager();
+		this->_gameView->openWindow();
 	}
 		
 	else {
@@ -174,6 +176,8 @@ void GameController::update()
 	dt = dt_clock.restart().asSeconds();
 
 	_eventManager->handleEvents(_gameModel, this, _gameView->getWindow());
+	if (isEnd)
+		return;
 
 	if (isMoving) {
 		this->_gameView->updateMove(dt);
@@ -184,33 +188,6 @@ void GameController::update()
 		this->_gameView->updateSpawning(dt);
 		this->render();
 	}
-
-	/*if (isGraphic) {
-		updatePollEventsGraphic();
-
-		if (isMoving) {
-			this->_gameView->updateMove(dt);
-			this->render();
-		}
-
-		if (isSpawning) {
-			this->_gameView->updateSpawning(dt);
-			this->render();
-		}
-	}
-	else {
-		updatePollEventsCMD();
-
-		if (isMoving) {
-			this->_gameView->updateMove(dt);
-			this->render();
-		}
-
-		if (isSpawning) {
-			this->_gameView->updateSpawning(dt);
-			this->render();
-		}
-	}*/
 
 	/*playground->update(dt);
 	if (!isGameOver) {
@@ -223,61 +200,6 @@ void GameController::update()
 		updatePollEvents();
 	}*/
 }
-
-void GameController::updatePollEventsGraphic()
-{
-	//sf::Event ev;
-
-	//if (window->pollEvent(ev)) {
-
-	//	if ((ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Escape) || (ev.type == sf::Event::Closed)) {
-	//		this->window->close();
-	//		this->isEnd = true;
-	//	}
-	//		
-
-	//	if (!isEnd) {
-	//		if (!isGameOver && !isMoving)
-	//			
-
-	//		/*if (playground->getNewGameButton().contains(mouse_pos_view)) {
-	//			if (cursor_type != sf::StandardCursor::HAND) {
-	//				cursor_type = sf::StandardCursor::HAND;
-	//				sf::StandardCursor Cursor(sf::StandardCursor::HAND);
-	//				Cursor.set(window->getSystemHandle());
-	//			}
-
-	//			if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
-	//				playground->clearBoard();
-	//				isGameOver = false;
-	//			}
-	//		}
-	//		else {
-	//			if (cursor_type != sf::StandardCursor::NORMAL) {
-	//				cursor_type = sf::StandardCursor::NORMAL;
-	//				sf::StandardCursor Cursor(sf::StandardCursor::NORMAL);
-	//				Cursor.set(window->getSystemHandle());
-	//			}
-	//		}*/
-	//	}
-	//}
-}
-
-void GameController::updatePollEventsCMD()
-{
-	/*char input;
-	std::cin >> input;
-
-	switch (input) {
-	case 'a': model.move(sf::Keyboard::A); break;
-	case 'd': model.move(sf::Keyboard::D); break;
-	case 'w': model.move(sf::Keyboard::W); break;
-	case 's': model.move(sf::Keyboard::S); break;
-	case 'c': this->switchView(); break;
-	}*/
-}
-
-
 
 // = = = = = Render functions  = = = = = //
 void GameController::render()

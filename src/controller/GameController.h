@@ -31,7 +31,6 @@ private:
 	void initVariables();
 
 public:
-
 	// Constructors / Destructors
 	GameController();
 	~GameController();
@@ -48,8 +47,6 @@ public:
 
 	// Update functions
 	void update();
-	void updatePollEventsGraphic();
-	void updatePollEventsCMD();
 	
 	// Render function
 	void render();

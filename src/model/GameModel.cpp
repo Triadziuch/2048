@@ -6,25 +6,25 @@ GameModel::GameModel() : BaseModel() {
 	m_tileMatrix = new TileMatrixModel();
 	
 	m_tileMatrix->connect("STARTED_SPAWN", [&]() {
-			printf("[GameModel]: TileMatrixModel has started spawning new tile.\n");
+			printDebug("[GameModel]: TileMatrixModel has started spawning new tile.");
 			this->notify("STARTED_SPAWN");
 		return false;
 		});
 
 	m_tileMatrix->connect("STARTED_MOVE", [&]() {
-			printf("[GameModel]: TileMatrixModel has started move.\n");
+			printDebug("[GameModel]: TileMatrixModel has started move.");
 			this->notify("STARTED_MOVE");
 		return false;
 		});
 
 	m_tileMatrix->connect("GAME_OVER", [&]() {
-			printf("[GameModel]: TileMatrixModel has informed about game over.\n");
+			printDebug("[GameModel]: TileMatrixModel has informed about game over.");
 			this->notify("GAME_OVER");
 		return false;
 		});
 
 	m_tileMatrix->connect("GAME_WON", [&]() {
-			printf("[GameModel]: TileMatrixModel has informed about winning a game.\n");
+			printDebug("[GameModel]: TileMatrixModel has informed about winning a game.");
 			this->notify("GAME_WON");
 		return false;
 		});

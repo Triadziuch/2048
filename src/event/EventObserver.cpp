@@ -1,5 +1,11 @@
 #include "EventObserver.h"
 
+void EventObserver::printDebug(const std::string& info)
+{
+    if (isDebug)
+        std::cout << info << std::endl;
+}
+
 void EventObserver::disconnect(ListenerConnection id) {
     Observator::unregisterObserver(id);
 }

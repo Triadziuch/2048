@@ -2,6 +2,7 @@
 
 #include "../event/EventObserver.h"
 #include "../model/GameModel.h"
+#include <Windows.h>
 
 class BaseView : public EventObserver {
 public:

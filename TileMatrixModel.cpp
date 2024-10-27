@@ -382,7 +382,7 @@ void TileMatrixModel::endMove()
 
 	spawn();
 
-	printf("\n\t\tAdded score: %d\n\n", m_addedScore);
+	printDebug("Added score: " + m_addedScore);
 }
 
 void TileMatrixModel::endMerge()
@@ -413,7 +413,7 @@ void TileMatrixModel::spawn(const int amount)
 void TileMatrixModel::addTile(const sf::Vector2i& pos, const int type)
 {
 	if (pos.x > m_matrixWidth - 1 || pos.y > m_matrixHeight - 1)
-		printf("TileMatrixModel::addTile ERROR: Tile spawning position out of bounds\n");
+		printDebug("TileMatrixModel::addTile ERROR: Tile spawning position out of bounds.");
 	else {
 		m_matrix[pos.x][pos.y] = new TileModel(type);
 		this->m_spawnInstructions.emplace_back(new SpawnInstruction(pos, type));

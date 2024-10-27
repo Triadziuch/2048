@@ -215,5 +215,6 @@
     <ClCompile Include="IEventManager.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
+    <ClCompile Include="src\controller\IBaseController.cpp" />
   </ItemGroup>
 </Project>

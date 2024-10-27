@@ -3,8 +3,8 @@
 
 GameViewCMD::GameViewCMD() {
     this->registerObserver("update_game", [&] () {
-        std::cout << "[GameViewCMD] Self Observer \"update_game\" triggered." << std::endl;
-        return (true);
+			printDebug("[GameViewCMD] Self Observer \"update_game\" triggered.");
+        return (false);
     });
 }
 
@@ -14,10 +14,26 @@ const std::string & GameViewCMD::getViewPath() const {
 
 void GameViewCMD::openWindow()
 {
+	FILE* file;
+
+	if (AllocConsole()) {
+		if (freopen_s(&file, "CONOUT$", "w", stdout) != 0) 
+			printDebug("Nie mozna przekierowac stdout.");
+
+		if (freopen_s(&file, "CONOUT$", "w", stderr) != 0) 
+			printDebug("Nie mo¿na przekierowaæ stderr.");
+
+		if (freopen_s(&file, "CONIN$", "r", stdin) != 0) 
+			printDebug("Nie mo¿na przekierowaæ stdin.");
+
+		std::cout.setf(std::ios::unitbuf);
+		setvbuf(stdout, nullptr, _IONBF, 0);
+	}
 }
 
 void GameViewCMD::closeWindow()
 {
+	FreeConsole();
 }
 
 void GameViewCMD::syncMatrix(TileBase* const(&matrix)[4][4])
@@ -119,6 +135,29 @@ sf::RenderWindow* GameViewCMD::getWindow()
 
 void GameViewCMD::render()
 {
+	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	if (hConsole == nullptr) return;
+
+	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	DWORD charsWritten;
+	DWORD consoleSize;
+	COORD topLeft = { 0, 0 };
+
+	// Pobranie rozmiaru bufora konsoli
+	if (!GetConsoleScreenBufferInfo(hConsole, &consoleInfo)) return;
+	consoleSize = consoleInfo.dwSize.X * consoleInfo.dwSize.Y;
+
+	// Wype³nienie bufora pustymi znakami
+	FillConsoleOutputCharacter(hConsole, ' ', consoleSize, topLeft, &charsWritten);
+
+	// Przywrócenie domyœlnych atrybutów (kolory znaków i t³a)
+	FillConsoleOutputAttribute(hConsole, consoleInfo.wAttributes, consoleSize, topLeft, &charsWritten);
+
+	// Ustawienie kursora na pocz¹tek
+	SetConsoleCursorPosition(hConsole, topLeft);
+
+	//system("cls");
+
 	printf("\n\nMATRIX:\n");
 	for (int j = 0; j < 4; j++) {
 		for (int i = 0; i < 4; i++) {

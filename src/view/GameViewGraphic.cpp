@@ -136,7 +136,9 @@ void GameViewGraphic::syncMatrix(TileBase* const (&matrix)[4][4])
 {
 	this->m_matrix = matrix;
 	this->updateTiles();
-	this->drawMatrixCMD();
+
+	if (isDebug)
+		this->drawMatrixCMD();
 }
 
 void GameViewGraphic::startMove(const std::vector<MoveInstruction*>& moveInstructions)
@@ -149,7 +151,6 @@ void GameViewGraphic::startMove(const std::vector<MoveInstruction*>& moveInstruc
 		sf::Vector2i distance = new_pos - old_pos;
 		const sf::Vector2f pixel_distance = sf::Vector2f{ static_cast<float>(distance.x) * (m_innerEdgeWidth + m_tileWidth),
 														  static_cast<float>(distance.y) * (m_innerEdgeWidth + m_tileWidth) };
-		printf("Move pixel distance: %f %f\n", pixel_distance.x, pixel_distance.y);
 		this->tiles[old_pos.x][old_pos.y]->setIsMoving(true);
 		this->tiles[old_pos.x][old_pos.y]->smoothMove(pixel_distance, m_timeMovingMax);
 	}

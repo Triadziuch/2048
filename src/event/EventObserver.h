@@ -5,6 +5,10 @@
 #include "../pattern/Observator.hpp"
 
 class EventObserver : public IEventObserver, protected Observator<std::string> {
+protected:
+    bool isDebug{ false };
+    void printDebug(const std::string& info);
+
 public:
 
     template<typename Observer>
