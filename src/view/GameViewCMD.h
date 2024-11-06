@@ -3,6 +3,12 @@
 #include "../model/GameModel.h"
 #include "BaseView.h"
 #include "../TileMatrix.h"
+#include <ftxui/component/component.hpp>
+#include <ftxui/component/screen_interactive.hpp>
+#include <ftxui/dom/elements.hpp>
+#include "ftxui/component/loop.hpp"
+#include <array>
+#include <future>
 
 class GameViewCMD : public BaseView {
 private:
@@ -11,6 +17,40 @@ private:
 	const std::vector <SpawnInstruction*>* m_spawnInstructions{};
 	const std::vector <MergeInstruction*>* m_mergeInstructions{};
 	std::vector <TileModel*> m_tilesToMerge;
+
+	// Console Variables
+	HWND consoleWindow = nullptr;
+	FILE* m_stdout = nullptr;
+	FILE* m_stderr = nullptr;
+	FILE* m_stdin = nullptr;
+
+	// Grid variables
+	constexpr static int gridSize = 4;
+	constexpr static int cellSize = 9;
+	//std::array<std::array<int, gridSize>, gridSize> grid;
+	ftxui::Component grid_component;
+	ftxui::ScreenInteractive* screen;
+	ftxui::Loop *loop;
+
+	bool isRefreshing, needRefreshing;
+	std::mutex mtx;
+	std::condition_variable cv;
+
+	std::mutex update_grid_mutex;
+	std::thread* ftxui_thread;
+
+	ftxui::Component initGrid();
+	ftxui::Component renderer;
+
+	int getCell(int row, int col) const;
+	ftxui::Color getCellColor(int row, int col) const;
+	ftxui::Color getCellBorderColor(int row, int col) const;
+	std::string displayCell(int row, int col) const;
+
+	void renderFTXUI();
+	void updateGrid();
+	void refreshScreen();
+	
 
 public:
 	GameViewCMD();

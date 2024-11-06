@@ -47,6 +47,9 @@ public:
 
 	// Update functions
 	void update();
+
+	// Accessors / Mutators
+	const bool& getIsMoving();
 	
 	// Render function
 	void render();

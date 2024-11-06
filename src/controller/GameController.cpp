@@ -7,8 +7,8 @@ void GameController::initVariables()
 	this->isGraphic = true;
 	this->_eventManager = new GraphicEventManager();
 
-	HWND hWnd = GetConsoleWindow();
-	ShowWindow(hWnd, SW_HIDE);
+	/*HWND hWnd = GetConsoleWindow();
+	ShowWindow(hWnd, SW_HIDE);*/
 }
 
 
@@ -70,7 +70,8 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 	this->_gameView = this->_viewHandler->getView<GameViewCMD>("game_cmd");
 	this->_gameView->connect("started_move", [&]() {
 			this->_gameView->endSpawn();
-			isMoving = true;
+			this->_gameModel->endMove();
+			this->_gameView->endSpawn();
 		return false;
 		});
 
@@ -120,25 +121,29 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 void GameController::switchView()
 {
 	printDebug("[GameController] Switched view. Graphic: " + this->isGraphic);
-	if (isGraphic) {
-		this->_gameView->closeWindow();
-		this->_gameView = this->_viewHandler->getView<GameViewCMD>("game_cmd");
-		delete _eventManager;
-		this->_eventManager = new CMDEventManager();
-		this->_gameView->openWindow();
-	}
-		
-	else {
-		this->_gameView->closeWindow();
-		this->_gameView = this->_viewHandler->getView<GameViewGraphic>("game_graphic");
-		delete _eventManager;
-		this->_eventManager = new GraphicEventManager();
-		this->_gameView->openWindow();
-	}
-		
-	this->isGraphic = !this->isGraphic;
 
+	while (isMoving) 
+		this->_gameView->updateMove(1.f);
+
+	while (isSpawning) 
+		this->_gameView->updateSpawning(1.f);
+
+	this->_gameView->closeWindow();
+	delete _eventManager;
+
+	if (isGraphic) {
+		this->_gameView = this->_viewHandler->getView<GameViewCMD>("game_cmd");
+		this->_eventManager = new CMDEventManager();
+	}
+	else {
+		this->_gameView = this->_viewHandler->getView<GameViewGraphic>("game_graphic");
+		this->_eventManager = new GraphicEventManager();
+	}
+
+	this->_gameView->openWindow();
+	this->isGraphic = !this->isGraphic;
 	this->_gameView->syncMatrix(this->_gameModel->getMatrix());
+
 	this->render();
 }
 
@@ -199,6 +204,11 @@ void GameController::update()
 		updateMousePositions();
 		updatePollEvents();
 	}*/
+}
+
+const bool& GameController::getIsMoving()
+{
+	return isMoving;
 }
 
 // = = = = = Render functions  = = = = = //

@@ -1,44 +1,269 @@
 #include <iostream>
 #include "GameViewCMD.h"
 
-GameViewCMD::GameViewCMD() {
-    this->registerObserver("update_game", [&] () {
-			printDebug("[GameViewCMD] Self Observer \"update_game\" triggered.");
-        return (false);
-    });
+using namespace ftxui;
+
+Component GameViewCMD::initGrid()
+{
+	std::vector<Component> rows;
+
+	for (int row = 0; row < gridSize; ++row) {
+		std::vector<Component> cols;
+		for (int col = 0; col < gridSize; ++col) {
+			auto cell_content = Renderer([&, row, col] {
+				return vbox({
+					text(" ") | bgcolor(getCellColor(col, row)),
+					text(" ") | bgcolor(getCellColor(col, row)),
+					text(displayCell(col, row)) | bold | bgcolor(getCellColor(col, row)),
+					text(" ") | bgcolor(getCellColor(col, row)),
+					text(" ") | bgcolor(getCellColor(col, row)),
+					}) | borderStyled(ftxui::LIGHT, Color::White/*getCellBorderColor(col, row)*/) | size(WIDTH, EQUAL, cellSize + 4) | size(HEIGHT, EQUAL, cellSize);
+				});
+			cols.push_back(cell_content);
+		}
+		rows.push_back(Container::Horizontal(cols));  // Uk³ad poziomy komórek w jednym wierszu
+	}
+	return Container::Vertical(rows);  // Uk³ad pionowy wierszy komórek
 }
 
-const std::string & GameViewCMD::getViewPath() const {
-    return ("");
+int GameViewCMD::getCell(int row, int col) const
+{
+	if (m_matrix[row][col])
+		return *m_matrix[row][col];
+	return 0;
+}
+
+ftxui::Color GameViewCMD::getCellColor(int row, int col) const
+{
+	if (m_matrix == nullptr)
+		return Color::Black;
+
+	if (m_matrix[row][col]) {
+		int value = *m_matrix[row][col];
+
+		if (value == 2)
+			return Color(149, 165, 166);
+		else if (value == 4 || value == 8)
+			return Color(231, 76, 60);
+		else if (value == 16 || value == 32 || value == 64)
+			return Color(230, 126, 34);
+		else if (value == 128 || value == 256 || value == 512)
+			return Color(155, 89, 182);
+	}
+
+	return Color::Black;
+}
+
+ftxui::Color GameViewCMD::getCellBorderColor(int row, int col) const
+{
+	if (m_matrix == nullptr)
+		return Color::Black;
+
+	if (m_matrix[row][col]) {
+		int value = *m_matrix[row][col];
+
+		if (value == 2)
+			return Color(149, 165, 166);
+		else if (value == 4 || value == 8)
+			return Color(231, 76, 60);
+		else if (value == 16 || value == 32 || value == 64)
+			return Color(230, 126, 34);
+		else if (value == 128 || value == 256 || value == 512)
+			return Color(155, 89, 182);
+	}
+
+	return Color::White;
+}
+
+std::string GameViewCMD::displayCell(int row, int col) const
+{
+	int value = getCell(row, col);
+
+	if (value == 0)
+		return "";
+
+	if (value % 1024 == 0)
+		return "   " + std::to_string(value);
+	else if (value % 128 == 0)
+		return "    " + std::to_string(value);
+	else if (value % 16 == 0)
+		return "    " + std::to_string(value);
+	else
+		return "     " + std::to_string(value);
+}
+
+void GameViewCMD::renderFTXUI()
+{
+	OutputDebugString(L"Wejœcie do renderFTXUI()\n");
+
+
+	ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::Fullscreen();
+	this->screen = &screen;
+
+	update_grid_mutex.lock();
+	Loop loop(&screen, renderer);
+	update_grid_mutex.unlock();
+
+	std::unique_lock<std::mutex> lock(mtx);
+
+	while (isRefreshing) {
+		update_grid_mutex.lock();
+		loop.RunOnce();
+		this->needRefreshing = false;
+		update_grid_mutex.unlock();
+
+		cv.wait(lock, [this] { return needRefreshing; });
+	}
+}
+
+GameViewCMD::GameViewCMD() {
+	this->registerObserver("update_game", [&]() {
+		printDebug("[GameViewCMD] Self Observer \"update_game\" triggered.");
+		return (false);
+		});
+
+	this->updateGrid();
+}
+
+const std::string& GameViewCMD::getViewPath() const {
+	return ("");
+}
+
+void GameViewCMD::refreshScreen()
+{
+	{
+		std::lock_guard<std::mutex> lock(mtx);
+		needRefreshing = true;
+	}
+	cv.notify_one();
+}
+
+void GameViewCMD::updateGrid()
+{
+	update_grid_mutex.lock();
+	grid_component = initGrid();
+	renderer = Renderer(grid_component, [&] {
+		return vbox({
+		  hbox({
+			  filler(),
+		  }),
+		  filler(),
+		  hbox({
+			  filler(),
+			  vbox({
+				text("2048 Game") | bold | hcenter,
+				separator(),
+				grid_component->Render() | hcenter}),
+			  filler(),
+		  }),
+		  filler(),
+		  hbox({
+			  filler(),
+		  }),
+			});
+		});
+		/*return vbox({
+			text("2048 Game") | bold | hcenter,
+			separator(),
+			grid_component->Render() | hcenter,
+			});
+		});*/
+	update_grid_mutex.unlock();
 }
 
 void GameViewCMD::openWindow()
 {
-	FILE* file;
-
 	if (AllocConsole()) {
-		if (freopen_s(&file, "CONOUT$", "w", stdout) != 0) 
+		// Zapisz uchwyt do okna konsoli
+		consoleWindow = GetConsoleWindow();
+
+		if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
 			printDebug("Nie mozna przekierowac stdout.");
-
-		if (freopen_s(&file, "CONOUT$", "w", stderr) != 0) 
+		if (freopen_s(&m_stderr, "CONOUT$", "w", stderr) != 0)
 			printDebug("Nie mo¿na przekierowaæ stderr.");
-
-		if (freopen_s(&file, "CONIN$", "r", stdin) != 0) 
+		if (freopen_s(&m_stdin, "CONIN$", "r", stdin) != 0)
 			printDebug("Nie mo¿na przekierowaæ stdin.");
+
+		std::cout.clear();
+		std::cerr.clear();
+		std::cin.clear();
 
 		std::cout.setf(std::ios::unitbuf);
 		setvbuf(stdout, nullptr, _IONBF, 0);
+
+		// Uzyskaj wymiary okna konsoli
+		RECT consoleRect;
+		GetWindowRect(consoleWindow, &consoleRect);
+
+		// Uzyskaj wymiary ekranu
+		RECT screenRect;
+		SystemParametersInfo(SPI_GETWORKAREA, 0, &screenRect, 0);
+
+		// Oblicz pozycjê na œrodku ekranu
+		int screenWidth = screenRect.right - screenRect.left;
+		int screenHeight = screenRect.bottom - screenRect.top;
+
+		int consoleWidth = consoleRect.right - consoleRect.left;
+		int consoleHeight = consoleRect.bottom - consoleRect.top;
+
+		int posX = (screenWidth - consoleWidth) / 2 + screenRect.left;
+		int posY = (screenHeight - consoleHeight) / 2 + screenRect.top;
+
+		// Ustaw pozycjê okna konsoli na œrodku ekranu
+		MoveWindow(consoleWindow, posX, posY, consoleWidth, consoleHeight, TRUE);
 	}
+
+	this->isRefreshing = true;
 }
 
 void GameViewCMD::closeWindow()
 {
-	FreeConsole();
+	this->isRefreshing = false;
+	this->refreshScreen();
+
+	if (ftxui_thread->joinable())
+		ftxui_thread->join();
+
+	delete ftxui_thread;
+	ftxui_thread = nullptr;
+	this->screen = nullptr;
+
+	if (m_stdout) {
+		fclose(m_stdout);
+		m_stdout = nullptr;
+	}
+	if (m_stderr) {
+		fclose(m_stderr);
+		m_stderr = nullptr;
+	}
+	if (m_stdin) {
+		fclose(m_stdin);
+		m_stdin = nullptr;
+	}
+
+	freopen_s(&m_stdout, "NUL", "w", stdout);
+	freopen_s(&m_stderr, "NUL", "w", stderr);
+	freopen_s(&m_stdin, "NUL", "r", stdin);
+
+	std::cout.clear();
+	std::cerr.clear();
+	std::cin.clear();
+
+	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	HWND hWnd = GetConsoleWindow();
+	if (hWnd) {
+		FreeConsole();
+		SendMessage(hWnd, WM_CLOSE, 0, 0);
+	}
 }
 
 void GameViewCMD::syncMatrix(TileBase* const(&matrix)[4][4])
 {
+	update_grid_mutex.lock();
 	this->m_matrix = matrix;
+	update_grid_mutex.unlock();
+
+	this->updateGrid();
 }
 
 void GameViewCMD::startMove(const std::vector<MoveInstruction*>& moveInstructions)
@@ -93,6 +318,9 @@ void GameViewCMD::endSpawn()
 		tiles[instruction->pos.x][instruction->pos.y]->update(1.f);*/
 
 	this->notify("finished_spawning");
+
+	this->updateGrid();
+	this->refreshScreen();
 }
 
 void GameViewCMD::updateMove(float dt)
@@ -135,30 +363,35 @@ sf::RenderWindow* GameViewCMD::getWindow()
 
 void GameViewCMD::render()
 {
-	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	if (hConsole == nullptr) return;
+	if (this->screen == nullptr)
+		ftxui_thread = new std::thread([this]() {
+		this->renderFTXUI();
+			});
 
-	CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-	DWORD charsWritten;
-	DWORD consoleSize;
-	COORD topLeft = { 0, 0 };
+	//HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	//if (hConsole == nullptr) return;
 
-	// Pobranie rozmiaru bufora konsoli
-	if (!GetConsoleScreenBufferInfo(hConsole, &consoleInfo)) return;
-	consoleSize = consoleInfo.dwSize.X * consoleInfo.dwSize.Y;
+	//CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
+	//DWORD charsWritten;
+	//DWORD consoleSize;
+	//COORD topLeft = { 0, 0 };
 
-	// Wype³nienie bufora pustymi znakami
-	FillConsoleOutputCharacter(hConsole, ' ', consoleSize, topLeft, &charsWritten);
+	//// Pobranie rozmiaru bufora konsoli
+	//if (!GetConsoleScreenBufferInfo(hConsole, &consoleInfo)) return;
+	//consoleSize = consoleInfo.dwSize.X * consoleInfo.dwSize.Y;
 
-	// Przywrócenie domyœlnych atrybutów (kolory znaków i t³a)
-	FillConsoleOutputAttribute(hConsole, consoleInfo.wAttributes, consoleSize, topLeft, &charsWritten);
+	//// Wype³nienie bufora pustymi znakami
+	//FillConsoleOutputCharacter(hConsole, ' ', consoleSize, topLeft, &charsWritten);
 
-	// Ustawienie kursora na pocz¹tek
-	SetConsoleCursorPosition(hConsole, topLeft);
+	//// Przywrócenie domyœlnych atrybutów (kolory znaków i t³a)
+	//FillConsoleOutputAttribute(hConsole, consoleInfo.wAttributes, consoleSize, topLeft, &charsWritten);
+
+	//// Ustawienie kursora na pocz¹tek
+	//SetConsoleCursorPosition(hConsole, topLeft);
 
 	//system("cls");
 
-	printf("\n\nMATRIX:\n");
+	/*printf("\n\nMATRIX:\n");
 	for (int j = 0; j < 4; j++) {
 		for (int i = 0; i < 4; i++) {
 			if (m_matrix[i][j]) {
@@ -169,5 +402,7 @@ void GameViewCMD::render()
 		}
 		printf("\n");
 	}
-	printf("\n\n");
+	printf("\n\n");*/
+
+	OutputDebugString(L"Wychodzenie z GameViewCMD::render()\n");
 }
