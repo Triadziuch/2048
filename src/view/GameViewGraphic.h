@@ -92,6 +92,7 @@ public:
 	// Update functions
 	void updateMove(float dt);
 	void updateSpawning(float dt);
+	void updateScore(const int& score, const int& bestScore);
 
 	// Accessors / Mutators
 	sf::RenderWindow* getWindow();

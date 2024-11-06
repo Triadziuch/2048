@@ -20,6 +20,7 @@ public:
 	// Update functions
 	virtual void updateMove(float dt) = 0;
 	virtual void updateSpawning(float dt) = 0;
+	virtual void updateScore(const int& score, const int& bestScore) = 0;
 
 	// Accessors / Mutators
 	virtual sf::RenderWindow* getWindow() = 0;

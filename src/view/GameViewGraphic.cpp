@@ -243,6 +243,10 @@ void GameViewGraphic::updateSpawning(float dt)
 	}
 }
 
+void GameViewGraphic::updateScore(const int& score, const int& bestScore)
+{
+}
+
 sf::RenderWindow* GameViewGraphic::getWindow()
 {
 	return window;

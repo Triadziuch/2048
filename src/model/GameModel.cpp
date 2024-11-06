@@ -46,6 +46,9 @@ void GameModel::updateScore()
 	const int added_m_score = m_tileMatrix->getAddedScore();
 	m_tileMatrix->setAddedScore(0);
 	m_score += added_m_score;
+
+	if (m_score >= m_bestScore)
+		m_bestScore = m_score;
 }
 
 void GameModel::move(const sf::Keyboard::Key key)
@@ -110,4 +113,14 @@ const std::vector<SpawnInstruction*>& GameModel::getSpawnInstructions() const
 const std::vector<MergeInstruction*>& GameModel::getMergeInstructions() const
 {
 	return this->m_tileMatrix->getMergeInstructions();
+}
+
+const int& GameModel::getScore() const
+{
+	return m_score;
+}
+
+const int& GameModel::getBestScore() const
+{
+	return m_bestScore;
 }

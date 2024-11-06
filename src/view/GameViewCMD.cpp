@@ -94,9 +94,6 @@ std::string GameViewCMD::displayCell(int row, int col) const
 
 void GameViewCMD::renderFTXUI()
 {
-	OutputDebugString(L"Wejœcie do renderFTXUI()\n");
-
-
 	ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::Fullscreen();
 	this->screen = &screen;
 
@@ -143,31 +140,36 @@ void GameViewCMD::updateGrid()
 	update_grid_mutex.lock();
 	grid_component = initGrid();
 	renderer = Renderer(grid_component, [&] {
-		return vbox({
-		  hbox({
-			  filler(),
-		  }),
-		  filler(),
-		  hbox({
-			  filler(),
-			  vbox({
-				text("2048 Game") | bold | hcenter,
-				separator(),
-				grid_component->Render() | hcenter}),
-			  filler(),
-		  }),
-		  filler(),
-		  hbox({
-			  filler(),
-		  }),
-			});
+		return
+			hbox({ 
+				filler(),
+				vbox({
+					text(""),
+				}) | size(WIDTH, EQUAL, 9),
+				vbox({
+					text(""),
+				}) | size(WIDTH, EQUAL, 14),
+				filler(),
+
+				vbox({
+					text("2048 Game") | bold | hcenter,
+					separator(),
+					grid_component->Render() | hcenter
+				}),
+
+				filler(),
+				vbox({
+					text("Score") | hcenter,
+					text(std::to_string(score)) | hcenter,
+				}) | border | size(WIDTH, EQUAL, 9) | size(HEIGHT, EQUAL, 2),
+				filler(),
+				vbox({
+					text("Best score") | hcenter,
+					text(std::to_string(bestScore)) | hcenter,
+				}) | border | size(WIDTH, EQUAL, 14) | size(HEIGHT, EQUAL, 2),
+				filler(),
+				});
 		});
-		/*return vbox({
-			text("2048 Game") | bold | hcenter,
-			separator(),
-			grid_component->Render() | hcenter,
-			});
-		});*/
 	update_grid_mutex.unlock();
 }
 
@@ -367,42 +369,13 @@ void GameViewCMD::render()
 		ftxui_thread = new std::thread([this]() {
 		this->renderFTXUI();
 			});
+}
 
-	//HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-	//if (hConsole == nullptr) return;
+void GameViewCMD::updateScore(const int& score, const int& bestScore)
+{
+	this->score = score;
+	this->bestScore = bestScore;
 
-	//CONSOLE_SCREEN_BUFFER_INFO consoleInfo;
-	//DWORD charsWritten;
-	//DWORD consoleSize;
-	//COORD topLeft = { 0, 0 };
-
-	//// Pobranie rozmiaru bufora konsoli
-	//if (!GetConsoleScreenBufferInfo(hConsole, &consoleInfo)) return;
-	//consoleSize = consoleInfo.dwSize.X * consoleInfo.dwSize.Y;
-
-	//// Wype³nienie bufora pustymi znakami
-	//FillConsoleOutputCharacter(hConsole, ' ', consoleSize, topLeft, &charsWritten);
-
-	//// Przywrócenie domyœlnych atrybutów (kolory znaków i t³a)
-	//FillConsoleOutputAttribute(hConsole, consoleInfo.wAttributes, consoleSize, topLeft, &charsWritten);
-
-	//// Ustawienie kursora na pocz¹tek
-	//SetConsoleCursorPosition(hConsole, topLeft);
-
-	//system("cls");
-
-	/*printf("\n\nMATRIX:\n");
-	for (int j = 0; j < 4; j++) {
-		for (int i = 0; i < 4; i++) {
-			if (m_matrix[i][j]) {
-				printf("%-3d", *m_matrix[i][j]);
-			}
-			else
-				printf("%-3d", 0);
-		}
-		printf("\n");
-	}
-	printf("\n\n");*/
-
-	OutputDebugString(L"Wychodzenie z GameViewCMD::render()\n");
+	this->updateGrid();
+	this->refreshScreen();
 }

@@ -68,8 +68,8 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 
 	// CMD View
 	this->_gameView = this->_viewHandler->getView<GameViewCMD>("game_cmd");
+	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 	this->_gameView->connect("started_move", [&]() {
-			this->_gameView->endSpawn();
 			this->_gameModel->endMove();
 			this->_gameView->endSpawn();
 		return false;
@@ -89,11 +89,13 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 	this->_gameView->connect("finished_spawning", [&]() {
 		isSpawning = false;
 		this->_gameModel->endMerge();
+		this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 		return false;
 		});
 
 	// Graphic View
 	this->_gameView = this->_viewHandler->getView<GameViewGraphic>("game_graphic");
+	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 	this->_gameView->connect("started_move", [&]() {
 			this->_gameView->endSpawn();
 			isMoving = true;
@@ -114,6 +116,7 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 	this->_gameView->connect("finished_spawning", [&]() {
 			isSpawning = false;
 			this->_gameModel->endMerge();
+			this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 		return false;
 		});
 }

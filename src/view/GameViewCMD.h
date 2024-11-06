@@ -17,6 +17,7 @@ private:
 	const std::vector <SpawnInstruction*>* m_spawnInstructions{};
 	const std::vector <MergeInstruction*>* m_mergeInstructions{};
 	std::vector <TileModel*> m_tilesToMerge;
+	int score, bestScore;
 
 	// Console Variables
 	HWND consoleWindow = nullptr;
@@ -70,6 +71,7 @@ public:
 	// Update functions
 	void updateMove(float dt);
 	void updateSpawning(float dt);
+	void updateScore(const int& score, const int& bestScore);
 
 	// Accessors / Mutators
 	sf::RenderWindow* getWindow();

@@ -9,7 +9,7 @@
 class GameModel : public BaseModel {
 private:
     TileMatrixModel* m_tileMatrix{};
-    int m_score{};
+    int m_score{}, m_bestScore{ 212 };
 
 public:
     // Constructors / Destructors
@@ -29,4 +29,6 @@ public:
     const std::vector<MoveInstruction*>& getMoveInstructions() const;
     const std::vector<SpawnInstruction*>& getSpawnInstructions() const;
     const std::vector<MergeInstruction*>& getMergeInstructions() const;
+    const int& getScore() const;
+    const int& getBestScore() const;
 };
