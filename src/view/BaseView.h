@@ -9,6 +9,8 @@ public:
     virtual const std::string &getViewPath() const = 0;
 	virtual void openWindow() = 0;
 	virtual void closeWindow() = 0;
+	virtual void initRenderer() = 0;
+	virtual void deleteRenderer() = 0;
 
 	virtual void syncMatrix(TileBase* const (&matrix)[4][4]) = 0;
 

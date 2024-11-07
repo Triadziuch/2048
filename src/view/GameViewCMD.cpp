@@ -17,13 +17,13 @@ Component GameViewCMD::initGrid()
 					text(displayCell(col, row)) | bold | bgcolor(getCellColor(col, row)),
 					text(" ") | bgcolor(getCellColor(col, row)),
 					text(" ") | bgcolor(getCellColor(col, row)),
-					}) | borderStyled(ftxui::LIGHT, Color::White/*getCellBorderColor(col, row)*/) | size(WIDTH, EQUAL, cellSize + 4) | size(HEIGHT, EQUAL, cellSize);
+					}) | borderStyled(ftxui::LIGHT, Color::White) | size(WIDTH, EQUAL, cellSize + 4) | size(HEIGHT, EQUAL, cellSize);
 				});
 			cols.push_back(cell_content);
 		}
-		rows.push_back(Container::Horizontal(cols));  // Uk³ad poziomy komórek w jednym wierszu
+		rows.push_back(Container::Horizontal(cols));
 	}
-	return Container::Vertical(rows);  // Uk³ad pionowy wierszy komórek
+	return Container::Vertical(rows);
 }
 
 int GameViewCMD::getCell(int row, int col) const
@@ -197,15 +197,12 @@ void GameViewCMD::openWindow()
 		std::cout.setf(std::ios::unitbuf);
 		setvbuf(stdout, nullptr, _IONBF, 0);
 
-		// Uzyskaj wymiary okna konsoli
 		RECT consoleRect;
 		GetWindowRect(consoleWindow, &consoleRect);
 
-		// Uzyskaj wymiary ekranu
 		RECT screenRect;
 		SystemParametersInfo(SPI_GETWORKAREA, 0, &screenRect, 0);
 
-		// Oblicz pozycjê na œrodku ekranu
 		int screenWidth = screenRect.right - screenRect.left;
 		int screenHeight = screenRect.bottom - screenRect.top;
 
@@ -215,7 +212,6 @@ void GameViewCMD::openWindow()
 		int posX = (screenWidth - consoleWidth) / 2 + screenRect.left;
 		int posY = (screenHeight - consoleHeight) / 2 + screenRect.top;
 
-		// Ustaw pozycjê okna konsoli na œrodku ekranu
 		MoveWindow(consoleWindow, posX, posY, consoleWidth, consoleHeight, TRUE);
 	}
 
@@ -224,15 +220,7 @@ void GameViewCMD::openWindow()
 
 void GameViewCMD::closeWindow()
 {
-	this->isRefreshing = false;
-	this->refreshScreen();
-
-	if (ftxui_thread->joinable())
-		ftxui_thread->join();
-
-	delete ftxui_thread;
-	ftxui_thread = nullptr;
-	this->screen = nullptr;
+	this->deleteRenderer();
 
 	if (m_stdout) {
 		fclose(m_stdout);
@@ -261,6 +249,29 @@ void GameViewCMD::closeWindow()
 		FreeConsole();
 		SendMessage(hWnd, WM_CLOSE, 0, 0);
 	}
+}
+
+void GameViewCMD::initRenderer()
+{
+	this->isRefreshing = true;
+	if (this->screen == nullptr)
+		ftxui_thread = new std::thread([this]() {
+		this->renderFTXUI();
+			});
+	this->isRefreshing = true;
+}
+
+void GameViewCMD::deleteRenderer()
+{
+	this->isRefreshing = false;
+	this->refreshScreen();
+
+	if (ftxui_thread->joinable())
+		ftxui_thread->join();
+
+	delete ftxui_thread;
+	ftxui_thread = nullptr;
+	this->screen = nullptr;
 }
 
 void GameViewCMD::syncMatrix(TileBase* const(&matrix)[4][4])
@@ -369,10 +380,7 @@ sf::RenderWindow* GameViewCMD::getWindow()
 
 void GameViewCMD::render()
 {
-	if (this->screen == nullptr)
-		ftxui_thread = new std::thread([this]() {
-		this->renderFTXUI();
-			});
+	this->initRenderer();
 }
 
 void GameViewCMD::updateScore(const int& score, const int& bestScore)

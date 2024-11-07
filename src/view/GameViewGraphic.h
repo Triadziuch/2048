@@ -88,6 +88,8 @@ public:
 	const std::string& getViewPath() const;
 	void openWindow();
 	void closeWindow();
+	void initRenderer();
+	void deleteRenderer();
 
 	// Update functions
 	void updateMove(float dt);

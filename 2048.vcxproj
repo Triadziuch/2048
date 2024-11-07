@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseLeaderboardView.h" />
+    <ClInclude Include="ExitCode.h" />
     <ClInclude Include="IEventManager.h" />
     <ClInclude Include="LeaderboardModel.h" />
     <ClInclude Include="src\AssetManager.h" />
@@ -55,6 +57,7 @@
     <ClInclude Include="TileModel.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseLeaderboardView.cpp" />
     <ClCompile Include="IEventManager.cpp" />
     <ClCompile Include="LeaderboardModel.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />

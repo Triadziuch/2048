@@ -32,9 +32,18 @@ ControllerHandler::ControllerHandler(std::shared_ptr<ModelHandler> modelHandler,
     this->changeRoute("-", "Game");
 
     while (true) {
-        std::string nextController = this->_currentController->run();
+        ExitCode exitCode = this->_currentController->run();
+        system("cls");
 
-        if (nextController == "EXIT")
+        if (exitCode == ExitCode::GAME) {
+
+        }
+        else if (exitCode == ExitCode::LEADERBOARD) {
+            printf("LEADERBOARD\n");
+            Sleep(2000);
+        }
+        else if (exitCode == ExitCode::EXIT) {
             break;
+        }
     }
 }

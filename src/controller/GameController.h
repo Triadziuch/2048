@@ -26,6 +26,8 @@ private:
 	bool isSpawning = false;
 	bool isEnd = false;
 	bool isGameOver = false;
+	bool hasQuit = false;
+	ExitCode exitCode = ExitCode::EXIT;
 
 	// Initialization functions 
 	void initVariables();
@@ -41,9 +43,9 @@ public:
 	void switchView();
 
 	// Public funcitons
-	const std::string run() override;
+	const ExitCode run() override;
 	void close();
-	const std::string gameLoop();
+	const ExitCode gameLoop();
 
 	// Update functions
 	void update();

@@ -211,6 +211,14 @@ void GameViewGraphic::closeWindow()
 	this->window = nullptr;
 }
 
+void GameViewGraphic::initRenderer()
+{
+}
+
+void GameViewGraphic::deleteRenderer()
+{
+}
+
 
 
 // = = = = = Update functions = = = = = //

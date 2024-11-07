@@ -154,10 +154,19 @@ void GameController::switchView()
 
 
 // = = = = = Public functions  = = = = = //
-const std::string GameController::run()
+const ExitCode GameController::run()
 {
-	_gameView->syncMatrix(this->_gameModel->getMatrix());
-	this->render();
+	this->exitCode = ExitCode::EXIT;
+	this->isEnd = false;
+
+	if (isGraphic) {
+		this->switchView();
+	}
+	else {
+		_gameView->syncMatrix(this->_gameModel->getMatrix());
+		this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
+		this->render();
+	}
 
 	return this->gameLoop();
 }
@@ -166,15 +175,19 @@ void GameController::close()
 {
 	this->_gameView->closeWindow();
 	this->isEnd = true;
+	this->exitCode = ExitCode::EXIT;
 }
 
-const std::string GameController::gameLoop()
+const ExitCode GameController::gameLoop()
 {
 	while (!isEnd) {
 		update();
 	}
 
-	return "EXIT";
+	if (exitCode != ExitCode::EXIT)
+		this->_gameView->deleteRenderer();
+
+	return exitCode;
 }
 
 
@@ -182,6 +195,13 @@ const std::string GameController::gameLoop()
 // = = = = = Update functions  = = = = = //
 void GameController::update()
 {
+	if (!hasQuit) {
+		this->hasQuit = true;
+		this->exitCode = ExitCode::LEADERBOARD;
+		this->isEnd = true;
+		return;
+	}
+
 	dt = dt_clock.restart().asSeconds();
 
 	_eventManager->handleEvents(_gameModel, this, _gameView->getWindow());

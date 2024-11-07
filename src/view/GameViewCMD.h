@@ -7,7 +7,6 @@
 #include <ftxui/component/screen_interactive.hpp>
 #include <ftxui/dom/elements.hpp>
 #include "ftxui/component/loop.hpp"
-#include <array>
 #include <future>
 
 class GameViewCMD : public BaseView {
@@ -28,7 +27,6 @@ private:
 	// Grid variables
 	constexpr static int gridSize = 4;
 	constexpr static int cellSize = 9;
-	//std::array<std::array<int, gridSize>, gridSize> grid;
 	ftxui::Component grid_component;
 	ftxui::ScreenInteractive* screen;
 	ftxui::Loop *loop;
@@ -60,6 +58,8 @@ public:
 
 	void openWindow();
 	void closeWindow();
+	void initRenderer();
+	void deleteRenderer();
 
 	void syncMatrix(TileBase* const (&matrix)[4][4]);
 
