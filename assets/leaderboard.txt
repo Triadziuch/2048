@@ -1,0 +1,10 @@
+EchoShade;5000;2024.10.13
+FakesForge;4900;2024.10.11
+SolarFlare;4700;2024.10.10
+LunarEclipse;4600;2024.10.06
+SkyWalker;4500;2024.10.15
+SilentStorm;4300;2024.10.08
+NovaWave;4250;2024.10.12
+ShadowPulse;3800;2024.10.07
+PixelHunter;3750;2024.10.14
+MysticBlade;3400;2024.10.09

@@ -129,6 +129,9 @@
     <ClInclude Include="IEventManager.h">
       <Filter>Pliki nagłówków</Filter>
     </ClInclude>
+    <ClInclude Include="LeaderboardModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -216,5 +219,8 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
     <ClCompile Include="src\controller\IBaseController.cpp" />
+    <ClCompile Include="LeaderboardModel.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

@@ -146,6 +146,7 @@ void GameController::switchView()
 	this->_gameView->openWindow();
 	this->isGraphic = !this->isGraphic;
 	this->_gameView->syncMatrix(this->_gameModel->getMatrix());
+	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 
 	this->render();
 }

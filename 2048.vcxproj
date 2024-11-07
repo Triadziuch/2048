@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="IEventManager.h" />
+    <ClInclude Include="LeaderboardModel.h" />
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\controller\ControllerFactory.h" />
     <ClInclude Include="src\controller\ControllerHandler.h" />
@@ -55,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="IEventManager.cpp" />
+    <ClCompile Include="LeaderboardModel.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\controller\ControllerHandler.cpp" />
     <ClCompile Include="src\controller\GameController.cpp" />

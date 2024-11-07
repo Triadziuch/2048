@@ -3,6 +3,9 @@
 
 // = = = = = Constructors / Destructors = = = = = // 
 GameModel::GameModel() : BaseModel() {
+	m_leaderboardModel = new LeaderboardModel();
+	this->m_bestScore = m_leaderboardModel->getBestScore();
+
 	m_tileMatrix = new TileMatrixModel();
 	
 	m_tileMatrix->connect("STARTED_SPAWN", [&]() {
@@ -36,6 +39,7 @@ GameModel::GameModel() : BaseModel() {
 GameModel::~GameModel()
 {
 	delete m_tileMatrix;
+	delete m_leaderboardModel;
 }
 
 

@@ -5,10 +5,13 @@
 #include <list>
 #include "BaseModel.h"
 #include "../TileMatrixModel.h"
+#include "../LeaderboardModel.h"
 
 class GameModel : public BaseModel {
 private:
     TileMatrixModel* m_tileMatrix{};
+    LeaderboardModel* m_leaderboardModel;
+
     int m_score{}, m_bestScore{ 212 };
 
 public:

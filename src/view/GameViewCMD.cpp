@@ -70,6 +70,10 @@ ftxui::Color GameViewCMD::getCellBorderColor(int row, int col) const
 			return Color(230, 126, 34);
 		else if (value == 128 || value == 256 || value == 512)
 			return Color(155, 89, 182);
+		else if (value == 1024 || value == 2048)
+			return Color(52, 152, 219);
+		else
+			return Color(52, 73, 94);
 	}
 
 	return Color::White;
