@@ -36,6 +36,7 @@ public:
 	const ExitCode run() override;
 	void close();
 	const ExitCode gameLoop();
+	void enterName();
 
 	// Update functions
 	void update();

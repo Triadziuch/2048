@@ -132,6 +132,14 @@
     <ClInclude Include="LeaderboardModel.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="BaseGameView.h" />
+    <ClInclude Include="BaseLeaderboardView.h" />
+    <ClInclude Include="ExitCode.h" />
+    <ClInclude Include="LeaderboardViewCMD.h" />
+    <ClInclude Include="LeaderboardViewGraphic.h" />
+    <ClInclude Include="LeaderboardController.h">
+      <Filter>Controller</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -203,9 +211,6 @@
     <ClCompile Include="src\view\ViewHandler.cpp">
       <Filter>View</Filter>
     </ClCompile>
-    <ClCompile Include="src\view\BaseView.cpp">
-      <Filter>View</Filter>
-    </ClCompile>
     <ClCompile Include="src\view\GameViewGraphic.cpp">
       <Filter>View</Filter>
     </ClCompile>
@@ -221,6 +226,11 @@
     <ClCompile Include="src\controller\IBaseController.cpp" />
     <ClCompile Include="LeaderboardModel.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="LeaderboardViewCMD.cpp" />
+    <ClCompile Include="LeaderboardViewGraphic.cpp" />
+    <ClCompile Include="LeaderboardController.cpp">
+      <Filter>Controller</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

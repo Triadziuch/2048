@@ -82,6 +82,10 @@ void LeaderboardViewGraphic::setLeaderboardEntries(std::vector<LeaderboardEntry*
 	this->updateContent();
 }
 
+void LeaderboardViewGraphic::enterName(int score)
+{
+}
+
 sf::RenderWindow* LeaderboardViewGraphic::getWindow()
 {
 	return window;

@@ -15,43 +15,33 @@ int main() {
 	return 0;
 }
 
-// Copyright 2020 Arthur Sonzogni. All rights reserved.
-// Use of this source code is governed by the MIT license that can be found in
-// the LICENSE file.
-//#include <ftxui/dom/elements.hpp>  // for operator|, text, Element, Fit, borderDouble, borderHeavy, borderLight, borderRounded, vbox
-//#include <ftxui/screen/screen.hpp>  // for Screen
-//#include <iostream>                 // for endl, cout, ostream
-//#include <memory>                   // for allocator
+//#include <memory>  // for allocator, __shared_ptr_access
+//#include <string>  // for char_traits, operator+, string, basic_string
 //
-//#include "ftxui/dom/node.hpp"      // for Render
-//#include "ftxui/screen/color.hpp"  // for ftxui
+//#include "ftxui/component/captured_mouse.hpp"  // for ftxui
+//#include "ftxui/component/component.hpp"       // for Input, Renderer, Vertical
+//#include "ftxui/component/component_base.hpp"  // for ComponentBase
+//#include "ftxui/component/component_options.hpp"  // for InputOption
+//#include "ftxui/component/screen_interactive.hpp"  // for Component, ScreenInteractive
+//#include "ftxui/dom/elements.hpp"  // for text, hbox, separator, Element, operator|, vbox, border
+//#include "ftxui/util/ref.hpp"  // for Ref
 //
 //int main() {
 //    using namespace ftxui;
+//    auto screen = ScreenInteractive::TerminalOutput();
 //
-//    auto make_boxed = [] {
-//        return vbox({
-//            text("borderLight"), separator() | color(Color::Red),
-//            text("borderDashed"), separator() | color(Color::Red),
-//            text("borderHeavy"), separator() | color(Color::Red),
-//            text("borderDouble"), separator() | color(Color::Red),
-//            text("borderRounded"),
-//            });
-//        };
+//    std::vector<std::string> entries = {
+//        "entry 1",
+//        "entry 2",
+//        "entry 3",
+//    };
+//    int selected = 0;
 //
-//    auto document = hbox({
-//                        make_boxed(),
-//                        separator() | color(Color::Red),
-//                        make_boxed(),
-//                        separator() | color(Color::Red),
-//                        make_boxed(),
-//        }) |
-//        borderStyled(ROUNDED, Color::Red);
+//    MenuOption option;
+//    option.on_enter = screen.ExitLoopClosure();
+//    auto menu = Menu(&entries, &selected, option);
 //
-//    auto screen =
-//        Screen::Create(Dimension::Fit(document), Dimension::Fit(document));
-//    Render(screen, document);
-//    screen.Print();
-//    std::cout << std::endl;
+//    screen.Loop(menu);
+//
+//    std::cout << "Selected element = " << selected << std::endl;
 //}
-

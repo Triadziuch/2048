@@ -131,7 +131,8 @@ void CMDEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, Lead
 		previousKeyState[VK_ESCAPE] = false;
 
 	if (isKeyPressed('C') && !previousKeyState['C']) {
-		controller->switchView();
+		//controller->switchView();
+		controller->enterName();
 		previousKeyState['C'] = true;
 		return;
 	}

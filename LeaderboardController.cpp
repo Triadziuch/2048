@@ -146,6 +146,11 @@ const ExitCode LeaderboardController::gameLoop()
 	return exitCode;
 }
 
+void LeaderboardController::enterName()
+{
+	this->_leaderboardView->enterName(6969);
+}
+
 void LeaderboardController::update()
 {
 

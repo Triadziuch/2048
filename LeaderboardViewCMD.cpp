@@ -7,62 +7,106 @@ void LeaderboardViewCMD::renderFTXUI()
 	ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::Fullscreen();
 	this->screen = &screen;
 
-	update_grid_mutex.lock();
-	Loop loop(&screen, renderer);
-	update_grid_mutex.unlock();
+	this->loop = new Loop(&screen, renderer);
+	exit_loop = screen.ExitLoopClosure();
 
 	std::unique_lock<std::mutex> lock(mtx);
 
 	while (isRefreshing) {
-		update_grid_mutex.lock();
-		loop.RunOnce();
-		this->needRefreshing = false;
-		update_grid_mutex.unlock();
+		if (enteringName) {
+			while (enteringName)
+				loop->RunOnce();
+			//loop->Run();
+
+			{
+				std::lock_guard<std::mutex> lock(mtx_name_entered);
+				this->nameentered = true;
+			}
+
+			cv_name_entered.notify_one();
+		}
+		else {
+			update_grid_mutex.lock();
+			loop->RunOnce();
+			this->needRefreshing = false;
+			update_grid_mutex.unlock();
+		}
+
 
 		cv.wait(lock, [this] { return needRefreshing; });
 	}
+
+	//ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::Fullscreen();
+	//this->screen = &screen;
+
+	//this->loop = new Loop(&screen, renderer);
+	////exit_loop = screen.ExitLoopClosure();
+
+	//std::unique_lock<std::mutex> lock(mtx);
+
+	//while (isRefreshing) {
+	//	update_grid_mutex.lock();
+	//	loop->RunOnce();
+	//	this->needRefreshing = false;
+	//	update_grid_mutex.unlock();
+
+	//	cv.wait(lock, [this] { return needRefreshing; });
+	//}
+
+	delete this->loop;
+	this->loop = nullptr;
 }
 
 void LeaderboardViewCMD::updateContent()
 {
-	update_grid_mutex.lock();
+	this->update_grid_mutex.lock();
 
-	// Tworzymy nag³ówek tabeli
-	auto header = hbox({
-		text("Miejsce") | bold | border,
-		separator() | color(Color::White),
-		text("Nazwa") | bold | border,
-		separator() | color(Color::White),
-		text("Wynik") | bold | border,
-		separator() | color(Color::White),
-		text("Data") | bold | border
+	this->input_add = Input(&name, this->input_option_enter);
+	this->input_add |= CatchEvent([&](Event event) {
+		return !this->enteringName;
 		});
 
-	// Tworzymy zawartoœæ tabeli
-	std::vector<Element> rows;
-	rows.push_back(header);
+	this->container = ftxui::Container::Vertical({
+		input_add,
+		});
 
-	// Dodajemy wpisy z leaderboard
-	int rank = 1;
-	for (const auto& entry : *v_leaderboardEntries) {
-		auto row = hbox({
-			text(std::to_string(rank++)) | border,
-			separator() | color(Color::White),
-			text(entry->name) | border,
-			separator() | color(Color::White),
-			text(std::to_string(entry->score)) | border,
-			separator() | color(Color::White),
-			text(entry->date) | border
+	renderer = ftxui::Renderer(this->container, [&] {
+		return ftxui::hbox({
+			ftxui::filler(),
+			ftxui::vbox({}),
+			ftxui::filler(),
+
+			ftxui::vbox({}) | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 14),
+			ftxui::filler(),
+			ftxui::vbox({}),
+
+			ftxui::filler(),
+			ftxui::vbox({
+				this->table_element,
+			}),
+			ftxui::filler(),
+
+			ftxui::vbox({}),
+			ftxui::filler(),
+			this->enteringName
+				? ftxui::vbox({
+					  ftxui::text("Your score") | ftxui::hcenter,
+					  ftxui::text("254") | ftxui::hcenter,
+					  container->Render(), // Renderowanie komponentu input_add
+				  })
+				  | ftxui::border
+				  | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 14)
+				  | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 5)
+				: ftxui::vbox({})
+				  | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 14)
+				  | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 2),
+
+			ftxui::filler(),
+			ftxui::vbox({}),
+			ftxui::filler(),
 			});
-		rows.push_back(row);
-	}
-
-	// Tworzymy tabelê jako komponent
-	auto leaderboard_table = Renderer([rows] {
-		return vbox(std::move(rows)) | border;
 		});
 
-	this->renderer = leaderboard_table;
 	update_grid_mutex.unlock();
 }
 
@@ -75,12 +119,70 @@ void LeaderboardViewCMD::refreshScreen()
 	cv.notify_one();
 }
 
+void LeaderboardViewCMD::enteredName()
+{
+	this->enteringName = false;
+	//exit_loop();
+	//this->screen->Exit();
+}
+
+void LeaderboardViewCMD::updateTableElement()
+{
+	update_grid_mutex.lock();
+
+	if (this->table)
+		delete this->table;
+
+	using namespace ftxui;
+
+	
+	values.clear();
+	values.push_back({ { "   Rank   ", "       Nickname       ", "    Score    ", "    Date    " } });
+
+	int place = 1;
+	for (const auto& entry : *v_leaderboardEntries) {
+		values.push_back({ {"", "", "", ""} });
+		values.push_back({ {std::to_string(place++), entry->name, std::to_string(entry->score), entry->date} });
+		values.push_back({ {"", "", "", ""} });
+	}
+
+
+	this->table = new Table(values);
+
+	table->SelectAll().Decorate(center);
+	table->SelectAll().Decorate(bold);
+	table->SelectAll().Border(LIGHT);
+
+	table->SelectColumn(0).Border(LIGHT);
+
+	table->SelectRow(0).Decorate(bold);
+	table->SelectRow(0).Decorate(color(Color::Yellow));
+	table->SelectRow(0).SeparatorVertical(LIGHT);
+	table->SelectRow(0).Border(ftxui::DOUBLE);
+
+	table->SelectRows(0, -1).SeparatorVertical(LIGHT);
+
+	auto content = table->SelectRows(1, -1);
+	content.DecorateCellsAlternateRow(color(Color::Blue), 2, 0);
+	content.DecorateCellsAlternateRow(color(Color::Cyan), 2, 1);
+	content.DecorateCellsAlternateRow(color(Color::White), 2, 2);
+
+	this->table_element = table->Render();
+
+	update_grid_mutex.unlock();
+}
+
 LeaderboardViewCMD::LeaderboardViewCMD()
 {
 	this->registerObserver("update_game", [&]() {
 		printDebug("[LeaderboardView] Self Observer \"update_game\" triggered.");
 		return (false);
 		});
+
+	this->input_option_enter.on_enter = [&] {
+		this->enteredName();
+		};
+
 }
 
 const std::string& LeaderboardViewCMD::getViewPath() const
@@ -178,6 +280,9 @@ void LeaderboardViewCMD::initRenderer()
 
 void LeaderboardViewCMD::deleteRenderer()
 {
+	if (this->ftxui_thread == nullptr)
+		return;
+
 	this->isRefreshing = false;
 	this->refreshScreen();
 
@@ -192,7 +297,32 @@ void LeaderboardViewCMD::deleteRenderer()
 void LeaderboardViewCMD::setLeaderboardEntries(std::vector<LeaderboardEntry*>& v_leaderboardEntries)
 {
 	this->v_leaderboardEntries = &v_leaderboardEntries;
+	this->updateTableElement();
 	this->updateContent();
+}
+
+void LeaderboardViewCMD::enterName(int score)
+{
+	this->score = score;
+	this->enteringName = true;
+	this->isRefreshing = true;
+
+	this->updateTableElement();
+	this->updateContent();
+
+	this->refreshScreen();
+	std::unique_lock<std::mutex> lock(mtx_name_entered);
+	cv_name_entered.wait(lock, [this] { return nameentered; });
+	this->nameentered = false;
+	this->name = "";
+	// Tutaj zrób czekanie a¿ wywo³any zostanie warunek enteredName
+
+	this->updateTableElement();
+	this->updateContent();
+
+	this->refreshScreen();
+
+	//this->deleteRenderer();
 }
 
 sf::RenderWindow* LeaderboardViewCMD::getWindow()
