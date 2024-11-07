@@ -1,13 +1,13 @@
 #pragma once
 
 #include "../model/GameModel.h"
-#include "BaseView.h"
+#include "../BaseGameView.h"
 #include "../AssetManager.h"
 #include "../TileMatrix.h"
 #include "../GUI.h"
 #include "../StandardCursor.h"
 
-class GameViewGraphic : public BaseView {
+class GameViewGraphic : public BaseGameView {
 private:
 	AssetManager manager;
 

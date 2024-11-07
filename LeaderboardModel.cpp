@@ -43,3 +43,8 @@ const int& LeaderboardModel::getBestScore() const
 		return v_leaderboard.front()->score;
 	return 0;
 }
+
+std::vector<LeaderboardEntry*>& LeaderboardModel::getLeaderboardEntries()
+{
+	return v_leaderboard;
+}

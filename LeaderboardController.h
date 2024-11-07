@@ -1,41 +1,31 @@
 #pragma once
 
-#include <string>
-#include "../view/GameViewGraphic.h"
-#include "../view/GameViewCMD.h"
-#include "../view/ViewHandler.h"
-#include "IBaseController.h"
-#include "../IEventManager.h"
+#include "src/controller/IBaseController.h"
+#include "LeaderboardViewCMD.h"
+#include "LeaderboardViewGraphic.h"
+#include "src/view/ViewHandler.h"
+#include "IEventManager.h"
 
-class GameController : public IBaseController {
+class LeaderboardController : public IBaseController {
 private:
 	// MVC Model and View variables
 	std::shared_ptr<ModelHandler> _modelHandler;
 	std::shared_ptr<ViewHandler> _viewHandler;
-	std::shared_ptr<GameModel> _gameModel;
-	std::shared_ptr<BaseGameView> _gameView;
+	std::shared_ptr<LeaderboardModel> _leaderboardModel;
+	std::shared_ptr<BaseLeaderboardView> _leaderboardView;
 	IEventManager* _eventManager;
 
-	// Clock variables
-	sf::Clock dt_clock;
-	float dt;
-
-	// Is Variables
-	bool isGraphic = true;
-	bool isMoving = false;
-	bool isSpawning = false;
+	// Game state Variables
 	bool isEnd = false;
-	bool isGameOver = false;
-	bool hasQuit = false;
+	bool isGraphic = false;
 	ExitCode exitCode = ExitCode::EXIT;
 
 	// Initialization functions 
 	void initVariables();
-
+	
 public:
-	// Constructors / Destructors
-	GameController();
-	~GameController();
+	LeaderboardController();
+	~LeaderboardController();
 
 	// Model and View handling
 	void setModelHandler(std::shared_ptr<ModelHandler> modelHandler) override;
@@ -50,9 +40,6 @@ public:
 	// Update functions
 	void update();
 
-	// Accessors / Mutators
-	const bool& getIsMoving();
-	
 	// Render function
 	void render();
 };

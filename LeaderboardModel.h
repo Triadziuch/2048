@@ -21,4 +21,5 @@ public:
 	~LeaderboardModel();
 
 	const int& getBestScore() const;
+	std::vector<LeaderboardEntry*>& getLeaderboardEntries();
 };

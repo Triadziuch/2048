@@ -1,6 +1,8 @@
 #include "IEventManager.h"
 #include "src/model/GameModel.h"
 #include "src/controller/GameController.h"
+#include "LeaderboardModel.h"
+#include "LeaderboardController.h"
 
 std::unordered_map<int, bool> IEventManager::previousKeyState = {
 	{ VK_UP, false },
@@ -29,6 +31,30 @@ void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameCon
 
 			if (!controller->getIsMoving())
 				model->move(ev.key.code);
+
+			if (ev.key.code == sf::Keyboard::C) {
+				previousKeyState['C'] = true;
+				controller->switchView();
+			}
+		}
+	}
+}
+
+void GraphicEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, LeaderboardController* controller, sf::RenderWindow* window) const
+{
+	auto isKeyPressed = [](int key) -> bool {
+		return (GetAsyncKeyState(key) & 0x8000) != 0;
+		};
+
+	sf::Event ev;
+
+	if (window->pollEvent(ev)) {
+
+		if ((ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Escape) || (ev.type == sf::Event::Closed)) {
+			controller->close();
+		}
+
+		if (ev.type == sf::Event::KeyPressed) {
 
 			if (ev.key.code == sf::Keyboard::C) {
 				previousKeyState['C'] = true;
@@ -88,4 +114,27 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 	}
 	else if (!isKeyPressed(VK_RIGHT)) 
 		previousKeyState[VK_RIGHT] = false;
+}
+
+void CMDEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, LeaderboardController* controller, sf::RenderWindow* window) const
+{
+	auto isKeyPressed = [](int key) -> bool {
+		return (GetAsyncKeyState(key) & 0x8000) != 0;
+		};
+
+	if (isKeyPressed(VK_ESCAPE) && !previousKeyState[VK_ESCAPE]) {
+		controller->close();
+		previousKeyState[VK_ESCAPE] = true;
+		return;
+	}
+	else if (!isKeyPressed(VK_ESCAPE))
+		previousKeyState[VK_ESCAPE] = false;
+
+	if (isKeyPressed('C') && !previousKeyState['C']) {
+		controller->switchView();
+		previousKeyState['C'] = true;
+		return;
+	}
+	else if (!isKeyPressed('C'))
+		previousKeyState['C'] = false;
 }

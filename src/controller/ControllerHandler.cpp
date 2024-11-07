@@ -1,4 +1,5 @@
 #include "GameController.h"
+#include "../../LeaderboardController.h"
 #include "ControllerFactory.h"
 #include "ControllerHandler.h"
 
@@ -27,7 +28,8 @@ ControllerHandler::ControllerHandler(std::shared_ptr<ModelHandler> modelHandler,
     this->_viewHandler = viewHandler;
     this->_currentController = nullptr;
     this->_data = {
-            {"-", std::shared_ptr<ControllerFactory<GameController>>(new ControllerFactory<GameController>())}
+            {"-", std::shared_ptr<ControllerFactory<GameController>>(new ControllerFactory<GameController>())},
+            {"leaderboard", std::shared_ptr<ControllerFactory<LeaderboardController>>(new ControllerFactory<LeaderboardController>())}
     };
     this->changeRoute("-", "Game");
 
@@ -36,11 +38,10 @@ ControllerHandler::ControllerHandler(std::shared_ptr<ModelHandler> modelHandler,
         system("cls");
 
         if (exitCode == ExitCode::GAME) {
-
+            this->changeRoute("-", "Game");
         }
         else if (exitCode == ExitCode::LEADERBOARD) {
-            printf("LEADERBOARD\n");
-            Sleep(2000);
+            this->changeRoute("leaderboard", "Leaderboard");
         }
         else if (exitCode == ExitCode::EXIT) {
             break;

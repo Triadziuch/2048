@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../model/GameModel.h"
-#include "BaseView.h"
+#include "../BaseGameView.h"
 #include "../TileMatrix.h"
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
@@ -9,7 +9,7 @@
 #include "ftxui/component/loop.hpp"
 #include <future>
 
-class GameViewCMD : public BaseView {
+class GameViewCMD : public BaseGameView {
 private:
 	TileBase* const (*m_matrix)[4];
 	const std::vector <MoveInstruction*>* m_moveInstructions{};
@@ -32,13 +32,12 @@ private:
 	ftxui::Loop *loop;
 
 	bool isRefreshing, needRefreshing;
-	std::mutex mtx;
+	std::mutex mtx, update_grid_mutex;
 	std::condition_variable cv;
 
-	std::mutex update_grid_mutex;
 	std::thread* ftxui_thread;
 
-	ftxui::Component initGrid();
+	
 	ftxui::Component renderer;
 
 	int getCell(int row, int col) const;
@@ -46,6 +45,7 @@ private:
 	ftxui::Color getCellBorderColor(int row, int col) const;
 	std::string displayCell(int row, int col) const;
 
+	ftxui::Component initGrid();
 	void renderFTXUI();
 	void updateGrid();
 	void refreshScreen();
