@@ -82,8 +82,17 @@ void LeaderboardViewGraphic::setLeaderboardEntries(std::vector<LeaderboardEntry*
 	this->updateContent();
 }
 
-void LeaderboardViewGraphic::enterName(int score)
+void LeaderboardViewGraphic::setScore(int score)
 {
+}
+
+void LeaderboardViewGraphic::setMode(LeaderboardMode mode)
+{
+}
+
+LeaderboardEntry LeaderboardViewGraphic::getEntry()
+{
+	return LeaderboardEntry();
 }
 
 sf::RenderWindow* LeaderboardViewGraphic::getWindow()

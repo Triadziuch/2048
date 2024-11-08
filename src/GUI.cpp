@@ -1,8 +1,6 @@
 #pragma once
 #include "GUI.h"
 
-using namespace std;
-
 void GUI::center_origin(sf::Sprite& sprite)
 {
 	sprite.setOrigin(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width / 2.f,
@@ -17,11 +15,11 @@ void GUI::justifyHorizontal(const sf::FloatRect& button, sf::Text& text)
 
 void GUI::saveBestScore()
 {
-	ofstream file;
-	file.open(m_bestScoreFilename, ios::out);
+	std::ofstream file;
+	file.open(m_bestScoreFilename, std::ios::out);
 
 	if (file.good())
-		file << to_string(m_bestScore);
+		file << std::to_string(m_bestScore);
 
 	file.close();
 }
@@ -47,12 +45,12 @@ void GUI::stopGameOver()
 
 void GUI::loadBestScore()
 {
-	fstream file;
+	std::fstream file;
 	file.open(m_bestScoreFilename);
 
 	if (file.good()) {
-		string bestScoreString;
-		stringstream ss_best_score;
+		std::string bestScoreString;
+		std::stringstream ss_best_score;
 		int int_best_score;
 		file >> bestScoreString;
 		ss_best_score << bestScoreString;
@@ -75,7 +73,7 @@ void GUI::setScore(int value_)
 	m_score = value_;
 
 	const float old_width = m_scoreText.getGlobalBounds().width;
-	m_scoreText.setString(to_string(m_score));
+	m_scoreText.setString(std::to_string(m_score));
 	const float new_width = m_scoreText.getGlobalBounds().width;
 
 	if (old_width != new_width)
@@ -149,8 +147,8 @@ void GUI::initText()
 	m_scoreText.setFillColor(sf::Color::White);
 	m_bestScoreText.setFillColor(sf::Color::White);
 
-	m_scoreText.setString(to_string(m_score));
-	m_bestScoreText.setString(to_string(m_bestScore));
+	m_scoreText.setString(std::to_string(m_score));
+	m_bestScoreText.setString(std::to_string(m_bestScore));
 
 	m_scoreText.setOrigin(m_scoreText.getLocalBounds().left + m_scoreText.getGlobalBounds().width / 2.f, m_scoreText.getLocalBounds().top + m_scoreText.getGlobalBounds().height / 2.f);
 	m_bestScoreText.setOrigin(m_bestScoreText.getLocalBounds().left + m_bestScoreText.getGlobalBounds().width / 2.f, m_bestScoreText.getLocalBounds().top + m_bestScoreText.getGlobalBounds().height / 2.f);
@@ -187,7 +185,7 @@ void GUI::addScore(int value_) {
 	m_score += value_;
 	
 	float old_width = m_scoreText.getGlobalBounds().width;
-	m_scoreText.setString(to_string(m_score));
+	m_scoreText.setString(std::to_string(m_score));
 	float new_width = m_scoreText.getGlobalBounds().width;
 	
 	if (old_width != new_width)
@@ -195,7 +193,7 @@ void GUI::addScore(int value_) {
 
 	if (m_bestScore < m_score) {
 		m_bestScore = m_score;
-		m_bestScoreText.setString(to_string(m_bestScore));
+		m_bestScoreText.setString(std::to_string(m_bestScore));
 		justifyHorizontal(m_bestScoreButtonSprite.getGlobalBounds(), m_bestScoreText);
 		m_bestScoreText.setPosition(m_bestScoreText.getPosition().x, m_scoreText.getPosition().y - m_scoreText.getOrigin().y);
 	}

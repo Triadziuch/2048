@@ -6,6 +6,7 @@
 #include "src/view/ViewHandler.h"
 #include "IEventManager.h"
 
+
 class LeaderboardController : public IBaseController {
 private:
 	// MVC Model and View variables
@@ -19,6 +20,7 @@ private:
 	bool isEnd = false;
 	bool isGraphic = false;
 	ExitCode exitCode = ExitCode::EXIT;
+	LeaderboardMode leaderboardMode = LeaderboardMode::VIEW;
 
 	// Initialization functions 
 	void initVariables();

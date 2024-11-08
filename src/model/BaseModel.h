@@ -1,7 +1,4 @@
 #pragma once
-
 #include "../event/EventObserver.h"
 
-class BaseModel : public EventObserver {
-
-};
+class BaseModel : public EventObserver {};

@@ -142,6 +142,7 @@ void GameViewCMD::refreshScreen()
 void GameViewCMD::updateGrid()
 {
 	update_grid_mutex.lock();
+
 	grid_component = initGrid();
 	renderer = Renderer(grid_component, [&] {
 		return
@@ -174,6 +175,7 @@ void GameViewCMD::updateGrid()
 				filler(),
 				});
 		});
+
 	update_grid_mutex.unlock();
 }
 
@@ -285,18 +287,6 @@ void GameViewCMD::syncMatrix(TileBase* const(&matrix)[4][4])
 
 void GameViewCMD::startMove(const std::vector<MoveInstruction*>& moveInstructions)
 {
-	//this->m_moveInstructions = &moveInstructions;
-
-	//for (const auto& instruction : *m_moveInstructions) {
-	//	sf::Vector2i old_pos = instruction->getOldPos();
-	//	sf::Vector2i new_pos = instruction->getNewPos();
-	//	sf::Vector2i distance = new_pos - old_pos;
-	//	const sf::Vector2f pixel_distance = sf::Vector2f{ static_cast<float>(distance.x) * (m_innerEdgeWidth + m_tileWidth),
-	//													  static_cast<float>(distance.y) * (m_innerEdgeWidth + m_tileWidth) };
-	//	printf("Move pixel distance: %f %f\n", pixel_distance.x, pixel_distance.y);
-	//	this->tiles[old_pos.x][old_pos.y]->setIsMoving(true);
-	//	this->tiles[old_pos.x][old_pos.y]->smoothMove(pixel_distance, m_timeMovingMax);
-	//}
 	this->notify("started_move");
 }
 
@@ -307,33 +297,17 @@ void GameViewCMD::startMerge(const std::vector<MergeInstruction*>& mergeInstruct
 
 	this->m_mergeInstructions = &mergeInstructions;
 
-	/*for (const auto& instruction : *this->m_mergeInstructions) {
-		const sf::Vector2i pos = instruction->pos;
-		tiles[pos.x][pos.y]->startMerging();
-	}*/
-
 	this->notify("started_merging");
 }
 
 void GameViewCMD::startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions)
 {
 	this->m_spawnInstructions = &spawnInstructions;
-
-	/*for (const auto& instruction : *this->m_spawnInstructions) {
-		this->tiles[instruction->pos.x][instruction->pos.y] = new Tile(instruction->type, m_tileTextures[findID(instruction->type)], &m_scale, calculateTilePos(instruction->pos), m_movementManager);
-		this->tiles[instruction->pos.x][instruction->pos.y]->startSpawning();
-	}*/
-
 	this->notify("started_spawning");
 }
 
 void GameViewCMD::endSpawn()
 {
-	/*m_movementManager->update(1.f);
-
-	for (auto& instruction : *m_spawnInstructions)
-		tiles[instruction->pos.x][instruction->pos.y]->update(1.f);*/
-
 	this->notify("finished_spawning");
 
 	this->updateGrid();
@@ -342,34 +316,11 @@ void GameViewCMD::endSpawn()
 
 void GameViewCMD::updateMove(float dt)
 {
-	/*this->m_movementManager->update(dt);
-	this->m_movementContainer->update(dt);
-
-	if (m_timeMoving < m_timeMovingMax)
-		m_timeMoving += dt;
-	else {
-		m_timeMoving = 0.f;
-		this->notify("finished_move");
-	}*/
-
 	this->notify("finished_move");
 }
 
 void GameViewCMD::updateSpawning(float dt)
 {
-	/*this->m_movementManager->update(dt);
-
-	bool finishedSpawning = false;
-	for (auto& instruction : *m_spawnInstructions) {
-		tiles[instruction->pos.x][instruction->pos.y]->update(dt);
-		finishedSpawning = !tiles[instruction->pos.x][instruction->pos.y]->getSpawning();
-	}
-
-	if (finishedSpawning) {
-		this->m_mergeInstructions = nullptr;
-		this->notify("finished_spawning");
-	}*/
-
 	this->notify("finished_spawning");
 }
 
@@ -381,6 +332,7 @@ sf::RenderWindow* GameViewCMD::getWindow()
 void GameViewCMD::render()
 {
 	this->initRenderer();
+	this->refreshScreen();
 }
 
 void GameViewCMD::updateScore(const int& score, const int& bestScore)

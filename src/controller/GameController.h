@@ -6,6 +6,7 @@
 #include "../view/ViewHandler.h"
 #include "IBaseController.h"
 #include "../IEventManager.h"
+#include "../LeaderboardMode.h"
 
 class GameController : public IBaseController {
 private:
@@ -41,6 +42,7 @@ public:
 	void setModelHandler(std::shared_ptr<ModelHandler> modelHandler) override;
 	void setViewHandler(std::shared_ptr<ViewHandler> viewHandler) override;
 	void switchView();
+	void displayLeaderboard(LeaderboardMode mode);
 
 	// Public funcitons
 	const ExitCode run() override;

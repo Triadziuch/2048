@@ -24,6 +24,7 @@
     <ClInclude Include="ExitCode.h" />
     <ClInclude Include="IEventManager.h" />
     <ClInclude Include="LeaderboardController.h" />
+    <ClInclude Include="LeaderboardMode.h" />
     <ClInclude Include="LeaderboardModel.h" />
     <ClInclude Include="LeaderboardViewCMD.h" />
     <ClInclude Include="LeaderboardViewGraphic.h" />

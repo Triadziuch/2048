@@ -140,6 +140,9 @@
     <ClInclude Include="LeaderboardController.h">
       <Filter>Controller</Filter>
     </ClInclude>
+    <ClInclude Include="LeaderboardMode.h">
+      <Filter>Pliki nagłówków</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">

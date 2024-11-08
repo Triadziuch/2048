@@ -54,7 +54,7 @@ void LeaderboardController::setViewHandler(std::shared_ptr<ViewHandler> viewHand
 
 	// Graphic View
 	this->_leaderboardView = this->_viewHandler->getView<BaseLeaderboardView>("leaderboard_graphic");
-	this->_leaderboardView->connect("started_move", [&]() {
+	this->_leaderboardView->connect("entered_name", [&]() {
 		return false;
 		});
 
@@ -72,7 +72,11 @@ void LeaderboardController::setViewHandler(std::shared_ptr<ViewHandler> viewHand
 
 	// CMD View
 	this->_leaderboardView = this->_viewHandler->getView<BaseLeaderboardView>("leaderboard_cmd");
-	this->_leaderboardView->connect("started_move", [&]() {
+	this->_leaderboardView->connect("entered_name", [&]() {
+		this->_leaderboardModel->updateLeaderboard(this->_leaderboardView->getEntry());
+		this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
+		this->leaderboardMode = LeaderboardMode::VIEW;
+		this->_leaderboardView->render();
 		return false;
 		});
 
@@ -120,8 +124,10 @@ const ExitCode LeaderboardController::run()
 	if (isGraphic) {
 		this->switchView();
 	}
-	
+
+	//this->_leaderboardModel->initModel(this->_modelHandler);
 	this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
+	this->_leaderboardView->setMode(leaderboardMode);
 	this->render();
 
 	return this->gameLoop();
@@ -136,9 +142,8 @@ void LeaderboardController::close()
 
 const ExitCode LeaderboardController::gameLoop()
 {
-	while (!isEnd) {
+	while (!isEnd) 
 		update();
-	}
 
 	if (exitCode != ExitCode::EXIT)
 		this->_leaderboardView->deleteRenderer();
@@ -148,15 +153,13 @@ const ExitCode LeaderboardController::gameLoop()
 
 void LeaderboardController::enterName()
 {
-	this->_leaderboardView->enterName(6969);
+	//this->_leaderboardView->enterName(6969);
 }
 
 void LeaderboardController::update()
 {
-
-	//dt = dt_clock.restart().asSeconds();
-
 	_eventManager->handleEvents(_leaderboardModel, this, _leaderboardView->getWindow());
+
 	if (isEnd)
 		return;
 }

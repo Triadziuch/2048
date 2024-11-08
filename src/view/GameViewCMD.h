@@ -8,6 +8,8 @@
 #include <ftxui/dom/elements.hpp>
 #include "ftxui/component/loop.hpp"
 #include <future>
+#define byte win_byte_override
+#include <Windows.h>
 
 class GameViewCMD : public BaseGameView {
 private:

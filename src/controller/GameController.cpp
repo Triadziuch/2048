@@ -90,6 +90,8 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 		isSpawning = false;
 		this->_gameModel->endMerge();
 		this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
+		_gameView->syncMatrix(this->_gameModel->getMatrix());
+		this->_gameView->render();
 		return false;
 		});
 
@@ -151,6 +153,13 @@ void GameController::switchView()
 	this->render();
 }
 
+void GameController::displayLeaderboard(LeaderboardMode mode)
+{
+	this->_gameModel->setLeaderboardMode(mode);
+	this->exitCode = ExitCode::LEADERBOARD;
+	this->isEnd = true;
+}
+
 
 
 // = = = = = Public functions  = = = = = //
@@ -195,13 +204,6 @@ const ExitCode GameController::gameLoop()
 // = = = = = Update functions  = = = = = //
 void GameController::update()
 {
-	if (!hasQuit) {
-		this->hasQuit = true;
-		this->exitCode = ExitCode::LEADERBOARD;
-		this->isEnd = true;
-		return;
-	}
-
 	dt = dt_clock.restart().asSeconds();
 
 	_eventManager->handleEvents(_gameModel, this, _gameView->getWindow());

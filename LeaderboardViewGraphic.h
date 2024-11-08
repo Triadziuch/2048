@@ -51,7 +51,9 @@ public:
 	void deleteRenderer();
 
 	void setLeaderboardEntries(std::vector<LeaderboardEntry*>& v_leaderboardEntries);
-	void enterName(int score);
+	void setScore(int score);
+	void setMode(LeaderboardMode mode);
+	LeaderboardEntry getEntry();
 
 	// Accessors / Mutators
 	sf::RenderWindow* getWindow();

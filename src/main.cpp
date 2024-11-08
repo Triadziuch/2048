@@ -1,7 +1,9 @@
 ﻿//#include "Game.h"
+
+#define WIN32_LEAN_AND_MEAN
+
 #include <memory>
 #include "controller/GameController.h"
-#include "view/GameViewCMD.h"
 #include "controller/ControllerHandler.h"
 
 int main() {

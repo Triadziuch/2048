@@ -1,7 +1,17 @@
 #include "LeaderboardModel.h"
+#include "LeaderboardMode.h"
+#include "src/model/GameModel.h"
 
 void LeaderboardModel::initLeaderboard()
 {
+	
+}
+
+LeaderboardModel::LeaderboardModel() : BaseModel()
+{
+	this->score = 69;
+	this->mode = LeaderboardMode::EDIT;
+
 	std::ifstream leaderboard_file(this->leaderboard_file_path, std::ios::in);
 
 	if (!leaderboard_file.is_open()) {
@@ -23,11 +33,8 @@ void LeaderboardModel::initLeaderboard()
 	}
 
 	leaderboard_file.close();
-}
 
-LeaderboardModel::LeaderboardModel()
-{
-	this->initLeaderboard();
+	//this->initLeaderboard();
 }
 
 LeaderboardModel::~LeaderboardModel()
@@ -37,10 +44,34 @@ LeaderboardModel::~LeaderboardModel()
 	v_leaderboard.clear();
 }
 
+void LeaderboardModel::updateLeaderboard(LeaderboardEntry new_entry)
+{
+	for (size_t i = 0; i < v_leaderboard.size(); ++i) 
+		if (v_leaderboard[i]->score < new_entry.score) {
+			v_leaderboard.insert(v_leaderboard.begin() + i, new LeaderboardEntry(new_entry));
+			return;
+		}
+}
+
 const int& LeaderboardModel::getBestScore() const
 {
 	if (!v_leaderboard.empty())
 		return v_leaderboard.front()->score;
+	return 0;
+}
+
+void LeaderboardModel::setMode(LeaderboardMode mode)
+{
+	this->mode = mode;
+}
+
+const LeaderboardMode LeaderboardModel::getMode() const
+{
+	return LeaderboardMode();
+}
+
+const int LeaderboardModel::getScore() const
+{
 	return 0;
 }
 

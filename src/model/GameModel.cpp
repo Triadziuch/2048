@@ -1,47 +1,43 @@
-#include <string>
 #include "GameModel.h"
+#include "../LeaderboardModel.h"
+#include "../LeaderboardMode.h"
+
 
 // = = = = = Constructors / Destructors = = = = = // 
-GameModel::GameModel() : BaseModel() {
-	m_leaderboardModel = new LeaderboardModel();
+GameModel::GameModel(std::shared_ptr<LeaderboardModel> leaderboardModel) : BaseModel() {
+	m_leaderboardModel = leaderboardModel;
 	this->m_bestScore = m_leaderboardModel->getBestScore();
 
 	m_tileMatrix = new TileMatrixModel();
-	
+
 	m_tileMatrix->connect("STARTED_SPAWN", [&]() {
-			printDebug("[GameModel]: TileMatrixModel has started spawning new tile.");
-			this->notify("STARTED_SPAWN");
+		printDebug("[GameModel]: TileMatrixModel has started spawning new tile.");
+		this->notify("STARTED_SPAWN");
 		return false;
 		});
 
 	m_tileMatrix->connect("STARTED_MOVE", [&]() {
-			printDebug("[GameModel]: TileMatrixModel has started move.");
-			this->notify("STARTED_MOVE");
+		printDebug("[GameModel]: TileMatrixModel has started move.");
+		this->notify("STARTED_MOVE");
 		return false;
 		});
 
 	m_tileMatrix->connect("GAME_OVER", [&]() {
-			printDebug("[GameModel]: TileMatrixModel has informed about game over.");
-			this->notify("GAME_OVER");
+		printDebug("[GameModel]: TileMatrixModel has informed about game over.");
+		this->notify("GAME_OVER");
 		return false;
 		});
 
 	m_tileMatrix->connect("GAME_WON", [&]() {
-			printDebug("[GameModel]: TileMatrixModel has informed about winning a game.");
-			this->notify("GAME_WON");
+		printDebug("[GameModel]: TileMatrixModel has informed about winning a game.");
+		this->notify("GAME_WON");
 		return false;
 		});
 
 	m_tileMatrix->spawn(2);
-
 }
 
-GameModel::~GameModel()
-{
-	delete m_tileMatrix;
-	delete m_leaderboardModel;
-}
-
+GameModel::~GameModel() {}
 
 
 // = = = = = Public functions = = = = = // 
@@ -127,4 +123,9 @@ const int& GameModel::getScore() const
 const int& GameModel::getBestScore() const
 {
 	return m_bestScore;
+}
+
+void GameModel::setLeaderboardMode(LeaderboardMode mode)
+{
+	this->m_leaderboardModel->setMode(mode);
 }
