@@ -11,7 +11,8 @@ std::unordered_map<int, bool> IEventManager::previousKeyState = {
 	{ VK_RIGHT, false },
 	{ 'C', false },
 	{ VK_ESCAPE, false },
-	{ 'L', false }
+	{ 'L', false },
+	{ 'V', false }
 };
 
 void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
@@ -92,9 +93,16 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState['L'] = true;
 		return;
 	}
-	else if (!isKeyPressed('C'))
-		previousKeyState['C'] = false;
+	else if (!isKeyPressed('L'))
+		previousKeyState['L'] = false;
 	
+	if (isKeyPressed('V') && !previousKeyState['V']) {
+		controller->displayLeaderboard(LeaderboardMode::VIEW); // TODO: Do zmienienia na view bo edit bedzie tylko po przegranej
+		previousKeyState['V'] = true;
+		return;
+	}
+	else if (!isKeyPressed('V'))
+		previousKeyState['V'] = false;
 
 	if (isKeyPressed(VK_UP) && !previousKeyState[VK_UP]) {
 		OutputDebugString(L"UP\n");
@@ -150,4 +158,12 @@ void CMDEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, Lead
 	}
 	else if (!isKeyPressed('C'))
 		previousKeyState['C'] = false;
+
+	if (isKeyPressed('L') && !previousKeyState['L']) {
+		controller->close(ExitCode::GAME);
+		previousKeyState['L'] = true;
+		return;
+	}
+	else if (!isKeyPressed('L'))
+		previousKeyState['L'] = false;
 }

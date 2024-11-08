@@ -6,5 +6,5 @@ SkyWalker;4500;15.06.2024
 SilentStorm;4300;08.09.2023
 NovaWave;4250;01.02.2024
 ShadowPulse;3800;09.05.2022
-PixelHunter;3750;28.04.2023
-MysticBlade;3400;05.02.2019
+PixelHunter;75;28.04.2023
+MysticBlade;34;05.02.2019

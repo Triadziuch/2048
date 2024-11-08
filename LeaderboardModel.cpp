@@ -9,8 +9,8 @@ void LeaderboardModel::initLeaderboard()
 
 LeaderboardModel::LeaderboardModel() : BaseModel()
 {
-	this->score = 69;
-	this->mode = LeaderboardMode::EDIT;
+	this->score = 0;
+	this->mode = LeaderboardMode::VIEW;
 
 	std::ifstream leaderboard_file(this->leaderboard_file_path, std::ios::in);
 
@@ -63,19 +63,26 @@ const int& LeaderboardModel::getBestScore() const
 void LeaderboardModel::setMode(LeaderboardMode mode)
 {
 	this->mode = mode;
+	printf("setmode %p\n", this);
 }
 
 const LeaderboardMode LeaderboardModel::getMode() const
 {
-	return LeaderboardMode();
+	printf("getmmode %p\n", this);
+	return this->mode;
 }
 
 const int LeaderboardModel::getScore() const
 {
-	return 0;
+	return this->score;
 }
 
 std::vector<LeaderboardEntry*>& LeaderboardModel::getLeaderboardEntries()
 {
 	return v_leaderboard;
+}
+
+void LeaderboardModel::setScore(int score)
+{
+	this->score = score;
 }

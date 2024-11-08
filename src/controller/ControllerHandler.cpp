@@ -12,7 +12,7 @@ std::shared_ptr<IControllerFactory> ControllerHandler::getRouteControllerFactory
 }
 
 void ControllerHandler::changeRoute(const std::string &baseRoute, const std::string &subRoute) {
-    std::shared_ptr<IControllerFactory> pFactory = this->getRouteControllerFactory(baseRoute);
+    /*std::shared_ptr<IControllerFactory> pFactory = this->getRouteControllerFactory(baseRoute);
     if (pFactory == nullptr) {
         std::cerr << "invalid route: " << baseRoute << std::endl;
     }
@@ -20,17 +20,43 @@ void ControllerHandler::changeRoute(const std::string &baseRoute, const std::str
     this->_currentController = nullptr;
     this->_curBaseRoute = baseRoute;
     this->_curSubRoute = subRoute;
-    this->_currentController = pFactory->build(_modelHandler, _viewHandler);
+    this->_currentController = pFactory->build(_modelHandler, _viewHandler);*/
+    if (baseRoute == "-") {
+        _currentController = _gameController;
+    }
+    else if (baseRoute == "leaderboard") {
+        _currentController = _leaderboardController;
+    }
+    else {
+        std::cerr << "invalid route: " << baseRoute << std::endl;
+        return;
+    }
+
+    this->_curBaseRoute = baseRoute;
+    this->_curSubRoute = subRoute;
 }
 
 ControllerHandler::ControllerHandler(std::shared_ptr<ModelHandler> modelHandler, std::shared_ptr<ViewHandler> viewHandler) {
     this->_modelHandler = modelHandler;
     this->_viewHandler = viewHandler;
     this->_currentController = nullptr;
+
+    auto gameControllerFactory = std::make_shared<ControllerFactory<GameController>>();
+    auto leaderboardControllerFactory = std::make_shared<ControllerFactory<LeaderboardController>>();
+
+    this->_data = {
+        {"-", gameControllerFactory},
+        {"leaderboard", leaderboardControllerFactory}
+    };
+
     this->_data = {
             {"-", std::shared_ptr<ControllerFactory<GameController>>(new ControllerFactory<GameController>())},
             {"leaderboard", std::shared_ptr<ControllerFactory<LeaderboardController>>(new ControllerFactory<LeaderboardController>())}
     };
+
+    _gameController = gameControllerFactory->build(modelHandler, viewHandler);
+    _leaderboardController = leaderboardControllerFactory->build(modelHandler, viewHandler);
+
     this->changeRoute("-", "Game");
 
     while (true) {

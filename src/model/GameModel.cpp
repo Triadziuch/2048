@@ -46,6 +46,7 @@ void GameModel::updateScore()
 	const int added_m_score = m_tileMatrix->getAddedScore();
 	m_tileMatrix->setAddedScore(0);
 	m_score += added_m_score;
+	this->m_leaderboardModel->setScore(m_score);
 
 	if (m_score >= m_bestScore)
 		m_bestScore = m_score;

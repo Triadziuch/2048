@@ -13,6 +13,9 @@ private:
     std::shared_ptr<ModelHandler> _modelHandler;
     std::shared_ptr<ViewHandler> _viewHandler;
 
+    std::shared_ptr<IBaseController> _gameController;
+    std::shared_ptr<IBaseController> _leaderboardController;
+
     std::shared_ptr<IControllerFactory> getRouteControllerFactory(const std::string &route);
 
 public:

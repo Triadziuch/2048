@@ -30,9 +30,11 @@ public:
 
 	void updateLeaderboard(LeaderboardEntry new_entry);
 	const int& getBestScore() const;
-	void setMode(LeaderboardMode mode);
 	const LeaderboardMode getMode() const;
 	const int getScore() const;
+
+	void setMode(LeaderboardMode mode);
+	void setScore(int score);
 
 	std::vector<LeaderboardEntry*>& getLeaderboardEntries();
 	

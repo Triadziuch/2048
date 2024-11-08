@@ -61,7 +61,7 @@ void LeaderboardViewCMD::updateContent()
 			this->mode == LeaderboardMode::EDIT
 				? ftxui::vbox({
 					  ftxui::text("Your score") | ftxui::hcenter,
-					  ftxui::text("254") | ftxui::hcenter,
+					  ftxui::text(std::to_string(this->score)) | ftxui::hcenter,
 					  this->name_input_container->Render(), // Renderowanie komponentu input_add
 				  })
 				  | ftxui::border
@@ -239,6 +239,8 @@ void LeaderboardViewCMD::initRenderer()
 		this->renderFTXUI();
 		this->isRefreshing = true;
 		this->notify("entered_name");
+		this->name = "";
+		this->name_input.reset();
 	}
 	else {
 		this->isRefreshing = true;
@@ -285,7 +287,7 @@ void LeaderboardViewCMD::setMode(LeaderboardMode mode)
 
 LeaderboardEntry LeaderboardViewCMD::getEntry()
 {
-	return LeaderboardEntry{this->name, 5125, "12.12.2021"};
+	return LeaderboardEntry{this->name, this->score, "12.12.2021"};
 }
 
 sf::RenderWindow* LeaderboardViewCMD::getWindow()

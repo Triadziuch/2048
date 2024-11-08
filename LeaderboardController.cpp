@@ -125,19 +125,21 @@ const ExitCode LeaderboardController::run()
 		this->switchView();
 	}
 
-	//this->_leaderboardModel->initModel(this->_modelHandler);
 	this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
-	this->_leaderboardView->setMode(leaderboardMode);
+	this->_leaderboardView->setMode(this->_leaderboardModel->getMode());
+	this->_leaderboardView->setScore(this->_leaderboardModel->getScore());
 	this->render();
 
 	return this->gameLoop();
 }
 
-void LeaderboardController::close()
+void LeaderboardController::close(ExitCode code)
 {
-	this->_leaderboardView->closeWindow();
+	if (code == ExitCode::EXIT)
+		this->_leaderboardView->closeWindow();
+
 	this->isEnd = true;
-	this->exitCode = ExitCode::EXIT;
+	this->exitCode = code;
 }
 
 const ExitCode LeaderboardController::gameLoop()
@@ -149,11 +151,6 @@ const ExitCode LeaderboardController::gameLoop()
 		this->_leaderboardView->deleteRenderer();
 
 	return exitCode;
-}
-
-void LeaderboardController::enterName()
-{
-	//this->_leaderboardView->enterName(6969);
 }
 
 void LeaderboardController::update()

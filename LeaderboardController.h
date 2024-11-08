@@ -36,9 +36,8 @@ public:
 
 	// Public funcitons
 	const ExitCode run() override;
-	void close();
+	void close(ExitCode code = ExitCode::EXIT);
 	const ExitCode gameLoop();
-	void enterName();
 
 	// Update functions
 	void update();

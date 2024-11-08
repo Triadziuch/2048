@@ -108,12 +108,12 @@ void GameViewCMD::renderFTXUI()
 	std::unique_lock<std::mutex> lock(mtx);
 
 	while (isRefreshing) {
+		cv.wait(lock, [this] { return needRefreshing; });
+
 		update_grid_mutex.lock();
 		loop.RunOnce();
 		this->needRefreshing = false;
 		update_grid_mutex.unlock();
-
-		cv.wait(lock, [this] { return needRefreshing; });
 	}
 }
 
@@ -181,40 +181,46 @@ void GameViewCMD::updateGrid()
 
 void GameViewCMD::openWindow()
 {
-	if (AllocConsole()) {
-		// Zapisz uchwyt do okna konsoli
-		consoleWindow = GetConsoleWindow();
+	HWND consoleWindow = GetActiveWindow();
+	if (consoleWindow != nullptr) {
+		this->consoleWindow = consoleWindow;
+	}
+	else {
+		if (AllocConsole()) {
+			// Zapisz uchwyt do okna konsoli
+			consoleWindow = GetConsoleWindow();
 
-		if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
-			printDebug("Nie mozna przekierowac stdout.");
-		if (freopen_s(&m_stderr, "CONOUT$", "w", stderr) != 0)
-			printDebug("Nie mo¿na przekierowaæ stderr.");
-		if (freopen_s(&m_stdin, "CONIN$", "r", stdin) != 0)
-			printDebug("Nie mo¿na przekierowaæ stdin.");
+			if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
+				printDebug("Nie mozna przekierowac stdout.");
+			if (freopen_s(&m_stderr, "CONOUT$", "w", stderr) != 0)
+				printDebug("Nie mo¿na przekierowaæ stderr.");
+			if (freopen_s(&m_stdin, "CONIN$", "r", stdin) != 0)
+				printDebug("Nie mo¿na przekierowaæ stdin.");
 
-		std::cout.clear();
-		std::cerr.clear();
-		std::cin.clear();
+			std::cout.clear();
+			std::cerr.clear();
+			std::cin.clear();
 
-		std::cout.setf(std::ios::unitbuf);
-		setvbuf(stdout, nullptr, _IONBF, 0);
+			std::cout.setf(std::ios::unitbuf);
+			setvbuf(stdout, nullptr, _IONBF, 0);
 
-		RECT consoleRect;
-		GetWindowRect(consoleWindow, &consoleRect);
+			RECT consoleRect;
+			GetWindowRect(consoleWindow, &consoleRect);
 
-		RECT screenRect;
-		SystemParametersInfo(SPI_GETWORKAREA, 0, &screenRect, 0);
+			RECT screenRect;
+			SystemParametersInfo(SPI_GETWORKAREA, 0, &screenRect, 0);
 
-		int screenWidth = screenRect.right - screenRect.left;
-		int screenHeight = screenRect.bottom - screenRect.top;
+			int screenWidth = screenRect.right - screenRect.left;
+			int screenHeight = screenRect.bottom - screenRect.top;
 
-		int consoleWidth = consoleRect.right - consoleRect.left;
-		int consoleHeight = consoleRect.bottom - consoleRect.top;
+			int consoleWidth = consoleRect.right - consoleRect.left;
+			int consoleHeight = consoleRect.bottom - consoleRect.top;
 
-		int posX = (screenWidth - consoleWidth) / 2 + screenRect.left;
-		int posY = (screenHeight - consoleHeight) / 2 + screenRect.top;
+			int posX = (screenWidth - consoleWidth) / 2 + screenRect.left;
+			int posY = (screenHeight - consoleHeight) / 2 + screenRect.top;
 
-		MoveWindow(consoleWindow, posX, posY, consoleWidth, consoleHeight, TRUE);
+			MoveWindow(consoleWindow, posX, posY, consoleWidth, consoleHeight, TRUE);
+		}
 	}
 
 	this->isRefreshing = true;
@@ -280,6 +286,27 @@ void GameViewCMD::syncMatrix(TileBase* const(&matrix)[4][4])
 {
 	update_grid_mutex.lock();
 	this->m_matrix = matrix;
+
+	std::wstring output = L"Macierz:\n";
+
+	// Iterujemy po wszystkich elementach w macierzy
+	for (int row = 0; row < 4; ++row) {
+		for (int col = 0; col < 4; ++col) {
+			if (this->m_matrix[row][col] != nullptr) {
+				// Zak³adaj¹c, ¿e TileBase ma metodê ToString() zwracaj¹c¹ wstring
+				output += std::to_wstring(*this->m_matrix[row][col]); // Mo¿esz dostosowaæ ToString() do swojego typu
+			}
+			else {
+				output += L"NULL "; // Jeœli wskaŸnik jest NULL
+			}
+			output += L"\t";
+		}
+		output += L"\n"; // Nowa linia po ka¿dym wierszu
+	}
+
+	// Wypisanie na OutputDebugString
+	OutputDebugStringW(output.c_str());
+
 	update_grid_mutex.unlock();
 
 	this->updateGrid();
@@ -332,7 +359,6 @@ sf::RenderWindow* GameViewCMD::getWindow()
 void GameViewCMD::render()
 {
 	this->initRenderer();
-	this->refreshScreen();
 }
 
 void GameViewCMD::updateScore(const int& score, const int& bestScore)
