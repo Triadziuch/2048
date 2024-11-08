@@ -43,8 +43,6 @@ private:
 public:
 	LeaderboardViewGraphic();
 
-	const std::string& getViewPath() const override;
-
 	void openWindow();
 	void closeWindow();
 	void initRenderer();

@@ -44,11 +44,6 @@ LeaderboardViewGraphic::LeaderboardViewGraphic()
 	initAnimations();
 }
 
-const std::string& LeaderboardViewGraphic::getViewPath() const
-{
-	return "leaderboardViewGraphic";
-}
-
 void LeaderboardViewGraphic::updateContent()
 {
 

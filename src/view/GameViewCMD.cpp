@@ -118,16 +118,7 @@ void GameViewCMD::renderFTXUI()
 }
 
 GameViewCMD::GameViewCMD() {
-	this->registerObserver("update_game", [&]() {
-		printDebug("[GameViewCMD] Self Observer \"update_game\" triggered.");
-		return (false);
-		});
-
 	this->updateGrid();
-}
-
-const std::string& GameViewCMD::getViewPath() const {
-	return ("");
 }
 
 void GameViewCMD::refreshScreen()
@@ -179,15 +170,21 @@ void GameViewCMD::updateGrid()
 	update_grid_mutex.unlock();
 }
 
-void GameViewCMD::openWindow()
+/*void GameViewCMD::openWindow()
 {
 	HWND consoleWindow = GetActiveWindow();
 	if (consoleWindow != nullptr) {
 		this->consoleWindow = consoleWindow;
+
+		if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
+			printDebug("Nie mozna przekierowac stdout.");
+		if (freopen_s(&m_stderr, "CONOUT$", "w", stderr) != 0)
+			printDebug("Nie mo¿na przekierowaæ stderr.");
+		if (freopen_s(&m_stdin, "CONIN$", "r", stdin) != 0)
+			printDebug("Nie mo¿na przekierowaæ stdin.");
 	}
 	else {
 		if (AllocConsole()) {
-			// Zapisz uchwyt do okna konsoli
 			consoleWindow = GetConsoleWindow();
 
 			if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
@@ -266,7 +263,6 @@ void GameViewCMD::initRenderer()
 		ftxui_thread = new std::thread([this]() {
 		this->renderFTXUI();
 			});
-	this->isRefreshing = true;
 }
 
 void GameViewCMD::deleteRenderer()
@@ -280,92 +276,58 @@ void GameViewCMD::deleteRenderer()
 	delete ftxui_thread;
 	ftxui_thread = nullptr;
 	this->screen = nullptr;
-}
+}*/
 
 void GameViewCMD::syncMatrix(TileBase* const(&matrix)[4][4])
 {
-	update_grid_mutex.lock();
 	this->m_matrix = matrix;
-
-	std::wstring output = L"Macierz:\n";
-
-	// Iterujemy po wszystkich elementach w macierzy
-	for (int row = 0; row < 4; ++row) {
-		for (int col = 0; col < 4; ++col) {
-			if (this->m_matrix[row][col] != nullptr) {
-				// Zak³adaj¹c, ¿e TileBase ma metodê ToString() zwracaj¹c¹ wstring
-				output += std::to_wstring(*this->m_matrix[row][col]); // Mo¿esz dostosowaæ ToString() do swojego typu
-			}
-			else {
-				output += L"NULL "; // Jeœli wskaŸnik jest NULL
-			}
-			output += L"\t";
-		}
-		output += L"\n"; // Nowa linia po ka¿dym wierszu
-	}
-
-	// Wypisanie na OutputDebugString
-	OutputDebugStringW(output.c_str());
-
-	update_grid_mutex.unlock();
-
-	this->updateGrid();
 }
 
 void GameViewCMD::startMove(const std::vector<MoveInstruction*>& moveInstructions)
 {
-	this->notify("started_move");
+	GameViewCMD::BaseView::notify("started_move");
 }
 
 void GameViewCMD::startMerge(const std::vector<MergeInstruction*>& mergeInstructions)
 {
-	if (mergeInstructions.empty())
-		return;
-
-	this->m_mergeInstructions = &mergeInstructions;
-
-	this->notify("started_merging");
+	GameViewCMD::BaseView::notify("started_merging");
 }
 
 void GameViewCMD::startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions)
 {
-	this->m_spawnInstructions = &spawnInstructions;
-	this->notify("started_spawning");
+	GameViewCMD::BaseView::notify("started_spawning");
 }
 
 void GameViewCMD::endSpawn()
 {
-	this->notify("finished_spawning");
-
-	this->updateGrid();
-	this->refreshScreen();
+	GameViewCMD::BaseView::notify("finished_spawning");
 }
 
 void GameViewCMD::updateMove(float dt)
 {
-	this->notify("finished_move");
+	GameViewCMD::BaseView::notify("finished_move");
 }
 
 void GameViewCMD::updateSpawning(float dt)
 {
-	this->notify("finished_spawning");
+	GameViewCMD::BaseView::notify("finished_spawning");
 }
 
-sf::RenderWindow* GameViewCMD::getWindow()
-{
-	return nullptr;
-}
-
-void GameViewCMD::render()
-{
-	this->initRenderer();
-}
+//sf::RenderWindow* GameViewCMD::getWindow()
+//{
+//	return nullptr;
+//}
+//
+//void GameViewCMD::render()
+//{
+//	this->initRenderer();
+//
+//	this->updateGrid();
+//	this->refreshScreen();
+//}
 
 void GameViewCMD::updateScore(const int& score, const int& bestScore)
 {
 	this->score = score;
 	this->bestScore = bestScore;
-
-	this->updateGrid();
-	this->refreshScreen();
 }

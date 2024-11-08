@@ -2,10 +2,10 @@
 
 #include <string>
 #include <memory>
-#include "BaseView.h"
+#include "../CoreView.h"
 #include "../DataHandler.hpp"
 
-class ViewHandler : public DataHandler<std::string, std::shared_ptr<BaseView>> {
+class ViewHandler : public DataHandler<std::string, std::shared_ptr<CoreView>> {
 public:
     ViewHandler();
 

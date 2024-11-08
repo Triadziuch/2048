@@ -6,6 +6,7 @@
 #include "ftxui/component/loop.hpp"
 #include <ftxui/dom/table.hpp>
 #include "ftxui/dom/node.hpp"
+#include <ctime>
 #define byte win_byte_override
 #include <Windows.h>
 
@@ -13,9 +14,7 @@ class LeaderboardViewCMD : public BaseLeaderboardView {
 private:
 	// Console Variables
 	HWND consoleWindow = nullptr;
-	FILE* m_stdout = nullptr;
-	FILE* m_stderr = nullptr;
-	FILE* m_stdin = nullptr;
+	FILE* m_stdout = nullptr, * m_stderr = nullptr, * m_stdin = nullptr;
 
 	LeaderboardMode mode;
 	std::vector< std::vector< std::string >> values;
@@ -44,8 +43,6 @@ private:
 
 public:
 	LeaderboardViewCMD();
-
-	const std::string& getViewPath() const override;
 
 	void openWindow();
 	void closeWindow();

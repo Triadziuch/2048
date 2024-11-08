@@ -2,6 +2,7 @@
 
 #include "../model/GameModel.h"
 #include "../BaseGameView.h"
+#include "../BaseViewCMD.h"
 #include "../TileMatrix.h"
 #include <ftxui/component/component.hpp>
 #include <ftxui/component/screen_interactive.hpp>
@@ -11,20 +12,14 @@
 #define byte win_byte_override
 #include <Windows.h>
 
-class GameViewCMD : public BaseGameView {
+class GameViewCMD : public BaseViewCMD, public BaseGameView {
 private:
 	TileBase* const (*m_matrix)[4];
-	const std::vector <MoveInstruction*>* m_moveInstructions{};
-	const std::vector <SpawnInstruction*>* m_spawnInstructions{};
-	const std::vector <MergeInstruction*>* m_mergeInstructions{};
-	std::vector <TileModel*> m_tilesToMerge;
 	int score, bestScore;
 
 	// Console Variables
 	HWND consoleWindow = nullptr;
-	FILE* m_stdout = nullptr;
-	FILE* m_stderr = nullptr;
-	FILE* m_stdin = nullptr;
+	FILE* m_stdout = nullptr, *m_stderr = nullptr, *m_stdin = nullptr;
 
 	// Grid variables
 	constexpr static int gridSize = 4;
@@ -54,30 +49,36 @@ private:
 	
 
 public:
+	// Constructors / Destructors
 	GameViewCMD();
 
-    const std::string &getViewPath() const override;
-
-	void openWindow();
+	// Window and renderer manipulation functions
+	/*void openWindow();
 	void closeWindow();
 	void initRenderer();
-	void deleteRenderer();
+	void deleteRenderer();*/
 
+	void openWindow() override { BaseViewCMD::openWindow(); }
+	void closeWindow() override { BaseViewCMD::closeWindow(); }
+	void initRenderer() override { BaseViewCMD::initRenderer(); }
+	void deleteRenderer() override { BaseViewCMD::deleteRenderer(); }
+	sf::RenderWindow* getWindow() override { return BaseViewCMD::getWindow(); }
+	void render() override { BaseViewCMD::render(); }
+
+	// Game view functions
 	void syncMatrix(TileBase* const (&matrix)[4][4]);
-
 	void startMove(const std::vector<MoveInstruction*>& moveInstructions);
 	void startMerge(const std::vector<MergeInstruction*>& mergeInstructions);
 	void startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions);
 	void endSpawn();
 
-	// Update functions
 	void updateMove(float dt);
 	void updateSpawning(float dt);
 	void updateScore(const int& score, const int& bestScore);
 
-	// Accessors / Mutators
-	sf::RenderWindow* getWindow();
+	//// Accessors / Mutators
+	//sf::RenderWindow* getWindow();
 
-	// Render functions
-	void render();
+	//// Render functions
+	//void render();
 };

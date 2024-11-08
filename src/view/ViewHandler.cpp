@@ -6,8 +6,8 @@
 
 ViewHandler::ViewHandler() {
     this->_data = {
-            {"game_graphic", std::shared_ptr<BaseView>(new GameViewGraphic())},
-            {"game_cmd", std::shared_ptr<BaseView>(new GameViewCMD())},
+            {"game_graphic", std::shared_ptr<CoreView>(new GameViewGraphic())},
+            {"game_cmd", std::shared_ptr<CoreView>(new GameViewCMD())},
             {"leaderboard_graphic", std::shared_ptr<BaseView>(new LeaderboardViewGraphic())},
             {"leaderboard_cmd", std::shared_ptr<BaseView>(new LeaderboardViewCMD())}
     };

@@ -1,7 +1,7 @@
 #pragma once
 #include "src/view/BaseView.h"
 
-class BaseGameView : public BaseView {
+class BaseGameView : public virtual BaseView {
 public:
 	virtual void syncMatrix(TileBase* const (&matrix)[4][4]) = 0;
 

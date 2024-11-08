@@ -2,12 +2,13 @@
 
 #include "../model/GameModel.h"
 #include "../BaseGameView.h"
+#include "../BaseViewGraphic.h"
 #include "../AssetManager.h"
 #include "../TileMatrix.h"
 #include "../GUI.h"
 #include "../StandardCursor.h"
 
-class GameViewGraphic : public BaseGameView {
+class GameViewGraphic : public BaseViewGraphic, public BaseGameView {
 private:
 	AssetManager manager;
 
@@ -77,6 +78,13 @@ public:
 	GameViewGraphic();
 	~GameViewGraphic();
 
+	void openWindow() override { BaseViewGraphic::openWindow(); }
+	void closeWindow() override { BaseViewGraphic::closeWindow(); }
+	void initRenderer() override { BaseViewGraphic::initRenderer(); }
+	void deleteRenderer() override { BaseViewGraphic::deleteRenderer(); }
+	sf::RenderWindow* getWindow() override { return BaseViewGraphic::getWindow(); }
+	void render() override { BaseViewGraphic::render(); }
+
 	// Public functions
 	void syncMatrix(TileBase* const (&matrix)[4][4]);
 
@@ -85,20 +93,19 @@ public:
 	void startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions);
 	void endSpawn();
 
-	const std::string& getViewPath() const;
-	void openWindow();
+	/*void openWindow();
 	void closeWindow();
 	void initRenderer();
-	void deleteRenderer();
+	void deleteRenderer();*/
 
 	// Update functions
 	void updateMove(float dt);
 	void updateSpawning(float dt);
 	void updateScore(const int& score, const int& bestScore);
 
-	// Accessors / Mutators
-	sf::RenderWindow* getWindow();
+	//// Accessors / Mutators
+	//sf::RenderWindow* getWindow();
 
-	// Render functions
-	void render();
+	//// Render functions
+	//void render();
 };

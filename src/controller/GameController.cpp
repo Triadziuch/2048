@@ -71,27 +71,10 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 	this->_gameView->connect("started_move", [&]() {
 			this->_gameModel->endMove();
-			this->_gameView->endSpawn();
-		return false;
-		});
-
-	this->_gameView->connect("finished_move", [&]() {
-			isMoving = false;
-			this->_gameModel->endMove();
-		return false;
-		});
-
-	this->_gameView->connect("started_spawning", [&]() {
-			isSpawning = true;
-		return false;
-		});
-
-	this->_gameView->connect("finished_spawning", [&]() {
-		isSpawning = false;
-		this->_gameModel->endMerge();
-		this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
-		_gameView->syncMatrix(this->_gameModel->getMatrix());
-		this->_gameView->render();
+			this->_gameModel->endMerge();
+			this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
+			this->_gameView->syncMatrix(this->_gameModel->getMatrix());
+			this->_gameView->render();
 		return false;
 		});
 

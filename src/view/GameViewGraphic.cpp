@@ -137,7 +137,7 @@ void GameViewGraphic::syncMatrix(TileBase* const (&matrix)[4][4])
 	this->m_matrix = matrix;
 	this->updateTiles();
 
-	if (isDebug)
+	if (GameViewGraphic::BaseView::isDebug)
 		this->drawMatrixCMD();
 }
 
@@ -154,7 +154,7 @@ void GameViewGraphic::startMove(const std::vector<MoveInstruction*>& moveInstruc
 		this->tiles[old_pos.x][old_pos.y]->setIsMoving(true);
 		this->tiles[old_pos.x][old_pos.y]->smoothMove(pixel_distance, m_timeMovingMax);
 	}
-	this->notify("started_move");
+	GameViewGraphic::BaseView::notify("started_move");
 }
 
 void GameViewGraphic::startMerge(const std::vector<MergeInstruction*>& mergeInstructions)
@@ -168,7 +168,7 @@ void GameViewGraphic::startMerge(const std::vector<MergeInstruction*>& mergeInst
 		const sf::Vector2i pos = instruction->pos;
 		tiles[pos.x][pos.y]->startMerging();
 	}
-	this->notify("started_merging");
+	GameViewGraphic::BaseView::notify("started_merging");
 }
 
 void GameViewGraphic::startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions)
@@ -179,7 +179,7 @@ void GameViewGraphic::startSpawn(const std::vector<SpawnInstruction*>& spawnInst
 		this->tiles[instruction->pos.x][instruction->pos.y] = new Tile(instruction->type, m_tileTextures[findID(instruction->type)], &m_scale, calculateTilePos(instruction->pos), m_movementManager);
 		this->tiles[instruction->pos.x][instruction->pos.y]->startSpawning();
 	}
-	this->notify("started_spawning");
+	GameViewGraphic::BaseView::notify("started_spawning");
 }
 
 void GameViewGraphic::endSpawn()
@@ -190,34 +190,29 @@ void GameViewGraphic::endSpawn()
 		for (auto& instruction : *m_spawnInstructions) 
 			tiles[instruction->pos.x][instruction->pos.y]->update(1.f);
 	
-	this->notify("finished_spawning");
+	GameViewGraphic::BaseView::notify("finished_spawning");
 }
 
-const std::string& GameViewGraphic::getViewPath() const
-{
-	return "gameViewGraphic";
-}
-
-void GameViewGraphic::openWindow()
-{
-	if (this->window == nullptr)
-		initWindow();
-}
-
-void GameViewGraphic::closeWindow()
-{
-	this->window->close();
-	delete this->window;
-	this->window = nullptr;
-}
-
-void GameViewGraphic::initRenderer()
-{
-}
-
-void GameViewGraphic::deleteRenderer()
-{
-}
+//void GameViewGraphic::openWindow()
+//{
+//	if (this->window == nullptr)
+//		initWindow();
+//}
+//
+//void GameViewGraphic::closeWindow()
+//{
+//	this->window->close();
+//	delete this->window;
+//	this->window = nullptr;
+//}
+//
+//void GameViewGraphic::initRenderer()
+//{
+//}
+//
+//void GameViewGraphic::deleteRenderer()
+//{
+//}
 
 
 
@@ -231,7 +226,7 @@ void GameViewGraphic::updateMove(float dt)
 		m_timeMoving += dt;
 	else {
 		m_timeMoving = 0.f;
-		this->notify("finished_move");
+		GameViewGraphic::BaseView::notify("finished_move");
 	}
 }
 
@@ -247,7 +242,7 @@ void GameViewGraphic::updateSpawning(float dt)
 
 	if (finishedSpawning) {
 		this->m_mergeInstructions = nullptr;
-		this->notify("finished_spawning");
+		GameViewGraphic::BaseView::notify("finished_spawning");
 	}
 }
 
@@ -255,31 +250,29 @@ void GameViewGraphic::updateScore(const int& score, const int& bestScore)
 {
 }
 
-sf::RenderWindow* GameViewGraphic::getWindow()
-{
-	return window;
-}
-
-
-
-// = = = = = Render functions = = = = = //
-void GameViewGraphic::render()
-{
-	window->clear(m_backgroundColor);
-	window->draw(m_sprite);
-
-	if (m_mergeInstructions)
-		for (const auto& instruction : *m_mergeInstructions) {
-			int type = *instruction->tile;
-			sf::Vector2i pos = instruction->pos;
-			Tile tile(type, m_tileTextures[findID(type)], &m_scale, calculateTilePos(pos), m_movementManager);
-			tile.render(*window);
-		}
-
-	for (size_t j = 0; j < 4; ++j)
-		for (size_t i = 0; i < 4; ++i) 
-			if (tiles[i][j])
-				tiles[i][j]->render(*window);
-
-	window->display();
-}
+//sf::RenderWindow* GameViewGraphic::getWindow()
+//{
+//	return window;
+//}
+//
+//// = = = = = Render functions = = = = = //
+//void GameViewGraphic::render()
+//{
+//	window->clear(m_backgroundColor);
+//	window->draw(m_sprite);
+//
+//	if (m_mergeInstructions)
+//		for (const auto& instruction : *m_mergeInstructions) {
+//			int type = *instruction->tile;
+//			sf::Vector2i pos = instruction->pos;
+//			Tile tile(type, m_tileTextures[findID(type)], &m_scale, calculateTilePos(pos), m_movementManager);
+//			tile.render(*window);
+//		}
+//
+//	for (size_t j = 0; j < 4; ++j)
+//		for (size_t i = 0; i < 4; ++i) 
+//			if (tiles[i][j])
+//				tiles[i][j]->render(*window);
+//
+//	window->display();
+//}

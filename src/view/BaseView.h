@@ -1,11 +1,9 @@
 #pragma once
 
-#include "../event/EventObserver.h"
-#include "../model/GameModel.h"
+#include "../CoreView.h"
 
-class BaseView : public EventObserver {
+class BaseView : public CoreView {
 public:
-    virtual const std::string &getViewPath() const = 0;
 	virtual void openWindow() = 0;
 	virtual void closeWindow() = 0;
 	virtual void initRenderer() = 0;

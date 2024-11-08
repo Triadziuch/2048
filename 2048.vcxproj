@@ -21,6 +21,8 @@
   <ItemGroup>
     <ClInclude Include="BaseGameView.h" />
     <ClInclude Include="BaseLeaderboardView.h" />
+    <ClInclude Include="BaseViewCMD.h" />
+    <ClInclude Include="BaseViewGraphic.h" />
     <ClInclude Include="ExitCode.h" />
     <ClInclude Include="IEventManager.h" />
     <ClInclude Include="LeaderboardController.h" />
@@ -60,8 +62,11 @@
     <ClInclude Include="src\view\ViewHandler.h" />
     <ClInclude Include="TileMatrixModel.h" />
     <ClInclude Include="TileModel.h" />
+    <ClInclude Include="CoreView.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BaseViewCMD.cpp" />
+    <ClCompile Include="BaseViewGraphic.cpp" />
     <ClCompile Include="IEventManager.cpp" />
     <ClCompile Include="LeaderboardController.cpp" />
     <ClCompile Include="LeaderboardModel.cpp" />

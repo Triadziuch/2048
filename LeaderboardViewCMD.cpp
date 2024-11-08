@@ -46,7 +46,7 @@ void LeaderboardViewCMD::updateContent()
 			ftxui::vbox({}),
 			ftxui::filler(),
 
-			ftxui::vbox({}) | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 14),
+			ftxui::vbox({}) | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 20),
 			ftxui::filler(),
 			ftxui::vbox({}),
 
@@ -60,16 +60,21 @@ void LeaderboardViewCMD::updateContent()
 			ftxui::filler(),
 			this->mode == LeaderboardMode::EDIT
 				? ftxui::vbox({
-					  ftxui::text("Your score") | ftxui::hcenter,
-					  ftxui::text(std::to_string(this->score)) | ftxui::hcenter,
-					  this->name_input_container->Render(), // Renderowanie komponentu input_add
-				  })
-				  | ftxui::border
-				  | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 14)
-				  | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 5)
+					ftxui::vbox({
+						ftxui::text("Your score") | ftxui::hcenter,
+						ftxui::text(std::to_string(this->score)) | ftxui::hcenter,
+						}) | ftxui::border | ftxui::hcenter | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 20) | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 4),
+						ftxui::vbox({}) | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 4),
+					ftxui::vbox({
+						ftxui::text("Type your name") | ftxui::hcenter,
+						this->name_input_container->Render(),
+								}) | ftxui::border | ftxui::hcenter | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 20) | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 4),
+								ftxui::filler(),
+
+				  }) | ftxui::hcenter
 				: ftxui::vbox({})
-				  | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 14)
-				  | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 2),
+				  | ftxui::size(ftxui::WIDTH, ftxui::EQUAL, 20)
+				  | ftxui::size(ftxui::HEIGHT, ftxui::EQUAL, 4),
 
 			ftxui::filler(),
 			ftxui::vbox({}),
@@ -93,12 +98,6 @@ void LeaderboardViewCMD::updateTableElement()
 {
 	update_content_mutex.lock();
 
-	if (this->table)
-		delete this->table;
-
-	using namespace ftxui;
-
-	
 	values.clear();
 	values.push_back({ { "   Rank   ", "       Nickname       ", "    Score    ", "    Date    " } });
 
@@ -109,7 +108,8 @@ void LeaderboardViewCMD::updateTableElement()
 		values.push_back({ {"", "", "", ""} });
 	}
 
-
+	if (this->table)
+		delete this->table;
 	this->table = new Table(values);
 
 	table->SelectAll().Decorate(center);
@@ -150,20 +150,12 @@ LeaderboardViewCMD::LeaderboardViewCMD()
 
 }
 
-const std::string& LeaderboardViewCMD::getViewPath() const
-{
-	return ("");
-}
-
 void LeaderboardViewCMD::openWindow()
 {
-	HWND window = GetConsoleWindow();
+	HWND consoleWindow = GetConsoleWindow();
 
-	if (window)
-		consoleWindow = window;
-	else if (AllocConsole()) {
-		// Zapisz uchwyt do okna konsoli
-		consoleWindow = GetConsoleWindow();
+	if (consoleWindow) {
+		this->consoleWindow = consoleWindow;
 
 		if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
 			printDebug("Nie mozna przekierowac stdout.");
@@ -171,30 +163,43 @@ void LeaderboardViewCMD::openWindow()
 			printDebug("Nie mo¿na przekierowaæ stderr.");
 		if (freopen_s(&m_stdin, "CONIN$", "r", stdin) != 0)
 			printDebug("Nie mo¿na przekierowaæ stdin.");
+	}
+	else {
+		if (AllocConsole()) {
+			// Zapisz uchwyt do okna konsoli
+			consoleWindow = GetConsoleWindow();
 
-		std::cout.clear();
-		std::cerr.clear();
-		std::cin.clear();
+			if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
+				printDebug("Nie mozna przekierowac stdout.");
+			if (freopen_s(&m_stderr, "CONOUT$", "w", stderr) != 0)
+				printDebug("Nie mo¿na przekierowaæ stderr.");
+			if (freopen_s(&m_stdin, "CONIN$", "r", stdin) != 0)
+				printDebug("Nie mo¿na przekierowaæ stdin.");
 
-		std::cout.setf(std::ios::unitbuf);
-		setvbuf(stdout, nullptr, _IONBF, 0);
+			std::cout.clear();
+			std::cerr.clear();
+			std::cin.clear();
 
-		RECT consoleRect;
-		GetWindowRect(consoleWindow, &consoleRect);
+			std::cout.setf(std::ios::unitbuf);
+			setvbuf(stdout, nullptr, _IONBF, 0);
 
-		RECT screenRect;
-		SystemParametersInfo(SPI_GETWORKAREA, 0, &screenRect, 0);
+			RECT consoleRect;
+			GetWindowRect(consoleWindow, &consoleRect);
 
-		int screenWidth = screenRect.right - screenRect.left;
-		int screenHeight = screenRect.bottom - screenRect.top;
+			RECT screenRect;
+			SystemParametersInfo(SPI_GETWORKAREA, 0, &screenRect, 0);
 
-		int consoleWidth = consoleRect.right - consoleRect.left;
-		int consoleHeight = consoleRect.bottom - consoleRect.top;
+			int screenWidth = screenRect.right - screenRect.left;
+			int screenHeight = screenRect.bottom - screenRect.top;
 
-		int posX = (screenWidth - consoleWidth) / 2 + screenRect.left;
-		int posY = (screenHeight - consoleHeight) / 2 + screenRect.top;
+			int consoleWidth = consoleRect.right - consoleRect.left;
+			int consoleHeight = consoleRect.bottom - consoleRect.top;
 
-		MoveWindow(consoleWindow, posX, posY, consoleWidth, consoleHeight, TRUE);
+			int posX = (screenWidth - consoleWidth) / 2 + screenRect.left;
+			int posY = (screenHeight - consoleHeight) / 2 + screenRect.top;
+
+			MoveWindow(consoleWindow, posX, posY, consoleWidth, consoleHeight, TRUE);
+		}
 	}
 
 	this->isRefreshing = true;
@@ -287,7 +292,14 @@ void LeaderboardViewCMD::setMode(LeaderboardMode mode)
 
 LeaderboardEntry LeaderboardViewCMD::getEntry()
 {
-	return LeaderboardEntry{this->name, this->score, "12.12.2021"};
+	std::time_t t = std::time(nullptr);
+	std::tm tm{};
+	if (localtime_s(&tm, &t) != 0)
+		throw std::runtime_error("Nie uda³o siê pobraæ lokalnej daty i czasu");
+	std::ostringstream dateStream;
+	dateStream << std::put_time(&tm, "%d.%m.%Y");
+
+	return LeaderboardEntry{ this->name, this->score, dateStream.str() };
 }
 
 sf::RenderWindow* LeaderboardViewCMD::getWindow()
