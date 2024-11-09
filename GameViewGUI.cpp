@@ -13,12 +13,24 @@ void GameViewGUI::justifyHorizontal(const sf::FloatRect& button, sf::Text& text)
 	text.setPosition(button.left + (button.width - text.getGlobalBounds().width) / 2.f, text.getPosition().y);
 }
 
-void GameViewGUI::updateGameOver(const float dt)
+bool GameViewGUI::updateGameOver(const float dt)
 {
+	m_gameOverTime += dt;
+
 	if (m_gameOverTime < m_gameOverTimeMax) {
-		m_gameOverTime += dt;
+
 		m_gameOverText.setFillColor(sf::Color(250, 248, 239, 255 * m_gameOverTime / m_gameOverTimeMax));
+		return false;
 	}
+	else if (m_gameOverTime < m_gameOverTimeMax * 2.f) {
+
+	}
+	else if (m_gameOverTime < m_gameOverTimeMax * 3.f) {
+		m_gameOverPressKeyText.setFillColor(sf::Color(250, 248, 239, 255 * (m_gameOverTime - 2.f * m_gameOverTimeMax) / m_gameOverTimeMax ));
+		return false;
+	}
+
+	return true;
 }
 
 void GameViewGUI::startGameOver()
@@ -84,37 +96,44 @@ void GameViewGUI::initText()
 	m_scoreHeaderText.setFont(*m_font);
 	m_titleText.setFont(*m_font);
 	m_gameOverText.setFont(*m_font);
+	m_gameOverPressKeyText.setFont(*m_font);
 
 	m_newGameText.setCharacterSize(m_newGameSize);
 	m_bestScoreHeaderText.setCharacterSize(m_bestScoreSize);
 	m_scoreHeaderText.setCharacterSize(m_scoreSize);
 	m_titleText.setCharacterSize(m_titleSize);
 	m_gameOverText.setCharacterSize(m_gameOverSize);
+	m_gameOverPressKeyText.setCharacterSize(m_gameOverSize / 2U);
 
 	m_newGameText.setFillColor(sf::Color::White);
 	m_bestScoreHeaderText.setFillColor(m_scoreColor);
 	m_scoreHeaderText.setFillColor(m_scoreColor);
 	m_titleText.setFillColor(m_titleColor);
 	m_gameOverText.setFillColor(m_gameOverColor);
+	m_gameOverPressKeyText.setFillColor(m_gameOverColor);
 
 	m_newGameText.setString(m_newGameString);
 	m_bestScoreHeaderText.setString(m_bestScoreString);
 	m_scoreHeaderText.setString(m_scoreString);
 	m_titleText.setString(m_titleString);
 	m_gameOverText.setString(m_gameOverString);
+	m_gameOverPressKeyText.setString(m_gameOverPressKeyString);
 
 	m_gameOverText.setFillColor(m_titleColor);
+	m_gameOverPressKeyText.setFillColor(m_titleColor);
 
 	m_newGameText.setOrigin(m_newGameText.getLocalBounds().left + m_newGameText.getGlobalBounds().width / 2.f, m_newGameText.getLocalBounds().top + m_newGameText.getGlobalBounds().height / 2.f);
 	m_bestScoreHeaderText.setOrigin(m_bestScoreHeaderText.getLocalBounds().left + m_bestScoreHeaderText.getGlobalBounds().width / 2.f, m_bestScoreHeaderText.getLocalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height / 2.f);
 	m_scoreHeaderText.setOrigin(m_scoreHeaderText.getLocalBounds().left + m_scoreHeaderText.getGlobalBounds().width / 2.f, m_scoreHeaderText.getLocalBounds().top + m_scoreHeaderText.getGlobalBounds().height / 2.f);
 	m_gameOverText.setOrigin(m_gameOverText.getLocalBounds().left + m_gameOverText.getGlobalBounds().width / 2.f, m_gameOverText.getLocalBounds().top + m_gameOverText.getGlobalBounds().height / 2.f);
+	m_gameOverPressKeyText.setOrigin(m_gameOverPressKeyText.getLocalBounds().left + m_gameOverPressKeyText.getGlobalBounds().width / 2.f, m_gameOverPressKeyText.getLocalBounds().top + m_gameOverPressKeyText.getGlobalBounds().height / 2.f);
 
 	m_newGameText.setPosition(m_newGameButtonSprite.getGlobalBounds().left + m_newGameButtonSprite.getGlobalBounds().width / 2.f, m_newGameButtonSprite.getGlobalBounds().top + m_newGameButtonSprite.getGlobalBounds().height / 2.f);
 	m_bestScoreHeaderText.setPosition(m_bestScoreButtonSprite.getGlobalBounds().left + m_bestScoreButtonSprite.getGlobalBounds().width / 2.f, m_bestScoreButtonSprite.getGlobalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height * 2);
 	m_scoreHeaderText.setPosition(m_scoreButtonSprite.getGlobalBounds().left + m_scoreButtonSprite.getGlobalBounds().width / 2.f, m_scoreButtonSprite.getGlobalBounds().top + m_scoreHeaderText.getGlobalBounds().height * 2);
 	m_titleText.setPosition(m_playgroundRect.left, m_playgroundRect.top - m_titleText.getGlobalBounds().height * 1.75f);
-	m_gameOverText.setPosition(m_playgroundRect.left + m_playgroundRect.width / 2.f, m_playgroundRect.top + m_playgroundRect.height / 2.f);
+	m_gameOverText.setPosition(m_playgroundRect.left + m_playgroundRect.width / 2.f, m_playgroundRect.top + m_playgroundRect.height / 2.f - m_gameOverText.getGlobalBounds().height);
+	m_gameOverPressKeyText.setPosition(m_playgroundRect.left + m_playgroundRect.width / 2.f, m_playgroundRect.top + m_playgroundRect.height / 2.f + m_gameOverPressKeyText.getGlobalBounds().height);
 
 	m_scoreText.setFont(*m_font);
 	m_bestScoreText.setFont(*m_font);
@@ -195,6 +214,11 @@ void GameViewGUI::render(sf::RenderTarget& target)
 	target.draw(m_scoreText);
 
 	// Drawing game over
-	if (m_isGameOver)
+	if (m_isGameOver) {
 		target.draw(m_gameOverText);
+
+		if (m_gameOverTime > m_gameOverTimeMax * 2.f)
+			target.draw(m_gameOverPressKeyText);
+	}
+		
 }

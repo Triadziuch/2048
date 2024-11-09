@@ -24,8 +24,8 @@ private:
 	GameViewGUI* gui{};
 	
 	// Animation time variables
-	const float m_timeSpawningMax = 0.2f, m_timeMovingMax = 0.2f, m_timeMergingMax = 0.2f;
-	float m_timeMoving = 0.f, m_timeMerging = 0.f;
+	const float m_timeSpawningMax = 0.2f, m_timeMovingMax = 0.2f, m_timeMergingMax = 0.2f, m_timeGameOverMax = 0.5f;
+	float m_timeMoving = 0.f, m_timeMerging = 0.f, m_timeGameOver = 0.f;
 
 	Tile* tiles[4][4]{ {} };
 	const std::vector <MoveInstruction*>* m_moveInstructions{};
@@ -55,6 +55,7 @@ public:
 	void deleteRenderer() override { BaseViewGraphic::deleteRenderer(); }
 	sf::RenderWindow* getWindow() override { return BaseViewGraphic::getWindow(); }
 	void render() override;
+	void reset() override;
 
 	// Public functions
 	void syncMatrix(TileBase* const (&matrix)[4][4]);
@@ -62,10 +63,12 @@ public:
 	void startMove(const std::vector<MoveInstruction*>& moveInstructions);
 	void startMerge(const std::vector<MergeInstruction*>& mergeInstructions);
 	void startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions);
+	void startGameOver();
 	void endSpawn();
 
 	// Update functions
 	void updateMove(float dt);
-	void updateSpawning(float dt);
+	void updateSpawn(float dt);
+	void updateGameOver(float dt);
 	void updateScore(const int& score, const int& bestScore);
 };

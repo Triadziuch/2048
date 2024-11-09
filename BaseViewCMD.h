@@ -23,7 +23,7 @@ protected:
     std::thread* ftxui_thread = nullptr;
     std::mutex mtx, update_content_mutex;
     std::condition_variable cv;
-
+    ftxui::Component renderer;
     ftxui::ScreenInteractive* screen{};
 
     bool isRefreshing = false, needRefreshing = false;

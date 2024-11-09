@@ -127,6 +127,11 @@ void GameViewGraphic::startMove(const std::vector<MoveInstruction*>& moveInstruc
 	BaseGameView::notify("started_move");
 }
 
+void GameViewGraphic::reset()
+{
+	this->gui->stopGameOver();
+}
+
 void GameViewGraphic::startMerge(const std::vector<MergeInstruction*>& mergeInstructions)
 {
 	if (mergeInstructions.empty())
@@ -177,7 +182,17 @@ void GameViewGraphic::updateMove(float dt)
 	}
 }
 
-void GameViewGraphic::updateSpawning(float dt)
+void GameViewGraphic::startGameOver()
+{
+	for (size_t j = 0; j < 4; ++j)
+		for (size_t i = 0; i < 4; ++i)
+			if (this->tiles[i][j])
+				this->tiles[i][j]->startGameOver();
+
+	this->gui->startGameOver();
+}
+
+void GameViewGraphic::updateSpawn(float dt)
 {
 	this->m_movementManager->update(dt);
 
@@ -200,6 +215,17 @@ void GameViewGraphic::updateScore(const int& score, const int& bestScore)
 
 	this->gui->setScore(score);
 	this->gui->setBestScore(bestScore);
+}
+
+void GameViewGraphic::updateGameOver(float dt)
+{
+	for (size_t j = 0; j < 4; ++j)
+		for (size_t i = 0; i < 4; ++i)
+			if (this->tiles[i][j])
+				this->tiles[i][j]->update(dt);
+
+	if (this->gui->updateGameOver(dt))
+		BaseGameView::notify("finished_gameover");
 }
 
 // = = = = = Render functions = = = = = //

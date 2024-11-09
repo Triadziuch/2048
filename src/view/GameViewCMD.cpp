@@ -166,42 +166,37 @@ void GameViewCMD::syncMatrix(TileBase* const(&matrix)[4][4])
 	this->m_matrix = matrix;
 }
 
-void GameViewCMD::startMove(const std::vector<MoveInstruction*>& moveInstructions)
+void GameViewCMD::startMove(const std::vector<MoveInstruction*>& moveInstructions) { BaseGameView::notify("started_move"); }
+
+void GameViewCMD::startMerge(const std::vector<MergeInstruction*>& mergeInstructions) { BaseGameView::notify("started_merging"); }
+
+void GameViewCMD::startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions) { BaseGameView::notify("started_spawning"); }
+
+void GameViewCMD::startGameOver()
 {
-	BaseGameView::notify("started_move");
 }
 
-void GameViewCMD::startMerge(const std::vector<MergeInstruction*>& mergeInstructions)
-{
-	BaseGameView::notify("started_merging");
-}
+void GameViewCMD::endSpawn() { BaseGameView::notify("finished_spawning"); }
 
-void GameViewCMD::startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions)
-{
-	BaseGameView::notify("started_spawning");
-}
+void GameViewCMD::updateMove(float dt) { BaseGameView::notify("finished_move"); }
 
-void GameViewCMD::endSpawn()
-{
-	BaseGameView::notify("finished_spawning");
-}
+void GameViewCMD::updateSpawn(float dt) { BaseGameView::notify("finished_spawning"); }
 
-void GameViewCMD::updateMove(float dt)
+void GameViewCMD::updateGameOver(float dt)
 {
-	BaseGameView::notify("finished_move");
-}
 
-void GameViewCMD::updateSpawning(float dt)
-{
-	BaseGameView::notify("finished_spawning");
 }
 
 void GameViewCMD::render()
 {
 	this->initRenderer();
-
 	this->updateContent();
+	std::this_thread::sleep_for(std::chrono::milliseconds(4));
 	this->refreshScreen();
+}
+
+void GameViewCMD::reset()
+{
 }
 
 void GameViewCMD::updateScore(const int& score, const int& bestScore)

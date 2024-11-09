@@ -20,9 +20,9 @@ BaseViewCMD::BaseViewCMD() : BaseView() {}
 // = = = = = BaseView member functions = = = = = //
 void BaseViewCMD::openWindow()
 {
-	HWND consoleWindow = GetActiveWindow();
-	if (consoleWindow != nullptr) {
-		this->consoleWindow = consoleWindow;
+	HWND window = GetConsoleWindow();
+	if (window != nullptr) {
+		this->consoleWindow = window;
 
 		if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
 			printDebug("Nie mozna przekierowac stdout.");
@@ -33,7 +33,7 @@ void BaseViewCMD::openWindow()
 	}
 	else {
 		if (AllocConsole()) {
-			consoleWindow = GetConsoleWindow();
+			this->consoleWindow = GetConsoleWindow();
 
 			if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
 				printDebug("Nie mozna przekierowac stdout.");

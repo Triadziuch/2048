@@ -31,12 +31,16 @@ void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameCon
 
 		if (ev.type == sf::Event::KeyPressed) {
 
-			if (!controller->getIsMoving())
-				model->move(ev.key.code);
+			if (controller->getIsGameOver())
+				controller->resetGame();
+			else {
+				if (!controller->getIsMoving())
+					model->move(ev.key.code);
 
-			if (ev.key.code == sf::Keyboard::C) {
-				previousKeyState['C'] = true;
-				controller->switchView();
+				if (ev.key.code == sf::Keyboard::C) {
+					previousKeyState['C'] = true;
+					controller->switchView();
+				}
 			}
 		}
 	}
@@ -81,7 +85,8 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState[VK_ESCAPE] = false;
 
 	if (isKeyPressed('C') && !previousKeyState['C']) {
-		controller->switchView();
+		if (controller->getIsGameOver() == false)
+			controller->switchView();
 		previousKeyState['C'] = true;
 		return;
 	}
@@ -105,7 +110,6 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState['V'] = false;
 
 	if (isKeyPressed(VK_UP) && !previousKeyState[VK_UP]) {
-		OutputDebugString(L"UP\n");
 		model->move(sf::Keyboard::W);
 		previousKeyState[VK_UP] = true;
 	}
@@ -113,7 +117,6 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState[VK_UP] = false;
 
 	if (isKeyPressed(VK_DOWN) && !previousKeyState[VK_DOWN]) {
-		OutputDebugString(L"DOWN\n");
 		model->move(sf::Keyboard::S);
 		previousKeyState[VK_DOWN] = true;
 	}
@@ -121,7 +124,6 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState[VK_DOWN] = false;
 
 	if (isKeyPressed(VK_LEFT) && !previousKeyState[VK_LEFT]) {
-		OutputDebugString(L"LEFT\n");
 		model->move(sf::Keyboard::A);
 		previousKeyState[VK_LEFT] = true;
 	}
@@ -129,7 +131,6 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState[VK_LEFT] = false;
 
 	if (isKeyPressed(VK_RIGHT) && !previousKeyState[VK_RIGHT]) {
-		OutputDebugString(L"RIGHT\n");
 		model->move(sf::Keyboard::D);
 		previousKeyState[VK_RIGHT] = true;
 	}

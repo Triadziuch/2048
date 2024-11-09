@@ -57,6 +57,7 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 		});
 
 	this->_gameModel->connect("GAME_OVER", [&]() {
+			this->isGameOver = true;
 			printDebug("[GameController] GameModel has informed about game over.");
 		return false;
 		});
@@ -72,8 +73,8 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 	this->_gameView->connect("started_move", [&]() {
 			this->_gameModel->endMove();
 			this->_gameModel->endMerge();
-			this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 			this->_gameView->syncMatrix(this->_gameModel->getMatrix());
+			this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 			this->_gameView->render();
 		return false;
 		});
@@ -102,6 +103,15 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 			isSpawning = false;
 			this->_gameModel->endMerge();
 			this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
+
+			if (this->isGameOver)
+				this->_gameView->startGameOver();
+
+		return false;
+		});
+
+	this->_gameView->connect("finished_gameover", [&]() {
+
 		return false;
 		});
 }
@@ -114,7 +124,10 @@ void GameController::switchView()
 		this->_gameView->updateMove(1.f);
 
 	while (isSpawning) 
-		this->_gameView->updateSpawning(1.f);
+		this->_gameView->updateSpawn(1.f);
+
+	if (isGameOver)
+		this->_gameView->updateGameOver(5.f);
 
 	this->_gameView->closeWindow();
 	delete _eventManager;
@@ -133,6 +146,12 @@ void GameController::switchView()
 	this->_gameView->syncMatrix(this->_gameModel->getMatrix());
 	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 
+	if (isGameOver) {
+		this->_gameView->startGameOver();
+		this->_gameView->updateGameOver(5.f);
+		this->_gameView->updateGameOver(5.f);
+	}
+
 	this->render();
 }
 
@@ -141,6 +160,17 @@ void GameController::displayLeaderboard(LeaderboardMode mode)
 	this->_gameModel->setLeaderboardMode(mode);
 	this->exitCode = ExitCode::LEADERBOARD;
 	this->isEnd = true;
+}
+
+void GameController::resetGame()
+{
+	this->isGameOver = false;
+	this->_viewHandler->getView<GameViewCMD>("game_cmd")->reset();
+	this->_viewHandler->getView<GameViewGraphic>("game_graphic")->reset();
+	this->_gameModel->clearBoard();
+	this->_gameView->syncMatrix(this->_gameModel->getMatrix());
+	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
+	this->_gameView->render();
 }
 
 
@@ -199,7 +229,12 @@ void GameController::update()
 	}
 
 	if (isSpawning) {
-		this->_gameView->updateSpawning(dt);
+		this->_gameView->updateSpawn(dt);
+		this->render();
+	}
+
+	if (isGameOver && !isSpawning && !isMoving && isGraphic) {
+		this->_gameView->updateGameOver(dt);
 		this->render();
 	}
 
@@ -218,6 +253,11 @@ void GameController::update()
 const bool& GameController::getIsMoving()
 {
 	return isMoving;
+}
+
+const bool GameController::getIsGameOver()
+{
+	return isGameOver;
 }
 
 // = = = = = Render functions  = = = = = //

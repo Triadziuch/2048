@@ -43,6 +43,7 @@ public:
 	void setViewHandler(std::shared_ptr<ViewHandler> viewHandler) override;
 	void switchView();
 	void displayLeaderboard(LeaderboardMode mode);
+	void resetGame();
 
 	// Public funcitons
 	const ExitCode run() override;
@@ -54,6 +55,7 @@ public:
 
 	// Accessors / Mutators
 	const bool& getIsMoving();
+	const bool getIsGameOver();
 	
 	// Render function
 	void render();

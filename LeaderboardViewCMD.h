@@ -8,7 +8,7 @@ private:
 	std::vector< std::vector< std::string >> values;
 
 	// FTXUI Leaderboard Variables
-	ftxui::Component name_input, name_input_container, renderer;
+	ftxui::Component name_input, name_input_container;
 	ftxui::Table* table{};
 	ftxui::InputOption input_option_enter;
 	ftxui::Element table_element;
