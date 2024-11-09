@@ -24,6 +24,7 @@
     <ClInclude Include="BaseViewCMD.h" />
     <ClInclude Include="BaseViewGraphic.h" />
     <ClInclude Include="ExitCode.h" />
+    <ClInclude Include="GameViewGUI.h" />
     <ClInclude Include="IEventManager.h" />
     <ClInclude Include="LeaderboardController.h" />
     <ClInclude Include="LeaderboardMode.h" />
@@ -67,6 +68,7 @@
   <ItemGroup>
     <ClCompile Include="BaseViewCMD.cpp" />
     <ClCompile Include="BaseViewGraphic.cpp" />
+    <ClCompile Include="GameViewGUI.cpp" />
     <ClCompile Include="IEventManager.cpp" />
     <ClCompile Include="LeaderboardController.cpp" />
     <ClCompile Include="LeaderboardModel.cpp" />

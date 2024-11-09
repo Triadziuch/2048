@@ -32,6 +32,8 @@ void GameViewGraphic::initVariables()
 	playground_pos.x -= m_sprite.getLocalBounds().width / 4.f;
 	playground_pos.y -= m_sprite.getLocalBounds().height / 4.f;
 	m_playgroundPosition = playground_pos;
+
+	this->gui = new GameViewGUI(windowSize, m_sprite.getGlobalBounds()); 
 }
 
 void GameViewGraphic::initAnimations()
@@ -193,9 +195,14 @@ void GameViewGraphic::updateSpawning(float dt)
 
 void GameViewGraphic::updateScore(const int& score, const int& bestScore)
 {
+	this->score = score;
+	this->bestScore = bestScore;
+
+	this->gui->setScore(score);
+	this->gui->setBestScore(bestScore);
 }
 
-//// = = = = = Render functions = = = = = //
+// = = = = = Render functions = = = = = //
 void GameViewGraphic::render()
 {
 	if (window == nullptr)
@@ -216,6 +223,8 @@ void GameViewGraphic::render()
 		for (size_t i = 0; i < 4; ++i) 
 			if (tiles[i][j])
 				tiles[i][j]->render(*window);
+
+	this->gui->render(*window);
 
 	window->display();
 }

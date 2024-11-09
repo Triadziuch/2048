@@ -4,7 +4,7 @@
 #include "../BaseGameView.h"
 #include "../BaseViewGraphic.h"
 #include "../TileMatrix.h"
-#include "../GUI.h"
+#include "../GameViewGUI.h"
 
 
 class GameViewGraphic : public BaseViewGraphic, public BaseGameView {
@@ -19,6 +19,9 @@ private:
 	const float m_playgroundPadding{ 100.f };
 	float m_scale{ 1.f }, m_outerEdgeWidth{ 37.f }, m_innerEdgeWidth{ 36.f }, m_tileWidth{ 215.f };
 	bool m_isGameOver{ false };
+
+	// GUI
+	GameViewGUI* gui{};
 	
 	// Animation time variables
 	const float m_timeSpawningMax = 0.2f, m_timeMovingMax = 0.2f, m_timeMergingMax = 0.2f;

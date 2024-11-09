@@ -151,17 +151,14 @@ const ExitCode GameController::run()
 	this->exitCode = ExitCode::EXIT;
 	this->isEnd = false;
 
-	if (isGraphic) {
+	if (isGraphic)
 		this->switchView();
-	}
 	else {
 		_gameView->openWindow();
 		_gameView->syncMatrix(this->_gameModel->getMatrix());
 		this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 		this->render();
 	}
-
-	
 
 	return this->gameLoop();
 }

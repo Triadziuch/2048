@@ -28,6 +28,15 @@
     <Filter Include="Pattern">
       <UniqueIdentifier>{17d1e7ae-4fdb-4404-bb2d-68dd596e9347}</UniqueIdentifier>
     </Filter>
+    <Filter Include="View\BaseView">
+      <UniqueIdentifier>{bca7f106-f785-40d4-b9da-1233efd2950f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\GameView">
+      <UniqueIdentifier>{ae5253c1-6358-4cda-add2-d1f72d2fe6f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="View\LeaderboardView">
+      <UniqueIdentifier>{f5f87a2f-ed8d-43e9-bb90-18221b5ccaaf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Game.h">
@@ -102,16 +111,7 @@
     <ClInclude Include="src\model\BaseModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="src\view\GameViewCMD.h">
-      <Filter>View</Filter>
-    </ClInclude>
     <ClInclude Include="src\view\ViewHandler.h">
-      <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="src\view\BaseView.h">
-      <Filter>View</Filter>
-    </ClInclude>
-    <ClInclude Include="src\view\GameViewGraphic.h">
       <Filter>View</Filter>
     </ClInclude>
     <ClInclude Include="src\DataHandler.hpp">
@@ -132,16 +132,47 @@
     <ClInclude Include="LeaderboardModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="BaseGameView.h" />
-    <ClInclude Include="BaseLeaderboardView.h" />
-    <ClInclude Include="ExitCode.h" />
-    <ClInclude Include="LeaderboardViewCMD.h" />
-    <ClInclude Include="LeaderboardViewGraphic.h" />
     <ClInclude Include="LeaderboardController.h">
       <Filter>Controller</Filter>
     </ClInclude>
     <ClInclude Include="LeaderboardMode.h">
       <Filter>Pliki nagłówków</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\GameViewCMD.h">
+      <Filter>View\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\GameViewGraphic.h">
+      <Filter>View\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="src\view\BaseView.h">
+      <Filter>View\BaseView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseGameView.h">
+      <Filter>View\BaseView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseLeaderboardView.h">
+      <Filter>View\BaseView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseViewCMD.h">
+      <Filter>View\BaseView</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseViewGraphic.h">
+      <Filter>View\BaseView</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreView.h">
+      <Filter>View\BaseView</Filter>
+    </ClInclude>
+    <ClInclude Include="GameViewGUI.h">
+      <Filter>View\GameView</Filter>
+    </ClInclude>
+    <ClInclude Include="ExitCode.h">
+      <Filter>Pliki nagłówków</Filter>
+    </ClInclude>
+    <ClInclude Include="LeaderboardViewCMD.h">
+      <Filter>View\LeaderboardView</Filter>
+    </ClInclude>
+    <ClInclude Include="LeaderboardViewGraphic.h">
+      <Filter>View\LeaderboardView</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -208,13 +239,7 @@
     <ClCompile Include="src\model\ModelHandler.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="src\view\GameViewCMD.cpp">
-      <Filter>View</Filter>
-    </ClCompile>
     <ClCompile Include="src\view\ViewHandler.cpp">
-      <Filter>View</Filter>
-    </ClCompile>
-    <ClCompile Include="src\view\GameViewGraphic.cpp">
       <Filter>View</Filter>
     </ClCompile>
     <ClCompile Include="TileMatrixModel.cpp">
@@ -226,14 +251,35 @@
     <ClCompile Include="IEventManager.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="src\controller\IBaseController.cpp" />
     <ClCompile Include="LeaderboardModel.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="LeaderboardViewCMD.cpp" />
-    <ClCompile Include="LeaderboardViewGraphic.cpp" />
     <ClCompile Include="LeaderboardController.cpp">
       <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\GameViewCMD.cpp">
+      <Filter>View\GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="src\view\GameViewGraphic.cpp">
+      <Filter>View\GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseViewCMD.cpp">
+      <Filter>View\BaseView</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseViewGraphic.cpp">
+      <Filter>View\BaseView</Filter>
+    </ClCompile>
+    <ClCompile Include="GameViewGUI.cpp">
+      <Filter>View\GameView</Filter>
+    </ClCompile>
+    <ClCompile Include="src\controller\IBaseController.cpp">
+      <Filter>Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="LeaderboardViewCMD.cpp">
+      <Filter>View\LeaderboardView</Filter>
+    </ClCompile>
+    <ClCompile Include="LeaderboardViewGraphic.cpp">
+      <Filter>View\LeaderboardView</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
