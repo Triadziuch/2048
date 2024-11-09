@@ -2,6 +2,11 @@
 #include "src/view/BaseView.h"
 
 class BaseGameView : public virtual BaseView {
+protected:
+	// Matrix and score variables
+	TileBase* const (*m_matrix)[4];
+	int score{}, bestScore{};
+
 public:
 	virtual void syncMatrix(TileBase* const (&matrix)[4][4]) = 0;
 

@@ -26,6 +26,27 @@ Component GameViewCMD::initGrid()
 	return Container::Vertical(rows);
 }
 
+void GameViewCMD::renderFTXUI()
+{
+	ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::Fullscreen();
+	this->screen = &screen;
+
+	update_content_mutex.lock();
+	Loop loop(&screen, renderer);
+	update_content_mutex.unlock();
+
+	std::unique_lock<std::mutex> lock(mtx);
+
+	while (isRefreshing) {
+		cv.wait(lock, [this] { return needRefreshing; });
+
+		update_content_mutex.lock();
+		loop.RunOnce();
+		this->needRefreshing = false;
+		update_content_mutex.unlock();
+	}
+}
+
 int GameViewCMD::getCell(int row, int col) const
 {
 	if (m_matrix[row][col])
@@ -96,43 +117,13 @@ std::string GameViewCMD::displayCell(int row, int col) const
 		return "     " + std::to_string(value);
 }
 
-void GameViewCMD::renderFTXUI()
-{
-	ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::Fullscreen();
-	this->screen = &screen;
-
-	update_grid_mutex.lock();
-	Loop loop(&screen, renderer);
-	update_grid_mutex.unlock();
-
-	std::unique_lock<std::mutex> lock(mtx);
-
-	while (isRefreshing) {
-		cv.wait(lock, [this] { return needRefreshing; });
-
-		update_grid_mutex.lock();
-		loop.RunOnce();
-		this->needRefreshing = false;
-		update_grid_mutex.unlock();
-	}
+GameViewCMD::GameViewCMD() : BaseViewCMD() {
+	this->updateContent();
 }
 
-GameViewCMD::GameViewCMD() {
-	this->updateGrid();
-}
-
-void GameViewCMD::refreshScreen()
+void GameViewCMD::updateContent()
 {
-	{
-		std::lock_guard<std::mutex> lock(mtx);
-		needRefreshing = true;
-	}
-	cv.notify_one();
-}
-
-void GameViewCMD::updateGrid()
-{
-	update_grid_mutex.lock();
+	update_content_mutex.lock();
 
 	grid_component = initGrid();
 	renderer = Renderer(grid_component, [&] {
@@ -167,116 +158,8 @@ void GameViewCMD::updateGrid()
 				});
 		});
 
-	update_grid_mutex.unlock();
+	update_content_mutex.unlock();
 }
-
-/*void GameViewCMD::openWindow()
-{
-	HWND consoleWindow = GetActiveWindow();
-	if (consoleWindow != nullptr) {
-		this->consoleWindow = consoleWindow;
-
-		if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
-			printDebug("Nie mozna przekierowac stdout.");
-		if (freopen_s(&m_stderr, "CONOUT$", "w", stderr) != 0)
-			printDebug("Nie mo¿na przekierowaæ stderr.");
-		if (freopen_s(&m_stdin, "CONIN$", "r", stdin) != 0)
-			printDebug("Nie mo¿na przekierowaæ stdin.");
-	}
-	else {
-		if (AllocConsole()) {
-			consoleWindow = GetConsoleWindow();
-
-			if (freopen_s(&m_stdout, "CONOUT$", "w", stdout) != 0)
-				printDebug("Nie mozna przekierowac stdout.");
-			if (freopen_s(&m_stderr, "CONOUT$", "w", stderr) != 0)
-				printDebug("Nie mo¿na przekierowaæ stderr.");
-			if (freopen_s(&m_stdin, "CONIN$", "r", stdin) != 0)
-				printDebug("Nie mo¿na przekierowaæ stdin.");
-
-			std::cout.clear();
-			std::cerr.clear();
-			std::cin.clear();
-
-			std::cout.setf(std::ios::unitbuf);
-			setvbuf(stdout, nullptr, _IONBF, 0);
-
-			RECT consoleRect;
-			GetWindowRect(consoleWindow, &consoleRect);
-
-			RECT screenRect;
-			SystemParametersInfo(SPI_GETWORKAREA, 0, &screenRect, 0);
-
-			int screenWidth = screenRect.right - screenRect.left;
-			int screenHeight = screenRect.bottom - screenRect.top;
-
-			int consoleWidth = consoleRect.right - consoleRect.left;
-			int consoleHeight = consoleRect.bottom - consoleRect.top;
-
-			int posX = (screenWidth - consoleWidth) / 2 + screenRect.left;
-			int posY = (screenHeight - consoleHeight) / 2 + screenRect.top;
-
-			MoveWindow(consoleWindow, posX, posY, consoleWidth, consoleHeight, TRUE);
-		}
-	}
-
-	this->isRefreshing = true;
-}
-
-void GameViewCMD::closeWindow()
-{
-	this->deleteRenderer();
-
-	if (m_stdout) {
-		fclose(m_stdout);
-		m_stdout = nullptr;
-	}
-	if (m_stderr) {
-		fclose(m_stderr);
-		m_stderr = nullptr;
-	}
-	if (m_stdin) {
-		fclose(m_stdin);
-		m_stdin = nullptr;
-	}
-
-	freopen_s(&m_stdout, "NUL", "w", stdout);
-	freopen_s(&m_stderr, "NUL", "w", stderr);
-	freopen_s(&m_stdin, "NUL", "r", stdin);
-
-	std::cout.clear();
-	std::cerr.clear();
-	std::cin.clear();
-
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	HWND hWnd = GetConsoleWindow();
-	if (hWnd) {
-		FreeConsole();
-		SendMessage(hWnd, WM_CLOSE, 0, 0);
-	}
-}
-
-void GameViewCMD::initRenderer()
-{
-	this->isRefreshing = true;
-	if (this->screen == nullptr)
-		ftxui_thread = new std::thread([this]() {
-		this->renderFTXUI();
-			});
-}
-
-void GameViewCMD::deleteRenderer()
-{
-	this->isRefreshing = false;
-	this->refreshScreen();
-
-	if (ftxui_thread->joinable())
-		ftxui_thread->join();
-
-	delete ftxui_thread;
-	ftxui_thread = nullptr;
-	this->screen = nullptr;
-}*/
 
 void GameViewCMD::syncMatrix(TileBase* const(&matrix)[4][4])
 {
@@ -285,46 +168,41 @@ void GameViewCMD::syncMatrix(TileBase* const(&matrix)[4][4])
 
 void GameViewCMD::startMove(const std::vector<MoveInstruction*>& moveInstructions)
 {
-	GameViewCMD::BaseView::notify("started_move");
+	BaseGameView::notify("started_move");
 }
 
 void GameViewCMD::startMerge(const std::vector<MergeInstruction*>& mergeInstructions)
 {
-	GameViewCMD::BaseView::notify("started_merging");
+	BaseGameView::notify("started_merging");
 }
 
 void GameViewCMD::startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions)
 {
-	GameViewCMD::BaseView::notify("started_spawning");
+	BaseGameView::notify("started_spawning");
 }
 
 void GameViewCMD::endSpawn()
 {
-	GameViewCMD::BaseView::notify("finished_spawning");
+	BaseGameView::notify("finished_spawning");
 }
 
 void GameViewCMD::updateMove(float dt)
 {
-	GameViewCMD::BaseView::notify("finished_move");
+	BaseGameView::notify("finished_move");
 }
 
 void GameViewCMD::updateSpawning(float dt)
 {
-	GameViewCMD::BaseView::notify("finished_spawning");
+	BaseGameView::notify("finished_spawning");
 }
 
-//sf::RenderWindow* GameViewCMD::getWindow()
-//{
-//	return nullptr;
-//}
-//
-//void GameViewCMD::render()
-//{
-//	this->initRenderer();
-//
-//	this->updateGrid();
-//	this->refreshScreen();
-//}
+void GameViewCMD::render()
+{
+	this->initRenderer();
+
+	this->updateContent();
+	this->refreshScreen();
+}
 
 void GameViewCMD::updateScore(const int& score, const int& bestScore)
 {

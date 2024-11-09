@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../CoreView.h"
+#include "SFML/Graphics.hpp"
 
 class BaseView : public CoreView {
 public:

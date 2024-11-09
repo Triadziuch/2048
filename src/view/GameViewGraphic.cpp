@@ -2,15 +2,6 @@
 #include "GameViewGraphic.h"
 
 // = = = = = Initialization funcitons = = = = = //
-void GameViewGraphic::initWindow()
-{
-	window = new sf::RenderWindow(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), WINDOW_TITLE, sf::Style::Titlebar | sf::Style::Close);
-
-	sf::Image icon;
-	icon.loadFromFile("assets/Textures/appicon.png");
-	window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-}
-
 void GameViewGraphic::initAssets()
 {
 	for (int i = 1, k = 0; i < 15; ++i, ++k)
@@ -36,15 +27,11 @@ void GameViewGraphic::initVariables()
 	m_outerEdgeWidth *= m_scale;
 	m_tileWidth *= m_scale;
 
-	m_movementManager = new MovementManager();
-	m_movementContainer = MovementContainer::getInstance();
 
 	sf::Vector2f playground_pos = m_sprite.getPosition();
 	playground_pos.x -= m_sprite.getLocalBounds().width / 4.f;
 	playground_pos.y -= m_sprite.getLocalBounds().height / 4.f;
 	m_playgroundPosition = playground_pos;
-
-	//m_gui = new GUI(windowSize, m_sprite.getGlobalBounds());
 }
 
 void GameViewGraphic::initAnimations()
@@ -82,21 +69,6 @@ int GameViewGraphic::findID(int type) const
 
 
 // = = = = = Private funcitons = = = = = //
-void GameViewGraphic::drawMatrixCMD()
-{
-	printf("\n\nMATRIX:\n");
-	for (int j = 0; j < 4; j++) {
-		for (int i = 0; i < 4; i++) {
-			if (m_matrix[i][j]) {
-				printf("%-3d", *m_matrix[i][j]);
-			}
-			else
-				printf("%-3d", 0);
-		}
-		printf("\n");
-	}
-	printf("\n\n");
-}
 
 void GameViewGraphic::updateTiles()
 {
@@ -117,8 +89,8 @@ void GameViewGraphic::updateTiles()
 
 
 // = = = = = Constructors / Destructors = = = = = //
-GameViewGraphic::GameViewGraphic() {
-	initWindow();
+GameViewGraphic::GameViewGraphic() : BaseViewGraphic() {
+	//this->openWindow();
 	initAssets();
 	initVariables();
 	initAnimations();
@@ -126,7 +98,6 @@ GameViewGraphic::GameViewGraphic() {
 
 GameViewGraphic::~GameViewGraphic()
 {
-	delete m_gui;
 }
 
 
@@ -136,9 +107,6 @@ void GameViewGraphic::syncMatrix(TileBase* const (&matrix)[4][4])
 {
 	this->m_matrix = matrix;
 	this->updateTiles();
-
-	if (GameViewGraphic::BaseView::isDebug)
-		this->drawMatrixCMD();
 }
 
 void GameViewGraphic::startMove(const std::vector<MoveInstruction*>& moveInstructions)
@@ -154,7 +122,7 @@ void GameViewGraphic::startMove(const std::vector<MoveInstruction*>& moveInstruc
 		this->tiles[old_pos.x][old_pos.y]->setIsMoving(true);
 		this->tiles[old_pos.x][old_pos.y]->smoothMove(pixel_distance, m_timeMovingMax);
 	}
-	GameViewGraphic::BaseView::notify("started_move");
+	BaseGameView::notify("started_move");
 }
 
 void GameViewGraphic::startMerge(const std::vector<MergeInstruction*>& mergeInstructions)
@@ -168,7 +136,7 @@ void GameViewGraphic::startMerge(const std::vector<MergeInstruction*>& mergeInst
 		const sf::Vector2i pos = instruction->pos;
 		tiles[pos.x][pos.y]->startMerging();
 	}
-	GameViewGraphic::BaseView::notify("started_merging");
+	BaseGameView::notify("started_merging");
 }
 
 void GameViewGraphic::startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions)
@@ -179,7 +147,7 @@ void GameViewGraphic::startSpawn(const std::vector<SpawnInstruction*>& spawnInst
 		this->tiles[instruction->pos.x][instruction->pos.y] = new Tile(instruction->type, m_tileTextures[findID(instruction->type)], &m_scale, calculateTilePos(instruction->pos), m_movementManager);
 		this->tiles[instruction->pos.x][instruction->pos.y]->startSpawning();
 	}
-	GameViewGraphic::BaseView::notify("started_spawning");
+	BaseGameView::notify("started_spawning");
 }
 
 void GameViewGraphic::endSpawn()
@@ -190,31 +158,8 @@ void GameViewGraphic::endSpawn()
 		for (auto& instruction : *m_spawnInstructions) 
 			tiles[instruction->pos.x][instruction->pos.y]->update(1.f);
 	
-	GameViewGraphic::BaseView::notify("finished_spawning");
+	BaseGameView::notify("finished_spawning");
 }
-
-//void GameViewGraphic::openWindow()
-//{
-//	if (this->window == nullptr)
-//		initWindow();
-//}
-//
-//void GameViewGraphic::closeWindow()
-//{
-//	this->window->close();
-//	delete this->window;
-//	this->window = nullptr;
-//}
-//
-//void GameViewGraphic::initRenderer()
-//{
-//}
-//
-//void GameViewGraphic::deleteRenderer()
-//{
-//}
-
-
 
 // = = = = = Update functions = = = = = //
 void GameViewGraphic::updateMove(float dt)
@@ -226,7 +171,7 @@ void GameViewGraphic::updateMove(float dt)
 		m_timeMoving += dt;
 	else {
 		m_timeMoving = 0.f;
-		GameViewGraphic::BaseView::notify("finished_move");
+		BaseGameView::notify("finished_move");
 	}
 }
 
@@ -242,7 +187,7 @@ void GameViewGraphic::updateSpawning(float dt)
 
 	if (finishedSpawning) {
 		this->m_mergeInstructions = nullptr;
-		GameViewGraphic::BaseView::notify("finished_spawning");
+		BaseGameView::notify("finished_spawning");
 	}
 }
 
@@ -250,29 +195,27 @@ void GameViewGraphic::updateScore(const int& score, const int& bestScore)
 {
 }
 
-//sf::RenderWindow* GameViewGraphic::getWindow()
-//{
-//	return window;
-//}
-//
 //// = = = = = Render functions = = = = = //
-//void GameViewGraphic::render()
-//{
-//	window->clear(m_backgroundColor);
-//	window->draw(m_sprite);
-//
-//	if (m_mergeInstructions)
-//		for (const auto& instruction : *m_mergeInstructions) {
-//			int type = *instruction->tile;
-//			sf::Vector2i pos = instruction->pos;
-//			Tile tile(type, m_tileTextures[findID(type)], &m_scale, calculateTilePos(pos), m_movementManager);
-//			tile.render(*window);
-//		}
-//
-//	for (size_t j = 0; j < 4; ++j)
-//		for (size_t i = 0; i < 4; ++i) 
-//			if (tiles[i][j])
-//				tiles[i][j]->render(*window);
-//
-//	window->display();
-//}
+void GameViewGraphic::render()
+{
+	if (window == nullptr)
+		return;
+
+	window->clear(m_backgroundColor);
+	window->draw(m_sprite);
+
+	if (m_mergeInstructions)
+		for (const auto& instruction : *m_mergeInstructions) {
+			int type = *instruction->tile;
+			sf::Vector2i pos = instruction->pos;
+			Tile tile(type, m_tileTextures[findID(type)], &m_scale, calculateTilePos(pos), m_movementManager);
+			tile.render(*window);
+		}
+
+	for (size_t j = 0; j < 4; ++j)
+		for (size_t i = 0; i < 4; ++i) 
+			if (tiles[i][j])
+				tiles[i][j]->render(*window);
+
+	window->display();
+}
