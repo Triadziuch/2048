@@ -3,6 +3,9 @@
 // = = = = = Private functions = = = = = //
 void BaseViewCMD::refreshScreen()
 {
+	if (this->screen != nullptr)
+		this->screen->PostEvent(ftxui::Event::Custom);
+
 	{
 		std::lock_guard<std::mutex> lock(mtx);
 		needRefreshing = true;

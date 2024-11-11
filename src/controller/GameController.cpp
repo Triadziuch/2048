@@ -75,6 +75,10 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 			this->_gameModel->endMerge();
 			this->_gameView->syncMatrix(this->_gameModel->getMatrix());
 			this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
+
+			if (this->isGameOver)
+				this->_gameView->startGameOver();
+
 			this->_gameView->render();
 		return false;
 		});
@@ -127,7 +131,7 @@ void GameController::switchView()
 		this->_gameView->updateSpawn(1.f);
 
 	if (isGameOver)
-		this->_gameView->updateGameOver(5.f);
+		this->_gameView->endGameOver();
 
 	this->_gameView->closeWindow();
 	delete _eventManager;
@@ -146,11 +150,8 @@ void GameController::switchView()
 	this->_gameView->syncMatrix(this->_gameModel->getMatrix());
 	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 
-	if (isGameOver) {
-		this->_gameView->startGameOver();
-		this->_gameView->updateGameOver(5.f);
-		this->_gameView->updateGameOver(5.f);
-	}
+	if (isGameOver) 
+		this->_gameView->endGameOver();
 
 	this->render();
 }
@@ -233,7 +234,7 @@ void GameController::update()
 		this->render();
 	}
 
-	if (isGameOver && !isSpawning && !isMoving && isGraphic) {
+	if (isGameOver && !isSpawning && !isMoving) {
 		this->_gameView->updateGameOver(dt);
 		this->render();
 	}

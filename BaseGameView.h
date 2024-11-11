@@ -15,7 +15,7 @@ public:
 	virtual void startMerge(const std::vector<MergeInstruction*>& mergeInstructions) = 0;
 	virtual void startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions) = 0;
 	virtual void startGameOver() = 0;
-	virtual void endSpawn() = 0;
+
 	virtual void reset() = 0;
 
 	// Update functions
@@ -23,4 +23,8 @@ public:
 	virtual void updateSpawn(float dt) = 0;
 	virtual void updateGameOver(float dt) = 0;
 	virtual void updateScore(const int& score, const int& bestScore) = 0;
+
+	// End functions
+	virtual void endSpawn() = 0;
+	virtual void endGameOver() = 0;
 };

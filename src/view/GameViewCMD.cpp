@@ -7,22 +7,43 @@ Component GameViewCMD::initGrid()
 {
 	std::vector<Component> rows;
 
-	for (int row = 0; row < gridSize; ++row) {
-		std::vector<Component> cols;
-		for (int col = 0; col < gridSize; ++col) {
-			auto cell_content = Renderer([&, row, col] {
-				return vbox({
-					text(" ") | bgcolor(getCellColor(col, row)),
-					text(" ") | bgcolor(getCellColor(col, row)),
-					text(displayCell(col, row)) | bold | bgcolor(getCellColor(col, row)),
-					text(" ") | bgcolor(getCellColor(col, row)),
-					text(" ") | bgcolor(getCellColor(col, row)),
-					}) | borderStyled(ftxui::LIGHT, Color::White) | size(WIDTH, EQUAL, cellSize + 4) | size(HEIGHT, EQUAL, cellSize);
-				});
-			cols.push_back(cell_content);
+	if (isDesaturated == false) {
+		for (int row = 0; row < gridSize; ++row) {
+			std::vector<Component> cols;
+			for (int col = 0; col < gridSize; ++col) {
+				auto cell_content = Renderer([&, row, col] {
+					return vbox({
+						text(" ") | bgcolor(getCellColor(col, row)),
+						text(" ") | bgcolor(getCellColor(col, row)),
+						text(displayCell(col, row)) | bold | bgcolor(getCellColor(col, row)),
+						text(" ") | bgcolor(getCellColor(col, row)),
+						text(" ") | bgcolor(getCellColor(col, row)),
+						}) | borderStyled(ftxui::LIGHT, Color::White) | size(WIDTH, EQUAL, cellSize + 4) | size(HEIGHT, EQUAL, cellSize);
+					});
+				cols.push_back(cell_content);
+			}
+			rows.push_back(Container::Horizontal(cols));
 		}
-		rows.push_back(Container::Horizontal(cols));
 	}
+	else {
+		for (int row = 0; row < gridSize; ++row) {
+			std::vector<Component> cols;
+			for (int col = 0; col < gridSize; ++col) {
+				auto cell_content = Renderer([&, row, col] {
+					return vbox({
+						text(" ") | bgcolor(getCellColorDesaturated(col, row)),
+						text(" ") | bgcolor(getCellColorDesaturated(col, row)),
+						text(displayCell(col, row)) | bold | bgcolor(getCellColorDesaturated(col, row)),
+						text(" ") | bgcolor(getCellColorDesaturated(col, row)),
+						text(" ") | bgcolor(getCellColorDesaturated(col, row)),
+						}) | borderStyled(ftxui::LIGHT, Color::White) | size(WIDTH, EQUAL, cellSize + 4) | size(HEIGHT, EQUAL, cellSize);
+					});
+				cols.push_back(cell_content);
+			}
+			rows.push_back(Container::Horizontal(cols));
+		}
+	}
+	
 	return Container::Vertical(rows);
 }
 
@@ -70,6 +91,35 @@ ftxui::Color GameViewCMD::getCellColor(int row, int col) const
 			return Color(230, 126, 34);
 		else if (value == 128 || value == 256 || value == 512)
 			return Color(155, 89, 182);
+		else if (value == 1024 || value == 2048)
+			return Color(52, 152, 219);
+		else if (value == 4096 || value == 8192)
+			return Color(52, 73, 94);
+	}
+
+	return Color::Black;
+}
+
+ftxui::Color GameViewCMD::getCellColorDesaturated(int row, int col) const
+{
+	if (m_matrix == nullptr)
+		return Color::Black;
+
+	if (m_matrix[row][col]) {
+		int value = *m_matrix[row][col];
+
+		if (value == 2)
+			return Color(119, 125, 125);
+		else if (value == 4 || value == 8)
+			return Color(173, 116, 110);
+		else if (value == 16 || value == 32 || value == 64)
+			return Color(173, 134, 99);
+		else if (value == 128 || value == 256 || value == 512)
+			return Color(126, 102, 137);
+		else if (value == 1024 || value == 2048)
+			return Color(102, 140, 164);
+		else
+			return Color(55, 63, 71);
 	}
 
 	return Color::Black;
@@ -128,7 +178,7 @@ void GameViewCMD::updateContent()
 	grid_component = initGrid();
 	renderer = Renderer(grid_component, [&] {
 		return
-			hbox({ 
+			hbox({
 				filler(),
 				vbox({
 					text(""),
@@ -146,14 +196,41 @@ void GameViewCMD::updateContent()
 
 				filler(),
 				vbox({
-					text("Score") | hcenter,
-					text(std::to_string(score)) | hcenter,
-				}) | border | size(WIDTH, EQUAL, 9) | size(HEIGHT, EQUAL, 2),
-				filler(),
-				vbox({
-					text("Best score") | hcenter,
-					text(std::to_string(bestScore)) | hcenter,
-				}) | border | size(WIDTH, EQUAL, 14) | size(HEIGHT, EQUAL, 2),
+					hbox({
+						filler(),
+						vbox({
+							text("Score") | hcenter,
+							text(std::to_string(score)) | hcenter,
+						}) | border | size(WIDTH, EQUAL, 9) | size(HEIGHT, EQUAL, 2),
+
+					filler(),
+
+						vbox({
+							text("Best score") | hcenter,
+							text(std::to_string(bestScore)) | hcenter,
+						}) | border | size(WIDTH, EQUAL, 14) | size(HEIGHT, EQUAL, 2),
+
+						filler(),
+					}) | size(HEIGHT, EQUAL, 4),
+
+					filler(),
+
+					this->isGameOver == true ? 
+					vbox({
+						text("GAME OVER") | hcenter,
+						text("Press return key to continue...") | hcenter,
+					}) | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 2)
+					:
+					vbox({
+					}) | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 2),
+
+					filler(),
+
+					vbox({
+
+					}) | size(HEIGHT, EQUAL, 4),
+				}),
+				
 				filler(),
 				});
 		});
@@ -174,9 +251,19 @@ void GameViewCMD::startSpawn(const std::vector<SpawnInstruction*>& spawnInstruct
 
 void GameViewCMD::startGameOver()
 {
+	this->isGameOver = true;
+	this->isGameOverAnimation = true;
 }
 
 void GameViewCMD::endSpawn() { BaseGameView::notify("finished_spawning"); }
+
+void GameViewCMD::endGameOver()
+{
+	this->startGameOver();
+	while (isGameOverAnimation)
+		this->updateGameOver(10.f);
+	this->refreshScreen();
+}
 
 void GameViewCMD::updateMove(float dt) { BaseGameView::notify("finished_move"); }
 
@@ -184,7 +271,18 @@ void GameViewCMD::updateSpawn(float dt) { BaseGameView::notify("finished_spawnin
 
 void GameViewCMD::updateGameOver(float dt)
 {
+	if (isGameOver && isGameOverAnimation) {
+		m_timeGameOver += dt;
 
+		if (m_timeGameOver > m_timeGameOverCycleMax) {
+			m_gameOverCycle++;
+			m_timeGameOver = 0.f;
+			this->isDesaturated = !this->isDesaturated;
+		}
+
+		if (m_gameOverCycle >= m_gameOverCyclesMax)
+			this->isGameOverAnimation = false;
+	}	
 }
 
 void GameViewCMD::render()
@@ -197,6 +295,11 @@ void GameViewCMD::render()
 
 void GameViewCMD::reset()
 {
+	this->m_timeGameOver = 0.f;
+	this->m_gameOverCycle = 0;
+	this->isDesaturated = false;
+	this->isGameOver = false;
+	this->isGameOverAnimation = false;
 }
 
 void GameViewCMD::updateScore(const int& score, const int& bestScore)

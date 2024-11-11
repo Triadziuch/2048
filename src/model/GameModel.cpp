@@ -89,6 +89,9 @@ void GameModel::endMerge()
 void GameModel::clearBoard()
 {
 	//m_isGameOver = false;
+	m_tileMatrix->setAddedScore(0);
+	m_score = 0;
+	this->m_leaderboardModel->setScore(m_score);
 	m_tileMatrix->clearBoard();
 	m_tileMatrix->spawn(2);
 }

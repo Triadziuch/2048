@@ -29,6 +29,10 @@ bool GameViewGUI::updateGameOver(const float dt)
 		m_gameOverPressKeyText.setFillColor(sf::Color(250, 248, 239, 255 * (m_gameOverTime - 2.f * m_gameOverTimeMax) / m_gameOverTimeMax ));
 		return false;
 	}
+	else {
+		m_gameOverText.setFillColor(sf::Color(250, 248, 239, 255));
+		m_gameOverPressKeyText.setFillColor(sf::Color(250, 248, 239, 255));
+	}
 
 	return true;
 }

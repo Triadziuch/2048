@@ -71,4 +71,6 @@ public:
 	void updateSpawn(float dt);
 	void updateGameOver(float dt);
 	void updateScore(const int& score, const int& bestScore);
+
+	void endGameOver();
 };

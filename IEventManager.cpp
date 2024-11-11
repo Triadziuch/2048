@@ -12,7 +12,8 @@ std::unordered_map<int, bool> IEventManager::previousKeyState = {
 	{ 'C', false },
 	{ VK_ESCAPE, false },
 	{ 'L', false },
-	{ 'V', false }
+	{ 'V', false },
+	{ VK_RETURN, false}
 };
 
 void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
@@ -85,8 +86,7 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState[VK_ESCAPE] = false;
 
 	if (isKeyPressed('C') && !previousKeyState['C']) {
-		if (controller->getIsGameOver() == false)
-			controller->switchView();
+		controller->switchView();
 		previousKeyState['C'] = true;
 		return;
 	}
@@ -136,6 +136,15 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 	}
 	else if (!isKeyPressed(VK_RIGHT)) 
 		previousKeyState[VK_RIGHT] = false;
+
+	if (isKeyPressed(VK_RETURN) && !previousKeyState[VK_RETURN]) {
+		if (controller->getIsGameOver())
+			controller->resetGame();
+
+		previousKeyState[VK_RETURN] = true;
+	}
+	else if (!isKeyPressed(VK_RETURN))
+		previousKeyState[VK_RETURN] = false;
 }
 
 void CMDEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, LeaderboardController* controller, sf::RenderWindow* window) const

@@ -15,7 +15,7 @@ private:
 
 	// Private functions
 	void renderFTXUI() override;
-	void updateContent() override;
+	void updateContent();
 	void updateTableElement();
 	
 

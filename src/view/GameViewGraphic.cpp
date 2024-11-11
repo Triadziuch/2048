@@ -228,6 +228,13 @@ void GameViewGraphic::updateGameOver(float dt)
 		BaseGameView::notify("finished_gameover");
 }
 
+void GameViewGraphic::endGameOver()
+{
+	this->startGameOver();
+	for (int i = 0; i < 4; ++i)
+		this->updateGameOver(5.f);
+}
+
 // = = = = = Render functions = = = = = //
 void GameViewGraphic::render()
 {

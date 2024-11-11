@@ -12,15 +12,22 @@ private:
 	constexpr static int cellSize = 9;
 	ftxui::Component grid_component;
 
+	// Game over animation variables
+	const int m_gameOverCyclesMax = 5;
+	int m_gameOverCycle = 0;
+	const float m_timeGameOverCycleMax = 0.1f;
+	float m_timeGameOver = 0.f;
+	bool isGameOver = false, isGameOverAnimation = false, isDesaturated = false;
+
 	int getCell(int row, int col) const;
 	ftxui::Color getCellColor(int row, int col) const;
+	ftxui::Color getCellColorDesaturated(int row, int col) const;
 	ftxui::Color getCellBorderColor(int row, int col) const;
 	std::string displayCell(int row, int col) const;
 
 	ftxui::Component initGrid();
 	void renderFTXUI() override;
-	void updateContent() override;
-	
+	void updateContent();
 
 public:
 	// Constructors / Destructors
@@ -40,11 +47,14 @@ public:
 	void startMerge(const std::vector<MergeInstruction*>& mergeInstructions);
 	void startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions);
 	void startGameOver();
-	void endSpawn();
+	
 
 	void updateMove(float dt);
 	void updateSpawn(float dt);
 	void updateGameOver(float dt);
 	void updateScore(const int& score, const int& bestScore);
+
+	void endSpawn();
+	void endGameOver();
 
 };

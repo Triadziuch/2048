@@ -30,7 +30,6 @@ protected:
 
     // Private functions
     virtual void renderFTXUI() = 0;
-    virtual void updateContent() = 0;
     void refreshScreen();
     
 
