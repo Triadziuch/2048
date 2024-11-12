@@ -200,6 +200,15 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 	else if (!isKeyPressed('V'))
 		previousKeyState['V'] = false;
 
+	if (isKeyPressed('R') && !previousKeyState['R']) {
+		controller->resetGame();
+		controller->render();
+		previousKeyState['R'] = true;
+		return;
+	}
+	else if (!isKeyPressed('R'))
+		previousKeyState['R'] = false;
+
 	if (isKeyPressed(VK_UP) && !previousKeyState[VK_UP]) {
 		model->move(sf::Keyboard::W);
 		previousKeyState[VK_UP] = true;

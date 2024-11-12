@@ -28,6 +28,8 @@ protected:
 
     bool isRefreshing = false, needRefreshing = false;
 
+    void disableResize();
+
     // Private functions
     virtual void renderFTXUI() = 0;
     void refreshScreen();

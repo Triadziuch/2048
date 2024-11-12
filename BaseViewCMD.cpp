@@ -1,5 +1,17 @@
 #include "BaseViewCMD.h"
 
+void BaseViewCMD::disableResize()
+{
+	HWND hwnd = GetConsoleWindow();
+	LONG style = GetWindowLong(hwnd, GWL_STYLE);
+	style &= ~WS_SIZEBOX;
+	SetWindowLong(hwnd, GWL_STYLE, style);
+
+	RECT r;
+	GetWindowRect(hwnd, &r);
+	MoveWindow(hwnd, r.left, r.top, r.right - r.left, r.bottom - r.top, TRUE);
+}
+
 // = = = = = Private functions = = = = = //
 void BaseViewCMD::refreshScreen()
 {
@@ -71,6 +83,7 @@ void BaseViewCMD::openWindow()
 		}
 	}
 
+	this->disableResize();
 	this->isRefreshing = true;
 }
 

@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include "GameViewCMD.h"
 
 using namespace ftxui;
@@ -181,21 +181,64 @@ void GameViewCMD::updateContent()
 			hbox({
 				filler(),
 				vbox({
-					hbox({
+					/*hbox({
 						vbox({}) | size(WIDTH, EQUAL, 9) | size(HEIGHT, EQUAL, 2),
 						vbox({}) | size(WIDTH, EQUAL, 14) | size(HEIGHT, EQUAL, 2),
 					}) | size(HEIGHT, EQUAL, 4),
 
-					filler(),
+					filler(),*/
+					
+					hbox({
+						filler(),
+							vbox({
 
-					vbox({}) | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 2),
+								filler(),
+								vbox({
+									text("How to play:") | hcenter,
+									text(""),
+									paragraphAlignJustify("Use your arrow keys to move the tiles. When two tiles with the same number touch, they merge into one!"),
+									}),
+								filler(),
+								text(""),
+								text(""),
+								text(""),
+								text(""),
+								text(""),
+								filler(),
+								vbox({
+									text("Controls:") | hcenter | bold,
+									text(""),
+									hbox({
+										text("Arrows") | bold,
+										text(" - Move board") | hcenter
+									}),
+									hbox({
+										text("L") | bold,
+										text(" - Show leaderboard") | hcenter
+									}),
+									hbox({
+										text("C") | bold,
+										text(" - Switch to graphic mode") | hcenter
+									}),
+									hbox({
+										text("R") | bold,
+										text(" - Reset game") | hcenter
+									}),
+									hbox({
+										text("ESC") | bold,
+										text(" - Quit Game") | hcenter
+									}),
+								}) | hcenter,
+								filler(),
 
-					filler(),
+								
+							}) | hcenter | vcenter | bold | size(WIDTH, EQUAL, 30),
+						filler(),
 
-					vbox({
 
-					}) | size(HEIGHT, EQUAL, 4),
-				}),
+					}) | hcenter | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 40),
+				
+				}) /*| border*/ | hcenter,
 				filler(),
 
 				vbox({
@@ -227,9 +270,9 @@ void GameViewCMD::updateContent()
 
 					this->isGameOver == true ?
 					vbox({
-						text("G A M E   O V E R") | hcenter,
+						text("G A M E   O V E R") | hcenter | bold,
 						text(""),
-						text("Press return key to continue...") | blink | hcenter,
+						text("Press return key to continue...") | bold | blink | hcenter,
 					}) | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 3)
 					:
 					vbox({
@@ -240,7 +283,7 @@ void GameViewCMD::updateContent()
 					vbox({
 
 					}) | size(HEIGHT, EQUAL, 4),
-				}),
+				}) /*| border*/,
 				
 				filler(),
 				});
