@@ -265,13 +265,13 @@ TileMatrixModel::TileMatrixModel() : BaseModel() {
 
 	addTile({ 1, 0 }, 128);
 	addTile({ 1, 1 }, 64);
-	addTile({ 1, 2 }, 2);
+	//addTile({ 1, 2 }, 2);
 	addTile({ 1, 3 }, 16);
 
 	addTile({ 2, 0 }, 512);
 	addTile({ 2, 1 }, 1024);
 	addTile({ 2, 2 }, 256);
-	addTile({ 2, 3 }, 2);
+	//addTile({ 2, 3 }, 2);
 }
 
 TileMatrixModel::~TileMatrixModel()

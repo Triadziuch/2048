@@ -63,12 +63,10 @@ const int& LeaderboardModel::getBestScore() const
 void LeaderboardModel::setMode(LeaderboardMode mode)
 {
 	this->mode = mode;
-	printf("setmode %p\n", this);
 }
 
 const LeaderboardMode LeaderboardModel::getMode() const
 {
-	printf("getmmode %p\n", this);
 	return this->mode;
 }
 
@@ -85,4 +83,13 @@ std::vector<LeaderboardEntry*>& LeaderboardModel::getLeaderboardEntries()
 void LeaderboardModel::setScore(int score)
 {
 	this->score = score;
+}
+
+void LeaderboardModel::adjustMode()
+{
+	if (this->v_leaderboard.size() >= 8)
+		if (this->score >= this->v_leaderboard[8]->score)
+			this->mode = LeaderboardMode::EDIT;
+		else
+			this->mode = LeaderboardMode::VIEW;
 }

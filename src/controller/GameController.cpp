@@ -156,9 +156,8 @@ void GameController::switchView()
 	this->render();
 }
 
-void GameController::displayLeaderboard(LeaderboardMode mode)
+void GameController::displayLeaderboard()
 {
-	this->_gameModel->setLeaderboardMode(mode);
 	this->exitCode = ExitCode::LEADERBOARD;
 	this->isEnd = true;
 }
@@ -166,12 +165,13 @@ void GameController::displayLeaderboard(LeaderboardMode mode)
 void GameController::resetGame()
 {
 	this->isGameOver = false;
+	this->_gameModel->prepareLeaderboard();
 	this->_viewHandler->getView<GameViewCMD>("game_cmd")->reset();
 	this->_viewHandler->getView<GameViewGraphic>("game_graphic")->reset();
 	this->_gameModel->clearBoard();
 	this->_gameView->syncMatrix(this->_gameModel->getMatrix());
 	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
-	this->_gameView->render();
+	//this->_gameView->render();
 }
 
 

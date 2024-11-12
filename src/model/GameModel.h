@@ -37,4 +37,5 @@ public:
     const int& getBestScore() const;
 
     void setLeaderboardMode(LeaderboardMode mode);
+    void prepareLeaderboard();
 };

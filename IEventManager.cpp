@@ -94,7 +94,7 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState['C'] = false;
 
 	if (isKeyPressed('L') && !previousKeyState['L']) {
-		controller->displayLeaderboard(LeaderboardMode::EDIT); // TODO: Do zmienienia na view bo edit bedzie tylko po przegranej
+		controller->displayLeaderboard(); // TODO: Do zmienienia na view bo edit bedzie tylko po przegranej
 		previousKeyState['L'] = true;
 		return;
 	}
@@ -102,7 +102,7 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState['L'] = false;
 	
 	if (isKeyPressed('V') && !previousKeyState['V']) {
-		controller->displayLeaderboard(LeaderboardMode::VIEW); // TODO: Do zmienienia na view bo edit bedzie tylko po przegranej
+		controller->displayLeaderboard(); // TODO: Do zmienienia na view bo edit bedzie tylko po przegranej
 		previousKeyState['V'] = true;
 		return;
 	}
@@ -138,8 +138,10 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState[VK_RIGHT] = false;
 
 	if (isKeyPressed(VK_RETURN) && !previousKeyState[VK_RETURN]) {
-		if (controller->getIsGameOver())
+		if (controller->getIsGameOver()) {
 			controller->resetGame();
+			controller->displayLeaderboard();
+		}
 
 		previousKeyState[VK_RETURN] = true;
 	}

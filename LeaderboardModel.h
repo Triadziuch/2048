@@ -34,6 +34,7 @@ public:
 	const int getScore() const;
 
 	void setMode(LeaderboardMode mode);
+	void adjustMode();
 	void setScore(int score);
 
 	std::vector<LeaderboardEntry*>& getLeaderboardEntries();

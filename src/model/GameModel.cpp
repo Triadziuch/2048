@@ -91,7 +91,7 @@ void GameModel::clearBoard()
 	//m_isGameOver = false;
 	m_tileMatrix->setAddedScore(0);
 	m_score = 0;
-	this->m_leaderboardModel->setScore(m_score);
+	//this->m_leaderboardModel->setScore(m_score);
 	m_tileMatrix->clearBoard();
 	m_tileMatrix->spawn(2);
 }
@@ -132,4 +132,10 @@ const int& GameModel::getBestScore() const
 void GameModel::setLeaderboardMode(LeaderboardMode mode)
 {
 	this->m_leaderboardModel->setMode(mode);
+}
+
+void GameModel::prepareLeaderboard()
+{
+	this->m_leaderboardModel->setScore(m_score);
+	this->m_leaderboardModel->adjustMode();
 }

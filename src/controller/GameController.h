@@ -42,7 +42,7 @@ public:
 	void setModelHandler(std::shared_ptr<ModelHandler> modelHandler) override;
 	void setViewHandler(std::shared_ptr<ViewHandler> viewHandler) override;
 	void switchView();
-	void displayLeaderboard(LeaderboardMode mode);
+	void displayLeaderboard();
 	void resetGame();
 
 	// Public funcitons
