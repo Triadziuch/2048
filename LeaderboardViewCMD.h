@@ -12,12 +12,14 @@ private:
 	ftxui::Table* table{};
 	ftxui::InputOption input_option_enter;
 	ftxui::Element table_element;
+	ftxui::Component container;
+	ftxui::Component main_container;
+	ftxui::Component scroller;
 
 	// Private functions
 	void renderFTXUI() override;
 	void updateContent();
 	void updateTableElement();
-	
 
 public:
 	LeaderboardViewCMD();

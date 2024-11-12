@@ -76,6 +76,7 @@ void LeaderboardController::setViewHandler(std::shared_ptr<ViewHandler> viewHand
 		this->_leaderboardModel->updateLeaderboard(this->_leaderboardView->getEntry());
 		this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
 		this->leaderboardMode = LeaderboardMode::VIEW;
+		this->_leaderboardModel->setMode(this->leaderboardMode);
 		this->_leaderboardView->render();
 		return false;
 		});

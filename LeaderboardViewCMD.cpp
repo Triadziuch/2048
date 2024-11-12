@@ -52,7 +52,13 @@ void LeaderboardViewCMD::updateContent()
 
 			ftxui::filler(),
 			ftxui::vbox({
+				ftxui::filler(),
+				text("L  E  A  D  E  R  B  O  A  R  D") | bold | hcenter | size(HEIGHT, EQUAL, 1) | ftxui::borderDouble | ftxui::blink,
+				ftxui::filler(),
 				this->table_element,
+				ftxui::filler(),
+				text("") | bold | hcenter | size(HEIGHT, EQUAL, 1),
+				ftxui::filler(),
 			}),
 			ftxui::filler(),
 
@@ -94,9 +100,12 @@ void LeaderboardViewCMD::updateTableElement()
 
 	int place = 1;
 	for (const auto& entry : *v_leaderboardEntries) {
-		values.push_back({ {"", "", "", ""} });
+		if (place != 1)
+			values.push_back({ {"", "", "", ""} });
 		values.push_back({ {std::to_string(place++), entry->name, std::to_string(entry->score), entry->date} });
-		values.push_back({ {"", "", "", ""} });
+
+		if (place == 11)
+			break;
 	}
 
 	if (this->table)
@@ -117,9 +126,8 @@ void LeaderboardViewCMD::updateTableElement()
 	table->SelectRows(0, -1).SeparatorVertical(LIGHT);
 
 	auto content = table->SelectRows(1, -1);
-	content.DecorateCellsAlternateRow(color(Color::Blue), 2, 0);
-	content.DecorateCellsAlternateRow(color(Color::Cyan), 2, 1);
-	content.DecorateCellsAlternateRow(color(Color::White), 2, 2);
+	content.DecorateCellsAlternateRow(color(Color::Blue), 4, 1);
+	content.DecorateCellsAlternateRow(color(Color::Cyan), 4, 3);
 
 	this->table_element = table->Render();
 

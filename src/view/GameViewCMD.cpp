@@ -181,11 +181,21 @@ void GameViewCMD::updateContent()
 			hbox({
 				filler(),
 				vbox({
-					text(""),
-				}) | size(WIDTH, EQUAL, 9),
-				vbox({
-					text(""),
-				}) | size(WIDTH, EQUAL, 14),
+					hbox({
+						vbox({}) | size(WIDTH, EQUAL, 9) | size(HEIGHT, EQUAL, 2),
+						vbox({}) | size(WIDTH, EQUAL, 14) | size(HEIGHT, EQUAL, 2),
+					}) | size(HEIGHT, EQUAL, 4),
+
+					filler(),
+
+					vbox({}) | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 2),
+
+					filler(),
+
+					vbox({
+
+					}) | size(HEIGHT, EQUAL, 4),
+				}),
 				filler(),
 
 				vbox({

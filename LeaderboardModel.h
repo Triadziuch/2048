@@ -23,6 +23,7 @@ private:
 	int score;
 
 	void initLeaderboard();
+	void saveLeaderboard();
 
 public:
 	LeaderboardModel();
