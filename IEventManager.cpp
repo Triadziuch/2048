@@ -9,11 +9,102 @@ std::unordered_map<int, bool> IEventManager::previousKeyState = {
 	{ VK_DOWN, false },
 	{ VK_LEFT, false },
 	{ VK_RIGHT, false },
-	{ 'C', false },
 	{ VK_ESCAPE, false },
+	{ VK_RETURN, false },
+	{ VK_SPACE, false },
+	{ VK_SHIFT, false },
+	{ VK_CONTROL, false },
+	{ VK_MENU, false },
+	{ VK_TAB, false },
+	{ VK_BACK, false },
+	{ VK_INSERT, false },
+	{ VK_DELETE, false },
+	{ VK_HOME, false },
+	{ VK_END, false },
+	{ VK_PRIOR, false },
+	{ VK_NEXT, false },
+	{ VK_F1, false },
+	{ VK_F2, false },
+	{ VK_F3, false },
+	{ VK_F4, false },
+	{ VK_F5, false },
+	{ VK_F6, false },
+	{ VK_F7, false },
+	{ VK_F8, false },
+	{ VK_F9, false },
+	{ VK_F10, false },
+	{ VK_F11, false },
+	{ VK_F12, false },
+
+	{ 'A', false },
+	{ 'B', false },
+	{ 'C', false },
+	{ 'D', false },
+	{ 'E', false },
+	{ 'F', false },
+	{ 'G', false },
+	{ 'H', false },
+	{ 'I', false },
+	{ 'J', false },
+	{ 'K', false },
 	{ 'L', false },
+	{ 'M', false },
+	{ 'N', false },
+	{ 'O', false },
+	{ 'P', false },
+	{ 'Q', false },
+	{ 'R', false },
+	{ 'S', false },
+	{ 'T', false },
+	{ 'U', false },
 	{ 'V', false },
-	{ VK_RETURN, false}
+	{ 'W', false },
+	{ 'X', false },
+	{ 'Y', false },
+	{ 'Z', false },
+	{ '0', false },
+	{ '1', false },
+	{ '2', false },
+	{ '3', false },
+	{ '4', false },
+	{ '5', false },
+	{ '6', false },
+	{ '7', false },
+	{ '8', false },
+	{ '9', false },
+
+	{ '!', false },
+	{ '"', false },
+	{ '#', false },
+	{ '$', false },
+	{ '%', false },
+	{ '&', false },
+	{ '\'', false },
+	{ '(', false },
+	{ ')', false },
+	{ '*', false },
+	{ '+', false },
+	{ ',', false },
+	{ '-', false },
+	{ '.', false },
+	{ '/', false },
+	{ ':', false },
+	{ ';', false },
+	{ '<', false },
+	{ '=', false },
+	{ '>', false },
+	{ '?', false },
+	{ '@', false },
+	{ '[', false },
+	{ '\\', false },
+	{ ']', false },
+	{ '^', false },
+	{ '_', false },
+	{ '`', false },
+	{ '{', false },
+	{ '|', false },
+	{ '}', false },
+	{ '~', false }
 };
 
 void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
@@ -178,4 +269,17 @@ void CMDEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, Lead
 	}
 	else if (!isKeyPressed('L'))
 		previousKeyState['L'] = false;
+
+	for (int key = 0; key <= 255; ++key) {
+		if (previousKeyState.find(key) != previousKeyState.end()) {
+			if (isKeyPressed(key) && !previousKeyState[key]) {
+				controller->close(ExitCode::GAME);
+				previousKeyState[key] = true;
+				return;
+			}
+			else if (!isKeyPressed(key)) {
+				previousKeyState[key] = false;
+			}
+		}
+	}
 }

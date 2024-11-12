@@ -40,6 +40,10 @@ void LeaderboardViewCMD::updateContent()
 		this->name_input,
 		});
 
+	this->name_input_container |= ftxui::CatchEvent([&](Event event) {
+		return event.is_character() && this->name.size() > 12;
+		});
+
 	renderer = ftxui::Renderer(this->name_input_container, [&] {
 		return ftxui::hbox({
 			ftxui::filler(),
@@ -146,7 +150,6 @@ LeaderboardViewCMD::LeaderboardViewCMD() : BaseViewCMD()
 	this->input_option_enter.on_enter = [&] {
 		this->mode = LeaderboardMode::VIEW;
 		};
-
 }
 
 void LeaderboardViewCMD::initRenderer()

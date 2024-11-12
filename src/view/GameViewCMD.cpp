@@ -225,14 +225,15 @@ void GameViewCMD::updateContent()
 
 					filler(),
 
-					this->isGameOver == true ? 
+					this->isGameOver == true ?
 					vbox({
-						text("GAME OVER") | hcenter,
-						text("Press return key to continue...") | hcenter,
-					}) | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 2)
+						text("G A M E   O V E R") | hcenter,
+						text(""),
+						text("Press return key to continue...") | blink | hcenter,
+					}) | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 3)
 					:
 					vbox({
-					}) | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 2),
+					}) | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 3),
 
 					filler(),
 
