@@ -165,9 +165,6 @@
     <ClInclude Include="GameViewGUI.h">
       <Filter>View\GameView</Filter>
     </ClInclude>
-    <ClInclude Include="ExitCode.h">
-      <Filter>Pliki nagłówków</Filter>
-    </ClInclude>
     <ClInclude Include="LeaderboardViewCMD.h">
       <Filter>View\LeaderboardView</Filter>
     </ClInclude>

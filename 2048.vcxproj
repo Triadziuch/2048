@@ -23,7 +23,6 @@
     <ClInclude Include="BaseLeaderboardView.h" />
     <ClInclude Include="BaseViewCMD.h" />
     <ClInclude Include="BaseViewGraphic.h" />
-    <ClInclude Include="ExitCode.h" />
     <ClInclude Include="GameViewGUI.h" />
     <ClInclude Include="IEventManager.h" />
     <ClInclude Include="LeaderboardController.h" />
