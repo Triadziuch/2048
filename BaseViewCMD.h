@@ -1,6 +1,5 @@
 #pragma once
 #include "src/view/BaseView.h"
-#include "SFML/Graphics.hpp"
 #include <thread>
 #include <future>
 #include <ftxui/component/screen_interactive.hpp>

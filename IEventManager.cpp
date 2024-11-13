@@ -109,57 +109,12 @@ std::unordered_map<int, bool> IEventManager::previousKeyState = {
 
 void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
 {
-	auto isKeyPressed = [](int key) -> bool {
-		return (GetAsyncKeyState(key) & 0x8000) != 0;
-		};
 
-	sf::Event ev;
-
-	if (window->pollEvent(ev)) {
-
-		if ((ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Escape) || (ev.type == sf::Event::Closed)) {
-			controller->close();
-		}
-
-		if (ev.type == sf::Event::KeyPressed) {
-
-			if (controller->getIsGameOver())
-				controller->resetGame();
-			else {
-				if (!controller->getIsMoving())
-					model->move(ev.key.code);
-
-				if (ev.key.code == sf::Keyboard::C) {
-					previousKeyState['C'] = true;
-					controller->switchView();
-				}
-			}
-		}
-	}
 }
 
 void GraphicEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, LeaderboardController* controller, sf::RenderWindow* window) const
 {
-	auto isKeyPressed = [](int key) -> bool {
-		return (GetAsyncKeyState(key) & 0x8000) != 0;
-		};
 
-	sf::Event ev;
-
-	if (window->pollEvent(ev)) {
-
-		if ((ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Escape) || (ev.type == sf::Event::Closed)) {
-			controller->close();
-		}
-
-		if (ev.type == sf::Event::KeyPressed) {
-
-			if (ev.key.code == sf::Keyboard::C) {
-				previousKeyState['C'] = true;
-				controller->switchView();
-			}
-		}
-	}
 }
 
 void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
@@ -176,29 +131,13 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 	else if (!isKeyPressed(VK_ESCAPE)) 
 		previousKeyState[VK_ESCAPE] = false;
 
-	if (isKeyPressed('C') && !previousKeyState['C']) {
-		controller->switchView();
-		previousKeyState['C'] = true;
-		return;
-	}
-	else if (!isKeyPressed('C')) 
-		previousKeyState['C'] = false;
-
 	if (isKeyPressed('L') && !previousKeyState['L']) {
-		controller->displayLeaderboard(); // TODO: Do zmienienia na view bo edit bedzie tylko po przegranej
+		controller->displayLeaderboard();
 		previousKeyState['L'] = true;
 		return;
 	}
 	else if (!isKeyPressed('L'))
 		previousKeyState['L'] = false;
-	
-	if (isKeyPressed('V') && !previousKeyState['V']) {
-		controller->displayLeaderboard(); // TODO: Do zmienienia na view bo edit bedzie tylko po przegranej
-		previousKeyState['V'] = true;
-		return;
-	}
-	else if (!isKeyPressed('V'))
-		previousKeyState['V'] = false;
 
 	if (isKeyPressed('R') && !previousKeyState['R']) {
 		controller->resetGame();
@@ -262,22 +201,6 @@ void CMDEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, Lead
 	}
 	else if (!isKeyPressed(VK_ESCAPE))
 		previousKeyState[VK_ESCAPE] = false;
-
-	if (isKeyPressed('C') && !previousKeyState['C']) {
-		controller->switchView();
-		previousKeyState['C'] = true;
-		return;
-	}
-	else if (!isKeyPressed('C'))
-		previousKeyState['C'] = false;
-
-	if (isKeyPressed('L') && !previousKeyState['L']) {
-		controller->close(ExitCode::GAME);
-		previousKeyState['L'] = true;
-		return;
-	}
-	else if (!isKeyPressed('L'))
-		previousKeyState['L'] = false;
 
 	for (int key = 0; key <= 255; ++key) {
 		if (previousKeyState.find(key) != previousKeyState.end()) {

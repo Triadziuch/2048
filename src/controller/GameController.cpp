@@ -4,11 +4,7 @@
 void GameController::initVariables()
 {
 	srand(static_cast<unsigned>(time(nullptr)));
-	this->isGraphic = true;
-	this->_eventManager = new GraphicEventManager();
-
-	/*HWND hWnd = GetConsoleWindow();
-	ShowWindow(hWnd, SW_HIDE);*/
+	this->_eventManager = new CMDEventManager();
 }
 
 
@@ -82,78 +78,6 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 			this->_gameView->render();
 		return false;
 		});
-
-	// Graphic View
-	this->_gameView = this->_viewHandler->getView<GameViewGraphic>("game_graphic");
-	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
-	this->_gameView->connect("started_move", [&]() {
-			this->_gameView->endSpawn();
-			isMoving = true;
-		return false;
-		});
-
-	this->_gameView->connect("finished_move", [&]() {
-			isMoving = false;
-			this->_gameModel->endMove();
-		return false;
-		});
-
-	this->_gameView->connect("started_spawning", [&]() {
-			isSpawning = true;
-		return false;
-		});
-
-	this->_gameView->connect("finished_spawning", [&]() {
-			isSpawning = false;
-			this->_gameModel->endMerge();
-			this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
-
-			if (this->isGameOver)
-				this->_gameView->startGameOver();
-
-		return false;
-		});
-
-	this->_gameView->connect("finished_gameover", [&]() {
-
-		return false;
-		});
-}
-
-void GameController::switchView()
-{
-	printDebug("[GameController] Switched view. Graphic: " + this->isGraphic);
-
-	while (isMoving) 
-		this->_gameView->updateMove(1.f);
-
-	while (isSpawning) 
-		this->_gameView->updateSpawn(1.f);
-
-	if (isGameOver)
-		this->_gameView->endGameOver();
-
-	this->_gameView->closeWindow();
-	delete _eventManager;
-
-	if (isGraphic) {
-		this->_gameView = this->_viewHandler->getView<GameViewCMD>("game_cmd");
-		this->_eventManager = new CMDEventManager();
-	}
-	else {
-		this->_gameView = this->_viewHandler->getView<GameViewGraphic>("game_graphic");
-		this->_eventManager = new GraphicEventManager();
-	}
-
-	this->_gameView->openWindow();
-	this->isGraphic = !this->isGraphic;
-	this->_gameView->syncMatrix(this->_gameModel->getMatrix());
-	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
-
-	if (isGameOver) 
-		this->_gameView->endGameOver();
-
-	this->render();
 }
 
 void GameController::displayLeaderboard()
@@ -167,11 +91,9 @@ void GameController::resetGame()
 	this->isGameOver = false;
 	this->_gameModel->prepareLeaderboard();
 	this->_viewHandler->getView<GameViewCMD>("game_cmd")->reset();
-	this->_viewHandler->getView<GameViewGraphic>("game_graphic")->reset();
 	this->_gameModel->clearBoard();
 	this->_gameView->syncMatrix(this->_gameModel->getMatrix());
 	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
-	//this->_gameView->render();
 }
 
 
@@ -182,14 +104,13 @@ const ExitCode GameController::run()
 	this->exitCode = ExitCode::EXIT;
 	this->isEnd = false;
 
-	if (isGraphic)
-		this->switchView();
-	else {
-		_gameView->openWindow();
-		_gameView->syncMatrix(this->_gameModel->getMatrix());
-		this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
-		this->render();
-	}
+	_gameView->openWindow();
+	_gameView->syncMatrix(this->_gameModel->getMatrix());
+	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
+	this->render();
+	
+	if (isGameOver)
+		this->_gameView->endGameOver();
 
 	return this->gameLoop();
 }
@@ -238,17 +159,6 @@ void GameController::update()
 		this->_gameView->updateGameOver(dt);
 		this->render();
 	}
-
-	/*playground->update(dt);
-	if (!isGameOver) {
-		updateMousePositions();
-		updatePollEvents();
-		updateGameOver();
-	}
-	else {
-		updateMousePositions();
-		updatePollEvents();
-	}*/
 }
 
 const bool& GameController::getIsMoving()

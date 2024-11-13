@@ -12,15 +12,6 @@ std::shared_ptr<IControllerFactory> ControllerHandler::getRouteControllerFactory
 }
 
 void ControllerHandler::changeRoute(const std::string &baseRoute, const std::string &subRoute) {
-    /*std::shared_ptr<IControllerFactory> pFactory = this->getRouteControllerFactory(baseRoute);
-    if (pFactory == nullptr) {
-        std::cerr << "invalid route: " << baseRoute << std::endl;
-    }
-    this->_currentController.reset();
-    this->_currentController = nullptr;
-    this->_curBaseRoute = baseRoute;
-    this->_curSubRoute = subRoute;
-    this->_currentController = pFactory->build(_modelHandler, _viewHandler);*/
     if (baseRoute == "-") {
         _currentController = _gameController;
     }
@@ -63,14 +54,13 @@ ControllerHandler::ControllerHandler(std::shared_ptr<ModelHandler> modelHandler,
         ExitCode exitCode = this->_currentController->run();
         system("cls");
 
-        if (exitCode == ExitCode::GAME) {
+        if (exitCode == ExitCode::GAME) 
             this->changeRoute("-", "Game");
-        }
-        else if (exitCode == ExitCode::LEADERBOARD) {
+
+        else if (exitCode == ExitCode::LEADERBOARD) 
             this->changeRoute("leaderboard", "Leaderboard");
-        }
-        else if (exitCode == ExitCode::EXIT) {
+
+        else if (exitCode == ExitCode::EXIT) 
             break;
-        }
     }
 }

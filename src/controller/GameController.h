@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include "../view/GameViewGraphic.h"
 #include "../view/GameViewCMD.h"
 #include "../view/ViewHandler.h"
 #include "IBaseController.h"
@@ -22,7 +21,6 @@ private:
 	float dt;
 
 	// Is Variables
-	bool isGraphic = true;
 	bool isMoving = false;
 	bool isSpawning = false;
 	bool isEnd = false;
@@ -41,7 +39,6 @@ public:
 	// Model and View handling
 	void setModelHandler(std::shared_ptr<ModelHandler> modelHandler) override;
 	void setViewHandler(std::shared_ptr<ViewHandler> viewHandler) override;
-	void switchView();
 	void displayLeaderboard();
 	void resetGame();
 

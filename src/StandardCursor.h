@@ -1,6 +1,5 @@
 #pragma once
 
-#include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #define byte win_byte_override
 #include <Windows.h>

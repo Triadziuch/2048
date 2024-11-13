@@ -22,14 +22,12 @@
     <ClInclude Include="BaseGameView.h" />
     <ClInclude Include="BaseLeaderboardView.h" />
     <ClInclude Include="BaseViewCMD.h" />
-    <ClInclude Include="BaseViewGraphic.h" />
-    <ClInclude Include="GameViewGUI.h" />
+    <ClInclude Include="ExitCode.h" />
     <ClInclude Include="IEventManager.h" />
     <ClInclude Include="LeaderboardController.h" />
     <ClInclude Include="LeaderboardMode.h" />
     <ClInclude Include="LeaderboardModel.h" />
     <ClInclude Include="LeaderboardViewCMD.h" />
-    <ClInclude Include="LeaderboardViewGraphic.h" />
     <ClInclude Include="src\AssetManager.h" />
     <ClInclude Include="src\controller\ControllerFactory.h" />
     <ClInclude Include="src\controller\ControllerHandler.h" />
@@ -39,8 +37,6 @@
     <ClInclude Include="src\DataHandler.hpp" />
     <ClInclude Include="src\event\EventObserver.h" />
     <ClInclude Include="src\event\IEventObserver.h" />
-    <ClInclude Include="src\Game.h" />
-    <ClInclude Include="src\GUI.h" />
     <ClInclude Include="src\model\BaseModel.h" />
     <ClInclude Include="src\model\ModelHandler.h" />
     <ClInclude Include="src\model\GameModel.h" />
@@ -52,12 +48,10 @@
     <ClInclude Include="src\MovementManager\TransformationRoutine.h" />
     <ClInclude Include="src\MovementManager\VertexArray2.h" />
     <ClInclude Include="src\pattern\Observator.hpp" />
-    <ClInclude Include="src\Playground.h" />
     <ClInclude Include="src\StandardCursor.h" />
     <ClInclude Include="src\Tile.h" />
     <ClInclude Include="src\TileMatrix.h" />
     <ClInclude Include="src\view\BaseView.h" />
-    <ClInclude Include="src\view\GameViewGraphic.h" />
     <ClInclude Include="src\view\GameViewCMD.h" />
     <ClInclude Include="src\view\ViewHandler.h" />
     <ClInclude Include="TileMatrixModel.h" />
@@ -66,20 +60,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseViewCMD.cpp" />
-    <ClCompile Include="BaseViewGraphic.cpp" />
-    <ClCompile Include="GameViewGUI.cpp" />
     <ClCompile Include="IEventManager.cpp" />
     <ClCompile Include="LeaderboardController.cpp" />
     <ClCompile Include="LeaderboardModel.cpp" />
     <ClCompile Include="LeaderboardViewCMD.cpp" />
-    <ClCompile Include="LeaderboardViewGraphic.cpp" />
     <ClCompile Include="src\AssetManager.cpp" />
     <ClCompile Include="src\controller\ControllerHandler.cpp" />
     <ClCompile Include="src\controller\GameController.cpp" />
     <ClCompile Include="src\controller\IBaseController.cpp" />
     <ClCompile Include="src\event\EventObserver.cpp" />
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\GUI.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\model\BaseModel.cpp" />
     <ClCompile Include="src\model\ModelHandler.cpp" />
@@ -91,11 +80,9 @@
     <ClCompile Include="src\MovementManager\transformationInfo.cpp" />
     <ClCompile Include="src\MovementManager\TransformationRoutine.cpp" />
     <ClCompile Include="src\MovementManager\VertexArray2.cpp" />
-    <ClCompile Include="src\Playground.cpp" />
     <ClCompile Include="src\StandardCursor.cpp" />
     <ClCompile Include="src\Tile.cpp" />
     <ClCompile Include="src\TileMatrix.cpp" />
-    <ClCompile Include="src\view\GameViewGraphic.cpp" />
     <ClCompile Include="src\view\GameViewCMD.cpp" />
     <ClCompile Include="src\view\ViewHandler.cpp" />
     <ClCompile Include="TileMatrixModel.cpp" />

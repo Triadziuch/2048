@@ -2,7 +2,6 @@
 
 #include "src/controller/IBaseController.h"
 #include "LeaderboardViewCMD.h"
-#include "LeaderboardViewGraphic.h"
 #include "src/view/ViewHandler.h"
 #include "IEventManager.h"
 
@@ -18,7 +17,6 @@ private:
 
 	// Game state Variables
 	bool isEnd = false;
-	bool isGraphic = false;
 	ExitCode exitCode = ExitCode::EXIT;
 	LeaderboardMode leaderboardMode = LeaderboardMode::VIEW;
 
@@ -32,7 +30,6 @@ public:
 	// Model and View handling
 	void setModelHandler(std::shared_ptr<ModelHandler> modelHandler) override;
 	void setViewHandler(std::shared_ptr<ViewHandler> viewHandler) override;
-	void switchView();
 
 	// Public funcitons
 	const ExitCode run() override;

@@ -3,7 +3,6 @@
 void LeaderboardController::initVariables()
 {
 	srand(static_cast<unsigned>(time(nullptr)));
-	this->isGraphic = false;
 	this->_eventManager = new CMDEventManager();
 }
 
@@ -52,24 +51,6 @@ void LeaderboardController::setViewHandler(std::shared_ptr<ViewHandler> viewHand
 		return false;
 		});
 
-	// Graphic View
-	this->_leaderboardView = this->_viewHandler->getView<BaseLeaderboardView>("leaderboard_graphic");
-	this->_leaderboardView->connect("entered_name", [&]() {
-		return false;
-		});
-
-	this->_leaderboardView->connect("finished_move", [&]() {
-		return false;
-		});
-
-	this->_leaderboardView->connect("started_spawning", [&]() {
-		return false;
-		});
-
-	this->_leaderboardView->connect("finished_spawning", [&]() {
-		return false;
-		});
-
 	// CMD View
 	this->_leaderboardView = this->_viewHandler->getView<BaseLeaderboardView>("leaderboard_cmd");
 	this->_leaderboardView->connect("entered_name", [&]() {
@@ -94,38 +75,12 @@ void LeaderboardController::setViewHandler(std::shared_ptr<ViewHandler> viewHand
 		});
 }
 
-void LeaderboardController::switchView()
-{
-	printDebug("[GameController] Switched view. Graphic: " + this->isGraphic);
-
-	this->_leaderboardView->closeWindow();
-	delete _eventManager;
-
-	if (isGraphic) {
-		this->_leaderboardView = this->_viewHandler->getView<LeaderboardViewCMD>("leaderboard_cmd");
-		this->_eventManager = new CMDEventManager();
-	}
-	else {
-		this->_leaderboardView = this->_viewHandler->getView<LeaderboardViewGraphic>("leaderboard_graphic");
-		this->_eventManager = new GraphicEventManager();
-	}
-
-	this->_leaderboardView->openWindow();
-	this->isGraphic = !this->isGraphic;
-	this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
-
-	this->render();
-}
-
 const ExitCode LeaderboardController::run()
 {
 	this->exitCode = ExitCode::EXIT;
 	this->isEnd = false;
 
-	if (isGraphic) {
-		this->switchView();
-	}
-
+	this->_leaderboardView->openWindow();
 	this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
 	this->_leaderboardView->setMode(this->_leaderboardModel->getMode());
 	this->_leaderboardView->setScore(this->_leaderboardModel->getScore());
