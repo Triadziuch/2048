@@ -319,6 +319,11 @@ void GameViewCMD::endGameOver()
 	this->refreshScreen();
 }
 
+sf::Event* GameViewCMD::update(float dt)
+{
+	return nullptr;
+}
+
 void GameViewCMD::updateMove(float dt) { BaseGameView::notify("finished_move"); }
 
 void GameViewCMD::updateSpawn(float dt) { BaseGameView::notify("finished_spawning"); }

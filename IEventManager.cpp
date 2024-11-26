@@ -115,24 +115,30 @@ void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameCon
 
 	sf::Event ev;
 
-	if (window->pollEvent(ev)) {
+	if (window->pollEvent(ev)) 
+		this->handleEvent(&ev, model, controller, window);
+}
 
-		if ((ev.type == sf::Event::KeyPressed && ev.key.code == sf::Keyboard::Escape) || (ev.type == sf::Event::Closed)) {
-			controller->close();
-		}
+void GraphicEventManager::handleEvent(sf::Event* event, std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
+{
+	if (event == nullptr)
+		return;
 
-		if (ev.type == sf::Event::KeyPressed) {
+	if ((event->type == sf::Event::KeyPressed && event->key.code == sf::Keyboard::Escape) || (event->type == sf::Event::Closed)) {
+		controller->close();
+	}
 
-			if (controller->getIsGameOver())
-				controller->resetGame();
-			else {
-				if (!controller->getIsMoving())
-					model->move(ev.key.code);
+	if (event->type == sf::Event::KeyPressed && controller->getIsHandlingEvents()) {
 
-				if (ev.key.code == sf::Keyboard::C) {
-					previousKeyState['C'] = true;
-					controller->switchView();
-				}
+		if (controller->getIsGameOver())
+			controller->resetGame();
+		else {
+			if (!controller->getIsMoving())
+				model->move(event->key.code);
+
+			if (event->key.code == sf::Keyboard::C) {
+				previousKeyState['C'] = true;
+				controller->switchView();
 			}
 		}
 	}
@@ -291,4 +297,8 @@ void CMDEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, Lead
 			}
 		}
 	}
+}
+
+void CMDEventManager::handleEvent(sf::Event* event, std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
+{
 }

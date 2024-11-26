@@ -19,6 +19,7 @@ public:
 	virtual void reset() = 0;
 
 	// Update functions
+	virtual sf::Event* update(float dt) = 0;
 	virtual void updateMove(float dt) = 0;
 	virtual void updateSpawn(float dt) = 0;
 	virtual void updateGameOver(float dt) = 0;

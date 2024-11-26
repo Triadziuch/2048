@@ -48,7 +48,7 @@ public:
 	void startSpawn(const std::vector<SpawnInstruction*>& spawnInstructions);
 	void startGameOver();
 	
-
+	sf::Event* update(float dt);
 	void updateMove(float dt);
 	void updateSpawn(float dt);
 	void updateGameOver(float dt);

@@ -23,7 +23,7 @@ bool GameViewGUI::updateGameOver(const float dt)
 		return false;
 	}
 	else if (m_gameOverTime < m_gameOverTimeMax * 2.f) {
-
+		return false;
 	}
 	else if (m_gameOverTime < m_gameOverTimeMax * 3.f) {
 		m_gameOverPressKeyText.setFillColor(sf::Color(250, 248, 239, 255 * (m_gameOverTime - 2.f * m_gameOverTimeMax) / m_gameOverTimeMax ));
@@ -96,6 +96,7 @@ void GameViewGUI::initText()
 		printf("Couldn't load m_font: assets/Fonts/ClearSans-Bold.ttf\n");
 
 	m_newGameText.setFont(*m_font);
+	m_leaderboardText.setFont(*m_font);
 	m_bestScoreHeaderText.setFont(*m_font);
 	m_scoreHeaderText.setFont(*m_font);
 	m_titleText.setFont(*m_font);
@@ -103,6 +104,7 @@ void GameViewGUI::initText()
 	m_gameOverPressKeyText.setFont(*m_font);
 
 	m_newGameText.setCharacterSize(m_newGameSize);
+	m_leaderboardText.setCharacterSize(m_newGameSize);
 	m_bestScoreHeaderText.setCharacterSize(m_bestScoreSize);
 	m_scoreHeaderText.setCharacterSize(m_scoreSize);
 	m_titleText.setCharacterSize(m_titleSize);
@@ -110,6 +112,7 @@ void GameViewGUI::initText()
 	m_gameOverPressKeyText.setCharacterSize(m_gameOverSize / 2U);
 
 	m_newGameText.setFillColor(sf::Color::White);
+	m_leaderboardText.setFillColor(sf::Color::White);
 	m_bestScoreHeaderText.setFillColor(m_scoreColor);
 	m_scoreHeaderText.setFillColor(m_scoreColor);
 	m_titleText.setFillColor(m_titleColor);
@@ -117,6 +120,7 @@ void GameViewGUI::initText()
 	m_gameOverPressKeyText.setFillColor(m_gameOverColor);
 
 	m_newGameText.setString(m_newGameString);
+	m_leaderboardText.setString(m_leaderboardString);
 	m_bestScoreHeaderText.setString(m_bestScoreString);
 	m_scoreHeaderText.setString(m_scoreString);
 	m_titleText.setString(m_titleString);
@@ -127,12 +131,14 @@ void GameViewGUI::initText()
 	m_gameOverPressKeyText.setFillColor(m_titleColor);
 
 	m_newGameText.setOrigin(m_newGameText.getLocalBounds().left + m_newGameText.getGlobalBounds().width / 2.f, m_newGameText.getLocalBounds().top + m_newGameText.getGlobalBounds().height / 2.f);
+	m_leaderboardText.setOrigin(m_leaderboardText.getLocalBounds().left + m_leaderboardText.getGlobalBounds().width / 2.f, m_leaderboardText.getLocalBounds().top + m_leaderboardText.getGlobalBounds().height / 2.f);
 	m_bestScoreHeaderText.setOrigin(m_bestScoreHeaderText.getLocalBounds().left + m_bestScoreHeaderText.getGlobalBounds().width / 2.f, m_bestScoreHeaderText.getLocalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height / 2.f);
 	m_scoreHeaderText.setOrigin(m_scoreHeaderText.getLocalBounds().left + m_scoreHeaderText.getGlobalBounds().width / 2.f, m_scoreHeaderText.getLocalBounds().top + m_scoreHeaderText.getGlobalBounds().height / 2.f);
 	m_gameOverText.setOrigin(m_gameOverText.getLocalBounds().left + m_gameOverText.getGlobalBounds().width / 2.f, m_gameOverText.getLocalBounds().top + m_gameOverText.getGlobalBounds().height / 2.f);
 	m_gameOverPressKeyText.setOrigin(m_gameOverPressKeyText.getLocalBounds().left + m_gameOverPressKeyText.getGlobalBounds().width / 2.f, m_gameOverPressKeyText.getLocalBounds().top + m_gameOverPressKeyText.getGlobalBounds().height / 2.f);
 
 	m_newGameText.setPosition(m_newGameButtonSprite.getGlobalBounds().left + m_newGameButtonSprite.getGlobalBounds().width / 2.f, m_newGameButtonSprite.getGlobalBounds().top + m_newGameButtonSprite.getGlobalBounds().height / 2.f);
+	m_leaderboardText.setPosition((int)(m_leaderboardButtonSprite.getGlobalBounds().left + m_leaderboardButtonSprite.getGlobalBounds().width / 2.f), (int)(m_leaderboardButtonSprite.getGlobalBounds().top + m_leaderboardButtonSprite.getGlobalBounds().height / 2.f));
 	m_bestScoreHeaderText.setPosition(m_bestScoreButtonSprite.getGlobalBounds().left + m_bestScoreButtonSprite.getGlobalBounds().width / 2.f, m_bestScoreButtonSprite.getGlobalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height * 2);
 	m_scoreHeaderText.setPosition(m_scoreButtonSprite.getGlobalBounds().left + m_scoreButtonSprite.getGlobalBounds().width / 2.f, m_scoreButtonSprite.getGlobalBounds().top + m_scoreHeaderText.getGlobalBounds().height * 2);
 	m_titleText.setPosition(m_playgroundRect.left, m_playgroundRect.top - m_titleText.getGlobalBounds().height * 1.75f);
@@ -169,15 +175,18 @@ void GameViewGUI::initSprites()
 		printf("Couldn't load texture: assets//Textures/button_score.png\n");
 
 	m_newGameButtonSprite.setTexture(*m_newGameTexture);
+	m_leaderboardButtonSprite.setTexture(*m_newGameTexture);
 	m_bestScoreButtonSprite.setTexture(*m_scoreTexture);
 	m_scoreButtonSprite.setTexture(*m_scoreTexture);
 
 	m_newGameButtonSprite.setScale(m_scale, m_scale);
+	m_leaderboardButtonSprite.setScale((m_scale + 0.05f), m_scale);
 	m_bestScoreButtonSprite.setScale(m_scale, m_scale);
 	m_scoreButtonSprite.setScale(m_scale, m_scale);
 
-	m_newGameButtonSprite.setPosition(m_windowSize.x - m_newGameButtonSprite.getGlobalBounds().width * 1.25f, m_playgroundRect.top + m_newGameButtonSprite.getGlobalBounds().height / 4.f);
-	m_bestScoreButtonSprite.setPosition(m_newGameButtonSprite.getPosition().x + m_newGameButtonSprite.getGlobalBounds().width - m_bestScoreButtonSprite.getGlobalBounds().width, m_playgroundRect.top - m_newGameButtonSprite.getGlobalBounds().height / 4.f - m_bestScoreButtonSprite.getGlobalBounds().height);
+	m_leaderboardButtonSprite.setPosition(m_windowSize.x - m_leaderboardButtonSprite.getGlobalBounds().width * 1.25f, m_playgroundRect.top + m_leaderboardButtonSprite.getGlobalBounds().height / 4.f);
+	m_newGameButtonSprite.setPosition(m_leaderboardButtonSprite.getPosition().x + (m_leaderboardButtonSprite.getGlobalBounds().width - m_newGameButtonSprite.getGlobalBounds().width), m_leaderboardButtonSprite.getGlobalBounds().top + m_leaderboardButtonSprite.getGlobalBounds().height + m_leaderboardButtonSprite.getGlobalBounds().height / 4.f);
+	m_bestScoreButtonSprite.setPosition(m_leaderboardButtonSprite.getPosition().x + m_leaderboardButtonSprite.getGlobalBounds().width - m_bestScoreButtonSprite.getGlobalBounds().width, m_playgroundRect.top - m_leaderboardButtonSprite.getGlobalBounds().height / 4.f - m_bestScoreButtonSprite.getGlobalBounds().height);
 	m_scoreButtonSprite.setPosition(m_bestScoreButtonSprite.getPosition().x - m_scoreButtonSprite.getGlobalBounds().width - 10.f, m_bestScoreButtonSprite.getPosition().y);
 }
 
@@ -204,11 +213,13 @@ void GameViewGUI::render(sf::RenderTarget& target)
 {
 	// Drawing buttons
 	target.draw(m_newGameButtonSprite);
+	target.draw(m_leaderboardButtonSprite);
 	target.draw(m_bestScoreButtonSprite);
 	target.draw(m_scoreButtonSprite);
 
 	// Drawing text
 	target.draw(m_newGameText);
+	target.draw(m_leaderboardText);
 	target.draw(m_bestScoreHeaderText);
 	target.draw(m_scoreHeaderText);
 	target.draw(m_titleText);

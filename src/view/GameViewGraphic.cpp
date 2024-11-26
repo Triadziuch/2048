@@ -141,7 +141,9 @@ void GameViewGraphic::startMerge(const std::vector<MergeInstruction*>& mergeInst
 
 	for (const auto& instruction : *this->m_mergeInstructions) {
 		const sf::Vector2i pos = instruction->pos;
-		tiles[pos.x][pos.y]->startMerging();
+		if (this->tiles[pos.x][pos.y])
+			tiles[pos.x][pos.y]->startMerging();
+		
 	}
 	BaseGameView::notify("started_merging");
 }
@@ -226,6 +228,46 @@ void GameViewGraphic::updateGameOver(float dt)
 
 	if (this->gui->updateGameOver(dt))
 		BaseGameView::notify("finished_gameover");
+}
+
+sf::Event* GameViewGraphic::update(float dt)
+{
+	if (this->window == nullptr)
+		return nullptr;
+
+	sf::Vector2i mouse_pos_window = sf::Mouse::getPosition(*window);
+	sf::Vector2f mouse_pos_view = window->mapPixelToCoords(mouse_pos_window);
+
+	if (this->gui->getNewGameButton().contains(mouse_pos_view) || this->gui->getLeaderboardButton().contains(mouse_pos_view)) {
+		if (cursor_type != sf::StandardCursor::HAND) {
+			cursor_type = sf::StandardCursor::HAND;
+			sf::StandardCursor Cursor(sf::StandardCursor::HAND);
+			Cursor.set(window->getSystemHandle());
+		}
+
+		sf::Event ev;
+		if (window->pollEvent(ev)) {
+			if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
+				if (this->gui->getNewGameButton().contains(mouse_pos_view)) {
+					OutputDebugString(L"New game button pressed\n");
+				}
+				else if (this->gui->getLeaderboardButton().contains(mouse_pos_view)) {
+					OutputDebugString(L"Leaderboard button pressed\n");
+				}
+			}
+			else
+				return &ev;
+		}
+	}
+	else {
+		if (cursor_type != sf::StandardCursor::NORMAL) {
+			cursor_type = sf::StandardCursor::NORMAL;
+			sf::StandardCursor Cursor(sf::StandardCursor::NORMAL);
+			Cursor.set(window->getSystemHandle());
+		}
+	}
+
+	return nullptr;
 }
 
 void GameViewGraphic::endGameOver()

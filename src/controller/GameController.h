@@ -27,6 +27,7 @@ private:
 	bool isSpawning = false;
 	bool isEnd = false;
 	bool isGameOver = false;
+	bool isHandlingEvents = false;
 	bool hasQuit = false;
 	ExitCode exitCode = ExitCode::EXIT;
 
@@ -56,6 +57,7 @@ public:
 	// Accessors / Mutators
 	const bool& getIsMoving();
 	const bool getIsGameOver();
+	const bool getIsHandlingEvents();
 	
 	// Render function
 	void render();

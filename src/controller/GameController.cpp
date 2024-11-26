@@ -108,14 +108,16 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 			this->_gameModel->endMerge();
 			this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
 
-			if (this->isGameOver)
+			if (this->isGameOver) {
+				this->isHandlingEvents = false;
 				this->_gameView->startGameOver();
+			}
 
 		return false;
 		});
 
 	this->_gameView->connect("finished_gameover", [&]() {
-
+		this->isHandlingEvents = true;
 		return false;
 		});
 }
@@ -143,6 +145,7 @@ void GameController::switchView()
 	else {
 		this->_gameView = this->_viewHandler->getView<GameViewGraphic>("game_graphic");
 		this->_eventManager = new GraphicEventManager();
+		this->isHandlingEvents = true;
 	}
 
 	this->_gameView->openWindow();
@@ -221,6 +224,10 @@ void GameController::update()
 	dt = dt_clock.restart().asSeconds();
 
 	_eventManager->handleEvents(_gameModel, this, _gameView->getWindow());
+	//this->_eventManager->handleEvent(sf::Event(), _gameModel, this, _gameView->getWindow());
+	//this->_gameView->update(dt);
+	_eventManager->handleEvent(this->_gameView->update(dt), _gameModel, this, _gameView->getWindow());
+
 	if (isEnd)
 		return;
 
@@ -259,6 +266,11 @@ const bool& GameController::getIsMoving()
 const bool GameController::getIsGameOver()
 {
 	return isGameOver;
+}
+
+const bool GameController::getIsHandlingEvents()
+{
+	return isHandlingEvents;
 }
 
 // = = = = = Render functions  = = = = = //
