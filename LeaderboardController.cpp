@@ -3,8 +3,6 @@
 void LeaderboardController::initVariables()
 {
 	srand(static_cast<unsigned>(time(nullptr)));
-	this->isGraphic = false;
-	this->_eventManager = new CMDEventManager();
 }
 
 LeaderboardController::LeaderboardController()
@@ -113,8 +111,11 @@ void LeaderboardController::switchView()
 	this->_leaderboardView->openWindow();
 	this->isGraphic = !this->isGraphic;
 	this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
+	this->_leaderboardView->setMode(this->_leaderboardModel->getMode());
+	this->_leaderboardView->setScore(this->_leaderboardModel->getScore());
 
 	this->render();
+	std::this_thread::sleep_for(std::chrono::milliseconds(32));
 }
 
 const ExitCode LeaderboardController::run()
@@ -123,13 +124,21 @@ const ExitCode LeaderboardController::run()
 	this->isEnd = false;
 
 	if (isGraphic) {
-		this->switchView();
+		this->_leaderboardView = this->_viewHandler->getView<BaseLeaderboardView>("leaderboard_graphic");
+		delete _eventManager;
+		this->_eventManager = new GraphicEventManager();
 	}
+		
+	else {
+		this->_leaderboardView = this->_viewHandler->getView<BaseLeaderboardView>("leaderboard_cmd");
+		delete _eventManager;
+		this->_eventManager = new CMDEventManager();
+	}
+		
 
 	this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
 	this->_leaderboardView->setMode(this->_leaderboardModel->getMode());
 	this->_leaderboardView->setScore(this->_leaderboardModel->getScore());
-	this->render();
 
 	return this->gameLoop();
 }
@@ -157,6 +166,8 @@ const ExitCode LeaderboardController::gameLoop()
 void LeaderboardController::update()
 {
 	_eventManager->handleEvents(_leaderboardModel, this, _leaderboardView->getWindow());
+
+	this->render();
 
 	if (isEnd)
 		return;

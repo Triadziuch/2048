@@ -3,18 +3,18 @@
 sf::StandardCursor::StandardCursor(const TYPE type_)
 {
 	switch (type_) {
-	case sf::StandardCursor::WAIT:
-		Cursor = LoadCursor(NULL, IDC_WAIT);
-		break;
-	case sf::StandardCursor::HAND:
-		Cursor = LoadCursor(NULL, IDC_HAND);
-		break;
-	case sf::StandardCursor::NORMAL:
-		Cursor = LoadCursor(NULL, IDC_ARROW);
-		break;
-	case sf::StandardCursor::TEXT:
-		Cursor = LoadCursor(NULL, IDC_IBEAM);
-		break;
+		case sf::StandardCursor::WAIT:
+			Cursor = LoadCursor(NULL, IDC_WAIT);
+			break;
+		case sf::StandardCursor::HAND:
+			Cursor = LoadCursor(NULL, IDC_HAND);
+			break;
+		case sf::StandardCursor::NORMAL:
+			Cursor = LoadCursor(NULL, IDC_ARROW);
+			break;
+		case sf::StandardCursor::TEXT:
+			Cursor = LoadCursor(NULL, IDC_IBEAM);
+			break;
 	}
 }
 

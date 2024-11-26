@@ -120,6 +120,16 @@ void GameController::setViewHandler(std::shared_ptr<ViewHandler> viewHandler) {
 		this->isHandlingEvents = true;
 		return false;
 		});
+
+	this->_gameView->connect("new_game", [&]() {
+			this->resetGame();
+		return false;
+		});
+
+	this->_gameView->connect("leaderboard", [&]() {
+			this->displayLeaderboard();
+		return false;
+		});
 }
 
 void GameController::switchView()
@@ -163,6 +173,9 @@ void GameController::displayLeaderboard()
 {
 	this->exitCode = ExitCode::LEADERBOARD;
 	this->isEnd = true;
+
+	if (!isGraphic)
+		system("cls");
 }
 
 void GameController::resetGame()
@@ -185,14 +198,21 @@ const ExitCode GameController::run()
 	this->exitCode = ExitCode::EXIT;
 	this->isEnd = false;
 
-	if (isGraphic)
-		this->switchView();
-	else {
-		_gameView->openWindow();
-		_gameView->syncMatrix(this->_gameModel->getMatrix());
-		this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
-		this->render();
+	delete _eventManager;
+	if (isGraphic) {
+		this->_eventManager = new GraphicEventManager();
+		this->_gameView = this->_viewHandler->getView<GameViewGraphic>("game_graphic");
 	}
+	else {
+		this->_eventManager = new CMDEventManager();
+		this->_gameView = this->_viewHandler->getView<GameViewCMD>("game_cmd");
+	}
+
+	this->isHandlingEvents = true;
+	_gameView->openWindow();
+	_gameView->syncMatrix(this->_gameModel->getMatrix());
+	this->_gameView->updateScore(this->_gameModel->getScore(), this->_gameModel->getBestScore());
+	this->render();
 
 	return this->gameLoop();
 }
@@ -224,8 +244,6 @@ void GameController::update()
 	dt = dt_clock.restart().asSeconds();
 
 	_eventManager->handleEvents(_gameModel, this, _gameView->getWindow());
-	//this->_eventManager->handleEvent(sf::Event(), _gameModel, this, _gameView->getWindow());
-	//this->_gameView->update(dt);
 	_eventManager->handleEvent(this->_gameView->update(dt), _gameModel, this, _gameView->getWindow());
 
 	if (isEnd)
@@ -245,17 +263,6 @@ void GameController::update()
 		this->_gameView->updateGameOver(dt);
 		this->render();
 	}
-
-	/*playground->update(dt);
-	if (!isGameOver) {
-		updateMousePositions();
-		updatePollEvents();
-		updateGameOver();
-	}
-	else {
-		updateMousePositions();
-		updatePollEvents();
-	}*/
 }
 
 const bool& GameController::getIsMoving()

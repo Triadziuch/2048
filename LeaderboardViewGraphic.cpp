@@ -42,6 +42,21 @@ void LeaderboardViewGraphic::render()
 	if (window == nullptr)
 		return;
 
+	/*if (cursor_type != sf::StandardCursor::NORMAL) {
+		cursor_type = sf::StandardCursor::NORMAL;
+		sf::StandardCursor Cursor(sf::StandardCursor::NORMAL);
+		Cursor.set(window->getSystemHandle());
+	}*/
+
 	window->clear(m_backgroundColor);
+
+	sf::Text text;
+	text.setFont(AssetManager::GetFont("assets/Fonts/ClearSans-Bold.ttf"));
+	text.setString("LEADERBOARD");
+	text.setCharacterSize(100);
+	text.setFillColor(sf::Color::White);
+	text.setPosition(windowSize.x / 2 - text.getGlobalBounds().width / 2, 50);
+	window->draw(text);
+
 	window->display();
 }

@@ -1,5 +1,8 @@
 #include "BaseViewGraphic.h"
 
+sf::RenderWindow* BaseViewGraphic::window = nullptr;
+sf::StandardCursor::TYPE BaseViewGraphic::cursor_type = sf::StandardCursor::TYPE::NORMAL;
+
 // = = = = = Initialization functions = = = = = //
 void BaseViewGraphic::initVariables()
 {

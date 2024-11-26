@@ -61,7 +61,7 @@ ControllerHandler::ControllerHandler(std::shared_ptr<ModelHandler> modelHandler,
 
     while (true) {
         ExitCode exitCode = this->_currentController->run();
-        system("cls");
+        //system("cls");
 
         if (exitCode == ExitCode::GAME) {
             this->changeRoute("-", "Game");

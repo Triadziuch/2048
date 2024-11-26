@@ -18,7 +18,6 @@ private:
 
 	// Game state Variables
 	bool isEnd = false;
-	bool isGraphic = false;
 	ExitCode exitCode = ExitCode::EXIT;
 	LeaderboardMode leaderboardMode = LeaderboardMode::VIEW;
 

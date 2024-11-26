@@ -249,10 +249,15 @@ sf::Event* GameViewGraphic::update(float dt)
 		if (window->pollEvent(ev)) {
 			if (ev.type == sf::Event::MouseButtonPressed && ev.mouseButton.button == sf::Mouse::Left) {
 				if (this->gui->getNewGameButton().contains(mouse_pos_view)) {
-					OutputDebugString(L"New game button pressed\n");
+					this->notify("new_game");
 				}
 				else if (this->gui->getLeaderboardButton().contains(mouse_pos_view)) {
-					OutputDebugString(L"Leaderboard button pressed\n");
+					if (cursor_type != sf::StandardCursor::NORMAL) {
+						cursor_type = sf::StandardCursor::NORMAL;
+						sf::StandardCursor Cursor(sf::StandardCursor::NORMAL);
+						Cursor.set(window->getSystemHandle());
+					}
+					this->notify("leaderboard");
 				}
 			}
 			else

@@ -287,7 +287,7 @@ void CMDEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, Lead
 
 	for (int key = 0; key <= 255; ++key) {
 		if (previousKeyState.find(key) != previousKeyState.end()) {
-			if (isKeyPressed(key) && !previousKeyState[key]) {
+			if (isKeyPressed(key) && !previousKeyState[key] && key != 'C') {
 				controller->close(ExitCode::GAME);
 				previousKeyState[key] = true;
 				return;

@@ -22,7 +22,6 @@ private:
 	float dt;
 
 	// Is Variables
-	bool isGraphic = true;
 	bool isMoving = false;
 	bool isSpawning = false;
 	bool isEnd = false;

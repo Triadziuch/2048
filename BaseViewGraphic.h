@@ -18,10 +18,10 @@ protected:
 	const unsigned int WINDOW_WIDTH = 1280;
 	const unsigned int WINDOW_HEIGHT = 720;
 	const bool VERTICAL_SYNC = true;
-	sf::StandardCursor::TYPE cursor_type = sf::StandardCursor::NORMAL;
+	static sf::StandardCursor::TYPE cursor_type;
 	sf::Vector2i mouse_pos_window;
 	sf::Vector2f mouse_pos_view;
-	sf::RenderWindow* window;
+	static sf::RenderWindow* window;
 
 	// Background variables
 	const sf::Color m_backgroundColor{ 250, 248, 239 };

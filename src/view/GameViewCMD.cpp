@@ -181,13 +181,6 @@ void GameViewCMD::updateContent()
 			hbox({
 				filler(),
 				vbox({
-					/*hbox({
-						vbox({}) | size(WIDTH, EQUAL, 9) | size(HEIGHT, EQUAL, 2),
-						vbox({}) | size(WIDTH, EQUAL, 14) | size(HEIGHT, EQUAL, 2),
-					}) | size(HEIGHT, EQUAL, 4),
-
-					filler(),*/
-					
 					hbox({
 						filler(),
 							vbox({
@@ -216,10 +209,10 @@ void GameViewCMD::updateContent()
 										text("L") | bold,
 										text(" - Show leaderboard") | hcenter
 									}),
-									hbox({
+									/*hbox({
 										text("C") | bold,
 										text(" - Switch to graphic mode") | hcenter
-									}),
+									}),*/
 									hbox({
 										text("R") | bold,
 										text(" - Reset game") | hcenter
@@ -231,13 +224,13 @@ void GameViewCMD::updateContent()
 								}) | hcenter,
 								filler(),
 
-								
+
 							}) | hcenter | vcenter | bold | size(WIDTH, EQUAL, 30),
 						filler(),
 
 
 					}) | hcenter | size(WIDTH, EQUAL, 35) | size(HEIGHT, EQUAL, 40),
-				
+
 				}) /*| border*/ | hcenter,
 				filler(),
 
@@ -284,7 +277,7 @@ void GameViewCMD::updateContent()
 
 					}) | size(HEIGHT, EQUAL, 4),
 				}) /*| border*/,
-				
+
 				filler(),
 				});
 		});

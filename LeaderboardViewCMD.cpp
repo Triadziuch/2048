@@ -61,7 +61,10 @@ void LeaderboardViewCMD::updateContent()
 				ftxui::filler(),
 				this->table_element,
 				ftxui::filler(),
-				text("") | bold | hcenter | size(HEIGHT, EQUAL, 1),
+				this->mode == LeaderboardMode::EDIT ?
+					text("") | size(HEIGHT, EQUAL, 1)
+				  : text("Press any key to continue...") | bold | hcenter | color(ftxui::Color::GrayDark) | size(HEIGHT, EQUAL, 1),
+
 				ftxui::filler(),
 			}),
 			ftxui::filler(),
@@ -160,6 +163,7 @@ void LeaderboardViewCMD::initRenderer()
 		this->notify("entered_name");
 		this->name = "";
 		this->name_input.reset();
+		std::this_thread::sleep_for(std::chrono::milliseconds(32));
 	}
 	else {
 		this->isRefreshing = true;
@@ -167,6 +171,7 @@ void LeaderboardViewCMD::initRenderer()
 			ftxui_thread = new std::thread([this]() {
 			this->renderFTXUI();
 				});
+		std::this_thread::sleep_for(std::chrono::milliseconds(16));
 	}
 }
 

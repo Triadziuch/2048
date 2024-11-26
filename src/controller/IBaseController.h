@@ -10,6 +10,7 @@
 class IBaseController {
 protected:
     bool isDebug{ false };
+    static bool isGraphic;
     void printDebug(const std::string& info);
 
 public:
