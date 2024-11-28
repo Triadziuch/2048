@@ -1,6 +1,15 @@
 #include "LeaderboardViewGraphic.h"
 
 
+void LeaderboardViewGraphic::initVariables()
+{
+	this->score = 0;
+	this->mode = LeaderboardMode::VIEW;
+	this->v_leaderboardEntries = nullptr;
+
+	this->gui = new LeaderboardViewGUI(windowSize);
+}
+
 LeaderboardViewGraphic::LeaderboardViewGraphic() : BaseViewGraphic()
 {
 	initAssets();
@@ -50,13 +59,7 @@ void LeaderboardViewGraphic::render()
 
 	window->clear(m_backgroundColor);
 
-	sf::Text text;
-	text.setFont(AssetManager::GetFont("assets/Fonts/ClearSans-Bold.ttf"));
-	text.setString("LEADERBOARD");
-	text.setCharacterSize(100);
-	text.setFillColor(sf::Color::White);
-	text.setPosition(windowSize.x / 2 - text.getGlobalBounds().width / 2, 50);
-	window->draw(text);
+	this->gui->render(*window);
 
 	window->display();
 }

@@ -1,11 +1,16 @@
 #pragma once
 #include "BaseLeaderboardView.h"
 #include "BaseViewGraphic.h"
+#include "LeaderboardViewGUI.h"
 
 class LeaderboardViewGraphic : public BaseViewGraphic, public BaseLeaderboardView {
 private:
+	// GUI
+	LeaderboardViewGUI* gui{};
+
+
 	// Initialization functions
-	void initVariables() {}
+	void initVariables();
 	void initAssets() {}
 	void initAnimations() {}
 

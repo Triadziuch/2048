@@ -1,5 +1,6 @@
 #pragma once
 #include "GameViewGUI.h"
+#include "Windows.h"
 
 void GameViewGUI::center_origin(sf::Sprite& sprite)
 {
@@ -162,6 +163,43 @@ void GameViewGUI::initText()
 
 	m_scoreText.setPosition(m_scoreHeaderText.getPosition().x, m_scoreHeaderText.getGlobalBounds().top + m_scoreHeaderText.getGlobalBounds().height + 15.f);
 	m_bestScoreText.setPosition(m_bestScoreHeaderText.getPosition().x, m_bestScoreHeaderText.getGlobalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height + 15.f);
+
+	std::wstring newGameTextPosition = std::to_wstring(m_newGameText.getPosition().x) + L" " + std::to_wstring(m_newGameText.getPosition().y);
+	OutputDebugString(L"New game text position: ");
+	OutputDebugString(newGameTextPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring leaderboardTextPosition = std::to_wstring(m_leaderboardText.getPosition().x) + L" " + std::to_wstring(m_leaderboardText.getPosition().y);
+	OutputDebugString(L"Leaderboard text position: ");
+	OutputDebugString(leaderboardTextPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring bestScoreHeaderTextPosition = std::to_wstring(m_bestScoreHeaderText.getPosition().x) + L" " + std::to_wstring(m_bestScoreHeaderText.getPosition().y);
+	OutputDebugString(L"Best score header text position: ");
+	OutputDebugString(bestScoreHeaderTextPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring scoreHeaderTextPosition = std::to_wstring(m_scoreHeaderText.getPosition().x) + L" " + std::to_wstring(m_scoreHeaderText.getPosition().y);
+	OutputDebugString(L"Score header text position: ");
+	OutputDebugString(scoreHeaderTextPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring titleTextPosition = std::to_wstring(m_titleText.getPosition().x) + L" " + std::to_wstring(m_titleText.getPosition().y);
+	OutputDebugString(L"Title text position: ");
+	OutputDebugString(titleTextPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring gameOverTextPosition = std::to_wstring(m_gameOverText.getPosition().x) + L" " + std::to_wstring(m_gameOverText.getPosition().y);
+	OutputDebugString(L"Game over text position: ");
+	OutputDebugString(gameOverTextPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring gameOverPressKeyTextPosition = std::to_wstring(m_gameOverPressKeyText.getPosition().x) + L" " + std::to_wstring(m_gameOverPressKeyText.getPosition().y);
+	OutputDebugString(L"Game over press key text position: ");
+	OutputDebugString(gameOverPressKeyTextPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring scoreTextPosition = std::to_wstring(m_scoreText.getPosition().x) + L" " + std::to_wstring(m_scoreText.getPosition().y);
+	OutputDebugString(L"Score text position: ");
+	OutputDebugString(scoreTextPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring bestScoreTextPosition = std::to_wstring(m_bestScoreText.getPosition().x) + L" " + std::to_wstring(m_bestScoreText.getPosition().y);
+	OutputDebugString(L"Best score text position: ");
+	OutputDebugString(bestScoreTextPosition.c_str());
+	OutputDebugString(L"\n");
 }
 
 void GameViewGUI::initSprites()
@@ -188,6 +226,23 @@ void GameViewGUI::initSprites()
 	m_newGameButtonSprite.setPosition(m_leaderboardButtonSprite.getPosition().x + (m_leaderboardButtonSprite.getGlobalBounds().width - m_newGameButtonSprite.getGlobalBounds().width), m_leaderboardButtonSprite.getGlobalBounds().top + m_leaderboardButtonSprite.getGlobalBounds().height + m_leaderboardButtonSprite.getGlobalBounds().height / 4.f);
 	m_bestScoreButtonSprite.setPosition(m_leaderboardButtonSprite.getPosition().x + m_leaderboardButtonSprite.getGlobalBounds().width - m_bestScoreButtonSprite.getGlobalBounds().width, m_playgroundRect.top - m_leaderboardButtonSprite.getGlobalBounds().height / 4.f - m_bestScoreButtonSprite.getGlobalBounds().height);
 	m_scoreButtonSprite.setPosition(m_bestScoreButtonSprite.getPosition().x - m_scoreButtonSprite.getGlobalBounds().width - 10.f, m_bestScoreButtonSprite.getPosition().y);
+
+	std::wstring leadebroardButtonPosition = std::to_wstring(m_leaderboardButtonSprite.getPosition().x) + L" " + std::to_wstring(m_leaderboardButtonSprite.getPosition().y);
+	OutputDebugString(L"Leaderboard button position: ");
+	OutputDebugString(leadebroardButtonPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring newGameButtonPosition = std::to_wstring(m_newGameButtonSprite.getPosition().x) + L" " + std::to_wstring(m_newGameButtonSprite.getPosition().y);
+	OutputDebugString(L"New game button position: ");
+	OutputDebugString(newGameButtonPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring bestScoreButtonPosition = std::to_wstring(m_bestScoreButtonSprite.getPosition().x) + L" " + std::to_wstring(m_bestScoreButtonSprite.getPosition().y);
+	OutputDebugString(L"Best score button position: ");
+	OutputDebugString(bestScoreButtonPosition.c_str());
+	OutputDebugString(L"\n");
+	std::wstring scoreButtonPosition = std::to_wstring(m_scoreButtonSprite.getPosition().x) + L" " + std::to_wstring(m_scoreButtonSprite.getPosition().y);
+	OutputDebugString(L"Score button position: ");
+	OutputDebugString(scoreButtonPosition.c_str());
+	OutputDebugString(L"\n");
 }
 
 
