@@ -177,6 +177,9 @@
     <ClInclude Include="LeaderboardViewGUI.h">
       <Filter>View\LeaderboardView</Filter>
     </ClInclude>
+    <ClInclude Include="LeaderboardEntry.h">
+      <Filter>Pliki nagłówków</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">

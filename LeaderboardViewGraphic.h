@@ -2,11 +2,14 @@
 #include "BaseLeaderboardView.h"
 #include "BaseViewGraphic.h"
 #include "LeaderboardViewGUI.h"
+#include <ctime>
+#include <iomanip>
 
 class LeaderboardViewGraphic : public BaseViewGraphic, public BaseLeaderboardView {
 private:
 	// GUI
 	LeaderboardViewGUI* gui{};
+	std::string name{};
 
 
 	// Initialization functions
@@ -17,6 +20,8 @@ private:
 public:
 	LeaderboardViewGraphic();
 	~LeaderboardViewGraphic();
+
+	sf::Event* update(float dt);
 
 	void openWindow() override { BaseViewGraphic::openWindow(); }
 	void closeWindow() override { BaseViewGraphic::closeWindow(); }

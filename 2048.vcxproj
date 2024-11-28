@@ -27,6 +27,7 @@
     <ClInclude Include="GameViewGUI.h" />
     <ClInclude Include="IEventManager.h" />
     <ClInclude Include="LeaderboardController.h" />
+    <ClInclude Include="LeaderboardEntry.h" />
     <ClInclude Include="LeaderboardMode.h" />
     <ClInclude Include="LeaderboardModel.h" />
     <ClInclude Include="LeaderboardViewCMD.h" />

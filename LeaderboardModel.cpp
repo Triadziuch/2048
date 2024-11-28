@@ -1,6 +1,7 @@
 #include "LeaderboardModel.h"
 #include "LeaderboardMode.h"
 #include "src/model/GameModel.h"
+#include "LeaderboardEntry.h"
 
 void LeaderboardModel::initLeaderboard()
 {

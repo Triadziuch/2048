@@ -53,29 +53,28 @@ void LeaderboardController::setViewHandler(std::shared_ptr<ViewHandler> viewHand
 	// Graphic View
 	this->_leaderboardView = this->_viewHandler->getView<BaseLeaderboardView>("leaderboard_graphic");
 	this->_leaderboardView->connect("entered_name", [&]() {
+			this->_leaderboardModel->updateLeaderboard(this->_leaderboardView->getEntry());
+			this->_leaderboardModel->setMode(LeaderboardMode::VIEW);
+			this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
+			this->leaderboardMode = LeaderboardMode::VIEW;
+			this->_leaderboardView->setMode(this->leaderboardMode);
+			this->_leaderboardView->render();
 		return false;
 		});
 
-	this->_leaderboardView->connect("finished_move", [&]() {
-		return false;
-		});
-
-	this->_leaderboardView->connect("started_spawning", [&]() {
-		return false;
-		});
-
-	this->_leaderboardView->connect("finished_spawning", [&]() {
+	this->_leaderboardView->connect("return", [&]() {
+			this->close(ExitCode::GAME);
 		return false;
 		});
 
 	// CMD View
 	this->_leaderboardView = this->_viewHandler->getView<BaseLeaderboardView>("leaderboard_cmd");
 	this->_leaderboardView->connect("entered_name", [&]() {
-		this->_leaderboardModel->updateLeaderboard(this->_leaderboardView->getEntry());
-		this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
-		this->leaderboardMode = LeaderboardMode::VIEW;
-		this->_leaderboardModel->setMode(this->leaderboardMode);
-		this->_leaderboardView->render();
+			this->_leaderboardModel->updateLeaderboard(this->_leaderboardView->getEntry());
+			this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
+			this->leaderboardMode = LeaderboardMode::VIEW;
+			this->_leaderboardModel->setMode(this->leaderboardMode);
+			this->_leaderboardView->render();
 		return false;
 		});
 
@@ -135,7 +134,6 @@ const ExitCode LeaderboardController::run()
 		this->_eventManager = new CMDEventManager();
 	}
 		
-
 	this->_leaderboardView->setLeaderboardEntries(this->_leaderboardModel->getLeaderboardEntries());
 	this->_leaderboardView->setMode(this->_leaderboardModel->getMode());
 	this->_leaderboardView->setScore(this->_leaderboardModel->getScore());
@@ -165,7 +163,8 @@ const ExitCode LeaderboardController::gameLoop()
 
 void LeaderboardController::update()
 {
-	_eventManager->handleEvents(_leaderboardModel, this, _leaderboardView->getWindow());
+	//_eventManager->handleEvents(_leaderboardModel, this, _leaderboardView->getWindow());
+	_eventManager->handleEvent(this->_leaderboardView->update(0.f), _leaderboardModel, this, _leaderboardView->getWindow());
 
 	this->render();
 

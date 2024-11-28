@@ -1,5 +1,5 @@
 #pragma once
-#include "src/model/BaseModel.h"  // Za³ó¿my, ¿e BaseModel jest klas¹ bazow¹
+#include "src/model/BaseModel.h"
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -7,12 +7,6 @@
 class GameModel;
 struct LeaderboardEntry;
 enum class LeaderboardMode;
-
-struct LeaderboardEntry {
-	std::string name{};
-	int score{};
-	std::string date{};
-};
 
 class LeaderboardModel : public BaseModel {
 private:

@@ -107,18 +107,6 @@ std::unordered_map<int, bool> IEventManager::previousKeyState = {
 	{ '~', false }
 };
 
-void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
-{
-	auto isKeyPressed = [](int key) -> bool {
-		return (GetAsyncKeyState(key) & 0x8000) != 0;
-		};
-
-	sf::Event ev;
-
-	if (window->pollEvent(ev)) 
-		this->handleEvent(&ev, model, controller, window);
-}
-
 void GraphicEventManager::handleEvent(sf::Event* event, std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
 {
 	if (event == nullptr)
@@ -130,8 +118,11 @@ void GraphicEventManager::handleEvent(sf::Event* event, std::shared_ptr<GameMode
 
 	if (event->type == sf::Event::KeyPressed && controller->getIsHandlingEvents()) {
 
-		if (controller->getIsGameOver())
+		if (controller->getIsGameOver()) {
 			controller->resetGame();
+			controller->displayLeaderboard();
+		}
+			
 		else {
 			if (!controller->getIsMoving())
 				model->move(event->key.code);
@@ -144,11 +135,40 @@ void GraphicEventManager::handleEvent(sf::Event* event, std::shared_ptr<GameMode
 	}
 }
 
-void GraphicEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, LeaderboardController* controller, sf::RenderWindow* window) const
+void GraphicEventManager::handleEvents(std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
 {
 	auto isKeyPressed = [](int key) -> bool {
 		return (GetAsyncKeyState(key) & 0x8000) != 0;
 		};
+
+	sf::Event ev;
+
+	if (window->pollEvent(ev)) 
+		this->handleEvent(&ev, model, controller, window);
+}
+
+void GraphicEventManager::handleEvent(sf::Event* event, std::shared_ptr<LeaderboardModel> model, LeaderboardController* controller, sf::RenderWindow* window) const
+{
+	if (event == nullptr)
+		return;
+
+	if ((event->type == sf::Event::KeyPressed && event->key.code == sf::Keyboard::Escape) || (event->type == sf::Event::Closed)) 
+		controller->close();
+
+	if (model->getMode() != LeaderboardMode::EDIT)
+		if (event->type == sf::Event::KeyPressed) {
+			if (event->key.code == sf::Keyboard::C) {
+				previousKeyState['C'] = true;
+				controller->switchView();
+			}
+		}
+	
+}
+
+void GraphicEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, LeaderboardController* controller, sf::RenderWindow* window) const
+{
+	if (model->getMode() == LeaderboardMode::EDIT)
+		return;
 
 	sf::Event ev;
 
@@ -158,7 +178,7 @@ void GraphicEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, 
 			controller->close();
 		}
 
-		if (ev.type == sf::Event::KeyPressed) {
+		if (ev.type == sf::Event::KeyPressed && model->getMode() == LeaderboardMode::VIEW) {
 
 			if (ev.key.code == sf::Keyboard::C) {
 				previousKeyState['C'] = true;
@@ -167,6 +187,11 @@ void GraphicEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, 
 		}
 	}
 }
+
+void CMDEventManager::handleEvent(sf::Event* event, std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
+{
+}
+
 
 void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
 {
@@ -255,6 +280,11 @@ void CMDEventManager::handleEvents(std::shared_ptr<GameModel> model, GameControl
 		previousKeyState[VK_RETURN] = false;
 }
 
+void CMDEventManager::handleEvent(sf::Event* event, std::shared_ptr<LeaderboardModel> model, LeaderboardController* controller, sf::RenderWindow* window) const
+{
+	this->handleEvents(model, controller, window);
+}
+
 void CMDEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, LeaderboardController* controller, sf::RenderWindow* window) const
 {
 	auto isKeyPressed = [](int key) -> bool {
@@ -297,8 +327,4 @@ void CMDEventManager::handleEvents(std::shared_ptr<LeaderboardModel> model, Lead
 			}
 		}
 	}
-}
-
-void CMDEventManager::handleEvent(sf::Event* event, std::shared_ptr<GameModel> model, GameController* controller, sf::RenderWindow* window) const
-{
 }

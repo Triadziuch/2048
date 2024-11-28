@@ -1,6 +1,7 @@
 #pragma once
 #include "BaseLeaderboardView.h"
 #include "BaseViewCMD.h"
+#include "LeaderboardEntry.h"
 #include <ctime>
 
 class LeaderboardViewCMD : public BaseViewCMD, public BaseLeaderboardView {
@@ -24,6 +25,7 @@ private:
 public:
 	LeaderboardViewCMD();
 
+	sf::Event* update(float dt);
 
 	void openWindow() override { BaseViewCMD::openWindow(); }
 	void closeWindow() override { BaseViewCMD::closeWindow(); }

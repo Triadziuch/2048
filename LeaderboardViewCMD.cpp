@@ -155,6 +155,11 @@ LeaderboardViewCMD::LeaderboardViewCMD() : BaseViewCMD()
 		};
 }
 
+sf::Event* LeaderboardViewCMD::update(float dt)
+{
+	return nullptr;
+}
+
 void LeaderboardViewCMD::initRenderer()
 {
 	if (this->mode == LeaderboardMode::EDIT) {
@@ -201,6 +206,8 @@ LeaderboardEntry LeaderboardViewCMD::getEntry()
 		throw std::runtime_error("Nie uda³o siê pobraæ lokalnej daty i czasu");
 	std::ostringstream dateStream;
 	dateStream << std::put_time(&tm, "%d.%m.%Y");
+
+	this->name.erase(std::remove_if(this->name.begin(), this->name.end(), [](char c) { return !std::isalnum(c); }), this->name.end());
 
 	return LeaderboardEntry{ this->name, this->score, dateStream.str() };
 }
