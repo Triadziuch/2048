@@ -5,9 +5,9 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "src/AssetManager.h"
-#include "Leaderboard.h"
-#include "LeaderboardMode.h"
+#include "../AssetManager.h"
+#include "../Leaderboard.h"
+#include "../LeaderboardMode.h"
 
 class LeaderboardViewGUI {
 private:

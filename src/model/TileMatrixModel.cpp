@@ -1,7 +1,6 @@
 #pragma once
 #include "TileMatrixModel.h"
 
-
 // = = = = = Utility functions = = = = = // 
 int TileMatrixModel::findID(int type) const
 {

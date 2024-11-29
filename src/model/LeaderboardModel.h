@@ -1,5 +1,5 @@
 #pragma once
-#include "src/model/BaseModel.h"
+#include "BaseModel.h"
 #include <string>
 #include <fstream>
 #include <sstream>

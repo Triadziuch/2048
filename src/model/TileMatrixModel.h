@@ -1,10 +1,10 @@
 #pragma once
 #include <iostream>
-#include "src/MovementManager/MovementManager.h"
+#include "../MovementManager/MovementManager.h"
 #include "TileModel.h"
-#include "src/AssetManager.h"
-#include "src/event/EventObserver.h"
-#include "src/model/BaseModel.h"
+#include "../AssetManager.h"
+#include "../event/EventObserver.h"
+#include "../model/BaseModel.h"
 
 struct MoveInstruction {
 	sf::Vector2i m_newPos, m_oldPos;

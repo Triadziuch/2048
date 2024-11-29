@@ -1,5 +1,5 @@
 #pragma once
-#include "src/view/BaseView.h"
+#include "BaseView.h"
 #include "SFML/Graphics.hpp"
 #include <thread>
 #include <future>

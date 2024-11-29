@@ -5,7 +5,7 @@
 #include <string>
 #include <sstream>
 #include <fstream>
-#include "src/AssetManager.h"
+#include "../AssetManager.h"
 
 class GameViewGUI {
 private:

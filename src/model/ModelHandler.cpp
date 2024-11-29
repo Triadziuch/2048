@@ -1,6 +1,6 @@
 #include "ModelHandler.h"
 #include "GameModel.h"
-#include "../LeaderboardModel.h"
+#include "LeaderboardModel.h"
 
 ModelHandler::ModelHandler() {
     this->_data.insert({ "leaderboard", std::shared_ptr<BaseModel>(new LeaderboardModel()) });

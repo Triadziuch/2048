@@ -1,5 +1,5 @@
 #pragma once
-#include "src/view/BaseView.h"
+#include "BaseView.h"
 
 class BaseGameView : public virtual BaseView {
 protected:

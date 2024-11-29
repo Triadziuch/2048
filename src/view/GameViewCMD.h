@@ -1,8 +1,8 @@
 #pragma once
 
 #include "../model/GameModel.h"
-#include "../BaseGameView.h"
-#include "../BaseViewCMD.h"
+#include "BaseGameView.h"
+#include "BaseViewCMD.h"
 #include "../TileMatrix.h"
 
 class GameViewCMD : public BaseViewCMD, public BaseGameView {

@@ -1,4 +1,4 @@
 #pragma once
-#include "src/event/EventObserver.h"
+#include "../event/EventObserver.h"
 
 class CoreView : public EventObserver {};

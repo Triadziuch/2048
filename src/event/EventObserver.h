@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include "IEventObserver.h"
 #include "../pattern/Observator.hpp"

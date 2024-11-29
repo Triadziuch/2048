@@ -2,7 +2,7 @@
 
 #include <string>
 #include <memory>
-#include "../CoreView.h"
+#include "CoreView.h"
 #include "../DataHandler.hpp"
 
 class ViewHandler : public DataHandler<std::string, std::shared_ptr<CoreView>> {

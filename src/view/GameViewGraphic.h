@@ -1,10 +1,10 @@
 #pragma once
 
 #include "../model/GameModel.h"
-#include "../BaseGameView.h"
-#include "../BaseViewGraphic.h"
+#include "BaseGameView.h"
+#include "BaseViewGraphic.h"
 #include "../TileMatrix.h"
-#include "../GameViewGUI.h"
+#include "GameViewGUI.h"
 
 
 class GameViewGraphic : public BaseViewGraphic, public BaseGameView {

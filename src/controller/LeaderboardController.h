@@ -1,11 +1,9 @@
 #pragma once
-
-#include "src/controller/IBaseController.h"
-#include "LeaderboardViewCMD.h"
-#include "LeaderboardViewGraphic.h"
-#include "src/view/ViewHandler.h"
-#include "IEventManager.h"
-
+#include "IBaseController.h"
+#include "../view/LeaderboardViewCMD.h"
+#include "../view/LeaderboardViewGraphic.h"
+#include "../view/ViewHandler.h"
+#include "../IEventManager.h"
 
 class LeaderboardController : public IBaseController {
 private:

@@ -3,7 +3,7 @@
 #include <functional>
 #include <list>
 #include "BaseModel.h"
-#include "../TileMatrixModel.h"
+#include "TileMatrixModel.h"
 
 class LeaderboardModel;
 enum class LeaderboardMode;

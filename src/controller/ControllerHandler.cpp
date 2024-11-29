@@ -1,5 +1,5 @@
 #include "GameController.h"
-#include "../../LeaderboardController.h"
+#include "LeaderboardController.h"
 #include "ControllerFactory.h"
 #include "ControllerHandler.h"
 

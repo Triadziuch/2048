@@ -1,7 +1,7 @@
 #pragma once
-#include "src/view/BaseView.h"
-#include "../LeaderboardModel.h"
-#include "LeaderboardMode.h"
+#include "BaseView.h"
+#include "../model/LeaderboardModel.h"
+#include "../LeaderboardMode.h"
 
 class BaseLeaderboardView : public virtual BaseView
 {

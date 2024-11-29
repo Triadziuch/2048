@@ -6,9 +6,6 @@ void GameController::initVariables()
 	srand(static_cast<unsigned>(time(nullptr)));
 	this->isGraphic = true;
 	this->_eventManager = new GraphicEventManager();
-
-	/*HWND hWnd = GetConsoleWindow();
-	ShowWindow(hWnd, SW_HIDE);*/
 }
 
 

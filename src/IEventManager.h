@@ -5,7 +5,6 @@
 #include <unordered_map>
 #include <conio.h>
 
-
 class GameModel;
 class ViewModel;
 class LeaderboardModel;

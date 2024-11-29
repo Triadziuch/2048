@@ -1,9 +1,9 @@
 #pragma once
-#include "src/view/BaseView.h"
+#include "BaseView.h"
 #include "SFML/Graphics.hpp"
-#include "src/AssetManager.h"
-#include "src/StandardCursor.h"
-#include "src/MovementManager/MovementManager.h"
+#include "../AssetManager.h"
+#include "../StandardCursor.h"
+#include "../MovementManager/MovementManager.h"
 
 class BaseViewGraphic : public virtual BaseView
 {

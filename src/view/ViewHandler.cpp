@@ -1,8 +1,8 @@
 #include "ViewHandler.h"
 #include "GameViewGraphic.h"
 #include "GameViewCMD.h"
-#include "../LeaderboardViewCMD.h"
-#include "../LeaderboardViewGraphic.h"
+#include "LeaderboardViewCMD.h"
+#include "LeaderboardViewGraphic.h"
 
 ViewHandler::ViewHandler() {
     this->_data = {

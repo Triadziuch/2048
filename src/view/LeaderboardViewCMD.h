@@ -1,7 +1,7 @@
 #pragma once
 #include "BaseLeaderboardView.h"
 #include "BaseViewCMD.h"
-#include "LeaderboardEntry.h"
+#include "../LeaderboardEntry.h"
 #include <ctime>
 
 class LeaderboardViewCMD : public BaseViewCMD, public BaseLeaderboardView {

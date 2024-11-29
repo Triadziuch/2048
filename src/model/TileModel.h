@@ -1,6 +1,5 @@
 #pragma once
-#include "src/MovementManager/MovementManager.h"
-
+#include "../MovementManager/MovementManager.h"
 
 class TileBase {
 protected:

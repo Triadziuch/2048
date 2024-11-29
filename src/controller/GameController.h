@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include "../view/GameViewGraphic.h"
 #include "../view/GameViewCMD.h"

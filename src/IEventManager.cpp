@@ -1,8 +1,8 @@
 #include "IEventManager.h"
-#include "src/model/GameModel.h"
-#include "src/controller/GameController.h"
-#include "LeaderboardModel.h"
-#include "LeaderboardController.h"
+#include "model/GameModel.h"
+#include "model/LeaderboardModel.h"
+#include "controller/GameController.h"
+#include "controller/LeaderboardController.h"
 
 std::unordered_map<int, bool> IEventManager::previousKeyState = {
 	{ VK_UP, false },

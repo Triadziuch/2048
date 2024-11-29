@@ -1,5 +1,5 @@
 #include "GameModel.h"
-#include "../LeaderboardModel.h"
+#include "LeaderboardModel.h"
 #include "../LeaderboardMode.h"
 
 

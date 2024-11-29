@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <SFML/Graphics.hpp>
-#include "src/AssetManager.h"
+#include "AssetManager.h"
 #include "LeaderboardEntry.h"
 
 class LeaderboardCell {
