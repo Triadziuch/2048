@@ -26,6 +26,7 @@
     <ClInclude Include="ExitCode.h" />
     <ClInclude Include="GameViewGUI.h" />
     <ClInclude Include="IEventManager.h" />
+    <ClInclude Include="Leaderboard.h" />
     <ClInclude Include="LeaderboardController.h" />
     <ClInclude Include="LeaderboardEntry.h" />
     <ClInclude Include="LeaderboardMode.h" />
@@ -72,6 +73,7 @@
     <ClCompile Include="BaseViewGraphic.cpp" />
     <ClCompile Include="GameViewGUI.cpp" />
     <ClCompile Include="IEventManager.cpp" />
+    <ClCompile Include="Leaderboard.cpp" />
     <ClCompile Include="LeaderboardController.cpp" />
     <ClCompile Include="LeaderboardModel.cpp" />
     <ClCompile Include="LeaderboardViewCMD.cpp" />

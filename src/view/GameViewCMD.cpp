@@ -3,6 +3,7 @@
 
 using namespace ftxui;
 
+// = = = = = Private functions  = = = = = //
 Component GameViewCMD::initGrid()
 {
 	std::vector<Component> rows;
@@ -43,29 +44,8 @@ Component GameViewCMD::initGrid()
 			rows.push_back(Container::Horizontal(cols));
 		}
 	}
-	
+
 	return Container::Vertical(rows);
-}
-
-void GameViewCMD::renderFTXUI()
-{
-	ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::Fullscreen();
-	this->screen = &screen;
-
-	update_content_mutex.lock();
-	Loop loop(&screen, renderer);
-	update_content_mutex.unlock();
-
-	std::unique_lock<std::mutex> lock(mtx);
-
-	while (isRefreshing) {
-		cv.wait(lock, [this] { return needRefreshing; });
-
-		update_content_mutex.lock();
-		loop.RunOnce();
-		this->needRefreshing = false;
-		update_content_mutex.unlock();
-	}
 }
 
 int GameViewCMD::getCell(int row, int col) const
@@ -167,8 +147,28 @@ std::string GameViewCMD::displayCell(int row, int col) const
 		return "     " + std::to_string(value);
 }
 
-GameViewCMD::GameViewCMD() : BaseViewCMD() {
-	this->updateContent();
+
+
+// = = = = = FTXUI Rendering functions  = = = = = //
+void GameViewCMD::renderFTXUI()
+{
+	ftxui::ScreenInteractive screen = ftxui::ScreenInteractive::Fullscreen();
+	this->screen = &screen;
+
+	update_content_mutex.lock();
+	Loop loop(&screen, renderer);
+	update_content_mutex.unlock();
+
+	std::unique_lock<std::mutex> lock(mtx);
+
+	while (isRefreshing) {
+		cv.wait(lock, [this] { return needRefreshing; });
+
+		update_content_mutex.lock();
+		loop.RunOnce();
+		this->needRefreshing = false;
+		update_content_mutex.unlock();
+	}
 }
 
 void GameViewCMD::updateContent()
@@ -285,6 +285,38 @@ void GameViewCMD::updateContent()
 	update_content_mutex.unlock();
 }
 
+
+// = = = = = Constructors / Destructors  = = = = = //
+GameViewCMD::GameViewCMD() : BaseViewCMD() 
+{
+	this->updateContent();
+}
+
+GameViewCMD::~GameViewCMD()
+{
+	this->deleteRenderer();
+}
+
+
+// = = = = = Inherited public functions  = = = = = //
+void GameViewCMD::render()
+{
+	this->initRenderer();
+	this->updateContent();
+	std::this_thread::sleep_for(std::chrono::milliseconds(4));
+	this->refreshScreen();
+}
+
+void GameViewCMD::reset()
+{
+	this->m_timeGameOver = 0.f;
+	this->m_gameOverCycle = 0;
+	this->isDesaturated = false;
+	this->isGameOver = false;
+	this->isGameOverAnimation = false;
+}
+
+// = = = = = Game view functions  = = = = = //
 void GameViewCMD::syncMatrix(TileBase* const(&matrix)[4][4])
 {
 	this->m_matrix = matrix;
@@ -312,6 +344,8 @@ void GameViewCMD::endGameOver()
 	this->refreshScreen();
 }
 
+
+// = = = = = Update functions  = = = = = //
 sf::Event* GameViewCMD::update(float dt)
 {
 	return nullptr;
@@ -335,23 +369,6 @@ void GameViewCMD::updateGameOver(float dt)
 		if (m_gameOverCycle >= m_gameOverCyclesMax)
 			this->isGameOverAnimation = false;
 	}	
-}
-
-void GameViewCMD::render()
-{
-	this->initRenderer();
-	this->updateContent();
-	std::this_thread::sleep_for(std::chrono::milliseconds(4));
-	this->refreshScreen();
-}
-
-void GameViewCMD::reset()
-{
-	this->m_timeGameOver = 0.f;
-	this->m_gameOverCycle = 0;
-	this->isDesaturated = false;
-	this->isGameOver = false;
-	this->isGameOverAnimation = false;
 }
 
 void GameViewCMD::updateScore(const int& score, const int& bestScore)

@@ -1,67 +1,7 @@
 #pragma once
 #include "LeaderboardViewGUI.h"
 
-void LeaderboardViewGUI::center_origin(sf::Sprite& sprite)
-{
-	sprite.setOrigin(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width / 2.f,
-		sprite.getGlobalBounds().top + sprite.getGlobalBounds().height / 2.f);
-}
-
-void LeaderboardViewGUI::justifyHorizontal(const sf::FloatRect& button, sf::Text& text)
-{
-	text.setOrigin(0.f, 0.f);
-	text.setPosition(button.left + (button.width - text.getGlobalBounds().width) / 2.f, text.getPosition().y);
-}
-
-LeaderboardViewGUI::LeaderboardViewGUI(sf::Vector2f windowSize) : m_windowSize(windowSize)
-{
-	initSprites();
-	initText();
-}
-
-void LeaderboardViewGUI::setMode(LeaderboardMode mode)
-{
-	this->mode = mode;
-	if (this->mode == LeaderboardMode::VIEW) {
-		m_congratulationsText.setString(m_congratulationsString);
-		m_congratulationsText.setOrigin((int)(m_congratulationsText.getLocalBounds().left + m_congratulationsText.getGlobalBounds().width / 2.f), (int)(m_congratulationsText.getLocalBounds().top + m_congratulationsText.getGlobalBounds().height / 2.f));
-		m_congratulationsText.setPosition((int)(m_windowSize.x / 2.f), (int)(m_windowSize.y / 2.f));
-	}
-}
-
-void LeaderboardViewGUI::setScore(int score)
-{
-	m_score = score;
-
-	const float old_width = m_scoreText.getGlobalBounds().width;
-	m_scoreText.setString(std::to_string(m_score));
-	const float new_width = m_scoreText.getGlobalBounds().width;
-
-	if (old_width != new_width)
-		m_scoreText.move((old_width - new_width) / 2.f, 0.f);
-}
-
-void LeaderboardViewGUI::setBestScore(int value)
-{
-	this->m_bestScore = value;
-	m_bestScoreText.setString(std::to_string(m_bestScore));
-	m_bestScoreText.setOrigin(m_bestScoreText.getLocalBounds().left + m_bestScoreText.getGlobalBounds().width / 2.f, m_bestScoreText.getLocalBounds().top + m_bestScoreText.getGlobalBounds().height / 2.f);
-	m_bestScoreText.setPosition(m_bestScoreHeaderText.getPosition().x, m_bestScoreHeaderText.getGlobalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height + 15.f);
-}
-
-LeaderboardViewGUI::~LeaderboardViewGUI()
-{
-
-}
-
-void LeaderboardViewGUI::update()
-{
-	if (cursor_clock.getElapsedTime() >= sf::seconds(0.5f)) {
-		show_cursor = !show_cursor;
-		cursor_clock.restart();
-	}
-}
-
+// = = = = = Initialization functions  = = = = = //
 void LeaderboardViewGUI::initText()
 {
 	m_font = &AssetManager::GetFont("assets/Fonts/ClearSans-Bold.ttf");
@@ -148,22 +88,68 @@ void LeaderboardViewGUI::initSprites()
 }
 
 
-void LeaderboardViewGUI::addScore(int value_) {
-	m_score += value_;
 
-	float old_width = m_scoreText.getGlobalBounds().width;
+// = = = = = Utility functions  = = = = = //
+void LeaderboardViewGUI::center_origin(sf::Sprite& sprite)
+{
+	sprite.setOrigin(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width / 2.f,
+	                 sprite.getGlobalBounds().top + sprite.getGlobalBounds().height / 2.f);
+}
+
+void LeaderboardViewGUI::justifyHorizontal(const sf::FloatRect& button, sf::Text& text)
+{
+	text.setOrigin(0.f, 0.f);
+	text.setPosition(button.left + (button.width - text.getGlobalBounds().width) / 2.f, text.getPosition().y);
+}
+
+
+
+// = = = = = Constructors / Destructors  = = = = = //
+LeaderboardViewGUI::LeaderboardViewGUI(sf::Vector2f windowSize) : m_windowSize(windowSize)
+{
+	initSprites();
+	initText();
+}
+
+LeaderboardViewGUI::~LeaderboardViewGUI()
+{
+	if (m_leaderboard)
+		delete m_leaderboard;
+}
+
+
+
+// = = = = = Update functions  = = = = = //
+void LeaderboardViewGUI::update()
+{
+	if (cursor_clock.getElapsedTime() >= sf::seconds(0.5f)) {
+		show_cursor = !show_cursor;
+		cursor_clock.restart();
+	}
+}
+
+
+// = = = = = Mutators  = = = = = //
+void LeaderboardViewGUI::setMode(LeaderboardMode mode)
+{
+	this->mode = mode;
+	if (this->mode == LeaderboardMode::VIEW) {
+		m_congratulationsText.setString(m_congratulationsString);
+		m_congratulationsText.setOrigin((int)(m_congratulationsText.getLocalBounds().left + m_congratulationsText.getGlobalBounds().width / 2.f), (int)(m_congratulationsText.getLocalBounds().top + m_congratulationsText.getGlobalBounds().height / 2.f));
+		m_congratulationsText.setPosition((int)(m_windowSize.x / 2.f), (int)(m_windowSize.y / 2.f));
+	}
+}
+
+void LeaderboardViewGUI::setScore(int score)
+{
+	m_score = score;
+
+	const float old_width = m_scoreText.getGlobalBounds().width;
 	m_scoreText.setString(std::to_string(m_score));
-	float new_width = m_scoreText.getGlobalBounds().width;
+	const float new_width = m_scoreText.getGlobalBounds().width;
 
 	if (old_width != new_width)
 		m_scoreText.move((old_width - new_width) / 2.f, 0.f);
-
-	if (m_bestScore < m_score) {
-		m_bestScore = m_score;
-		m_bestScoreText.setString(std::to_string(m_bestScore));
-		justifyHorizontal(m_bestScoreButtonSprite.getGlobalBounds(), m_bestScoreText);
-		m_bestScoreText.setPosition(m_bestScoreText.getPosition().x, m_scoreText.getPosition().y - m_scoreText.getOrigin().y);
-	}
 }
 
 void LeaderboardViewGUI::setName(std::string name)
@@ -185,6 +171,22 @@ void LeaderboardViewGUI::setLeaderboard(std::vector<LeaderboardEntry*> entries)
 	this->m_bestScoreText.setPosition(m_bestScoreHeaderText.getPosition().x, m_bestScoreHeaderText.getGlobalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height + 15.f);
 }
 
+
+
+// = = = = = Accessors  = = = = = //
+sf::FloatRect LeaderboardViewGUI::getReturnButton()
+{
+	return m_returnButtonSprite.getGlobalBounds();
+}
+
+sf::FloatRect LeaderboardViewGUI::getEnteredNameRect()
+{
+	return m_congratulationsText.getGlobalBounds();
+}
+
+
+
+// = = = = = Render functions  = = = = = //
 void LeaderboardViewGUI::render(sf::RenderTarget& target)
 {
 	if (mode == LeaderboardMode::VIEW) {

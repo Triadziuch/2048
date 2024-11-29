@@ -1,6 +1,6 @@
 #include "LeaderboardViewGraphic.h"
 
-
+// = = = = = Initialization functions = = = = = //
 void LeaderboardViewGraphic::initVariables()
 {
 	this->score = 0;
@@ -9,6 +9,9 @@ void LeaderboardViewGraphic::initVariables()
 	this->gui = new LeaderboardViewGUI(windowSize);
 }
 
+
+
+// = = = = = Constructors / Destructors = = = = = //
 LeaderboardViewGraphic::LeaderboardViewGraphic() : BaseViewGraphic()
 {
 	initAssets();
@@ -18,8 +21,12 @@ LeaderboardViewGraphic::LeaderboardViewGraphic() : BaseViewGraphic()
 
 LeaderboardViewGraphic::~LeaderboardViewGraphic()
 {
+	delete gui;
 }
 
+
+
+// = = = = = Update functions = = = = = //
 sf::Event* LeaderboardViewGraphic::update(float dt)
 {
 	if (this->window == nullptr)
@@ -81,6 +88,19 @@ sf::Event* LeaderboardViewGraphic::update(float dt)
 
 
 
+// = = = = = Accessors / Mutators = = = = = //
+LeaderboardEntry LeaderboardViewGraphic::getEntry()
+{
+	std::time_t t = std::time(nullptr);
+	std::tm tm{};
+	if (localtime_s(&tm, &t) != 0)
+		throw std::runtime_error("Nie uda³o siê pobraæ lokalnej daty i czasu");
+	std::ostringstream dateStream;
+	dateStream << std::put_time(&tm, "%d.%m.%Y");
+
+	return LeaderboardEntry{ this->name, this->score, dateStream.str() };
+}
+
 void LeaderboardViewGraphic::setLeaderboardEntries(std::vector<LeaderboardEntry*>& v_leaderboardEntries)
 {
 	this->v_leaderboardEntries = &v_leaderboardEntries;
@@ -100,33 +120,15 @@ void LeaderboardViewGraphic::setMode(LeaderboardMode mode)
 	this->gui->setMode(mode);
 }
 
-LeaderboardEntry LeaderboardViewGraphic::getEntry()
-{
-	std::time_t t = std::time(nullptr);
-	std::tm tm{};
-	if (localtime_s(&tm, &t) != 0)
-		throw std::runtime_error("Nie uda³o siê pobraæ lokalnej daty i czasu");
-	std::ostringstream dateStream;
-	dateStream << std::put_time(&tm, "%d.%m.%Y");
-
-	return LeaderboardEntry{ this->name, this->score, dateStream.str() };
-}
 
 
+// = = = = = Render functions = = = = = //
 void LeaderboardViewGraphic::render()
 {
 	if (window == nullptr)
 		return;
 
-	/*if (cursor_type != sf::StandardCursor::NORMAL) {
-		cursor_type = sf::StandardCursor::NORMAL;
-		sf::StandardCursor Cursor(sf::StandardCursor::NORMAL);
-		Cursor.set(window->getSystemHandle());
-	}*/
-
 	window->clear(m_backgroundColor);
-
 	this->gui->render(*window);
-
 	window->display();
 }

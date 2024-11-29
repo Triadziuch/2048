@@ -6,6 +6,7 @@
 
 class LeaderboardViewCMD : public BaseViewCMD, public BaseLeaderboardView {
 private:
+	// Leaderboard values
 	std::vector< std::vector< std::string >> values;
 
 	// FTXUI Leaderboard Variables
@@ -13,9 +14,7 @@ private:
 	ftxui::Table* table{};
 	ftxui::InputOption input_option_enter;
 	ftxui::Element table_element;
-	ftxui::Component container;
-	ftxui::Component main_container;
-	ftxui::Component scroller;
+	ftxui::Component container, main_container, scroller;
 
 	// Private functions
 	void renderFTXUI() override;
@@ -23,19 +22,24 @@ private:
 	void updateTableElement();
 
 public:
+	// Constructors / Destructors
 	LeaderboardViewCMD();
+	~LeaderboardViewCMD();
 
+	// Update functions
 	sf::Event* update(float dt);
 
+	// Inherited public functions
 	void openWindow() override { BaseViewCMD::openWindow(); }
 	void closeWindow() override { BaseViewCMD::closeWindow(); }
 	void initRenderer() override;
 	void deleteRenderer() override { BaseViewCMD::deleteRenderer(); }
 	sf::RenderWindow* getWindow() override { return BaseViewCMD::getWindow(); }
-	void render() override; //{ BaseViewCMD::render(); } - sprawdziæ czy zadzia³a samo this->initRenderer albo to w po³¹czeniu z updateGrid i refreshScreen
+	void render() override;
 
+	// Accessors / Mutators
+	LeaderboardEntry getEntry();
 	void setLeaderboardEntries(std::vector<LeaderboardEntry*>& v_leaderboardEntries);
 	void setScore(int score);
 	void setMode(LeaderboardMode mode);
-	LeaderboardEntry getEntry();
 };

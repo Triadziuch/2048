@@ -180,6 +180,9 @@
     <ClInclude Include="LeaderboardEntry.h">
       <Filter>Pliki nagłówków</Filter>
     </ClInclude>
+    <ClInclude Include="Leaderboard.h">
+      <Filter>Pliki nagłówków</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -289,6 +292,9 @@
     </ClCompile>
     <ClCompile Include="LeaderboardViewGUI.cpp">
       <Filter>View\LeaderboardView</Filter>
+    </ClCompile>
+    <ClCompile Include="Leaderboard.cpp">
+      <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

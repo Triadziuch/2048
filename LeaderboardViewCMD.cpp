@@ -2,6 +2,7 @@
 
 using namespace ftxui;
 
+// = = = = = Private functions  = = = = = //
 void LeaderboardViewCMD::renderFTXUI()
 {
 	if (this->mode == LeaderboardMode::EDIT) {
@@ -143,6 +144,9 @@ void LeaderboardViewCMD::updateTableElement()
 	this->updateContent();
 }
 
+
+
+// = = = = = Constructors / Destructors = = = = = //
 LeaderboardViewCMD::LeaderboardViewCMD() : BaseViewCMD()
 {
 	this->registerObserver("update_game", [&]() {
@@ -155,11 +159,30 @@ LeaderboardViewCMD::LeaderboardViewCMD() : BaseViewCMD()
 		};
 }
 
+LeaderboardViewCMD::~LeaderboardViewCMD()
+{
+	if (this->screen != nullptr) {
+		this->isRefreshing = false;
+		this->needRefreshing = true;
+		this->cv.notify_all();
+		this->ftxui_thread->join();
+		delete this->ftxui_thread;
+	}
+	if (this->table)
+		delete this->table;
+}
+
+
+
+// = = = = = Update functions = = = = = //
 sf::Event* LeaderboardViewCMD::update(float dt)
 {
 	return nullptr;
 }
 
+
+
+// = = = = = Inherited public functions = = = = = //
 void LeaderboardViewCMD::initRenderer()
 {
 	if (this->mode == LeaderboardMode::EDIT) {
@@ -180,6 +203,28 @@ void LeaderboardViewCMD::initRenderer()
 	}
 }
 
+void LeaderboardViewCMD::render()
+{
+	this->initRenderer();
+}
+
+
+
+// = = = = = Accessors / Mutators = = = = = //
+LeaderboardEntry LeaderboardViewCMD::getEntry()
+{
+	std::time_t t = std::time(nullptr);
+	std::tm tm{};
+	if (localtime_s(&tm, &t) != 0)
+		throw std::runtime_error("Nie uda³o siê pobraæ lokalnej daty i czasu");
+	std::ostringstream dateStream;
+	dateStream << std::put_time(&tm, "%d.%m.%Y");
+
+	this->name.erase(std::remove_if(this->name.begin(), this->name.end(), [](char c) { return !std::isalnum(c); }), this->name.end());
+
+	return LeaderboardEntry{ this->name, this->score, dateStream.str() };
+}
+
 void LeaderboardViewCMD::setLeaderboardEntries(std::vector<LeaderboardEntry*>& v_leaderboardEntries)
 {
 	this->v_leaderboardEntries = &v_leaderboardEntries;
@@ -196,23 +241,4 @@ void LeaderboardViewCMD::setMode(LeaderboardMode mode)
 {
 	this->mode = mode;
 	this->updateContent();
-}
-
-LeaderboardEntry LeaderboardViewCMD::getEntry()
-{
-	std::time_t t = std::time(nullptr);
-	std::tm tm{};
-	if (localtime_s(&tm, &t) != 0)
-		throw std::runtime_error("Nie uda³o siê pobraæ lokalnej daty i czasu");
-	std::ostringstream dateStream;
-	dateStream << std::put_time(&tm, "%d.%m.%Y");
-
-	this->name.erase(std::remove_if(this->name.begin(), this->name.end(), [](char c) { return !std::isalnum(c); }), this->name.end());
-
-	return LeaderboardEntry{ this->name, this->score, dateStream.str() };
-}
-
-void LeaderboardViewCMD::render()
-{
-	this->initRenderer();
 }

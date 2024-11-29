@@ -2,94 +2,8 @@
 #include "GameViewGUI.h"
 #include "Windows.h"
 
-void GameViewGUI::center_origin(sf::Sprite& sprite)
-{
-	sprite.setOrigin(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width / 2.f,
-					 sprite.getGlobalBounds().top + sprite.getGlobalBounds().height / 2.f);
-}
 
-void GameViewGUI::justifyHorizontal(const sf::FloatRect& button, sf::Text& text)
-{
-	text.setOrigin(0.f, 0.f);
-	text.setPosition(button.left + (button.width - text.getGlobalBounds().width) / 2.f, text.getPosition().y);
-}
-
-bool GameViewGUI::updateGameOver(const float dt)
-{
-	m_gameOverTime += dt;
-
-	if (m_gameOverTime < m_gameOverTimeMax) {
-
-		m_gameOverText.setFillColor(sf::Color(250, 248, 239, 255 * m_gameOverTime / m_gameOverTimeMax));
-		return false;
-	}
-	else if (m_gameOverTime < m_gameOverTimeMax * 2.f) {
-		return false;
-	}
-	else if (m_gameOverTime < m_gameOverTimeMax * 3.f) {
-		m_gameOverPressKeyText.setFillColor(sf::Color(250, 248, 239, 255 * (m_gameOverTime - 2.f * m_gameOverTimeMax) / m_gameOverTimeMax ));
-		return false;
-	}
-	else {
-		m_gameOverText.setFillColor(sf::Color(250, 248, 239, 255));
-		m_gameOverPressKeyText.setFillColor(sf::Color(250, 248, 239, 255));
-	}
-
-	return true;
-}
-
-void GameViewGUI::startGameOver()
-{
-	m_gameOverTime = 0.f;
-	m_isGameOver = true;
-}
-
-void GameViewGUI::stopGameOver()
-{
-	m_isGameOver = false;
-}
-
-GameViewGUI::GameViewGUI(sf::Vector2f windowSize, sf::FloatRect playgroundRect) : m_windowSize(windowSize), m_playgroundRect(playgroundRect)
-{
-	initSprites();
-	initText();
-}
-
-void GameViewGUI::setScore(int score)
-{
-	m_score = score;
-
-	const float old_width = m_scoreText.getGlobalBounds().width;
-	m_scoreText.setString(std::to_string(m_score));
-	const float new_width = m_scoreText.getGlobalBounds().width;
-
-	if (old_width != new_width)
-		m_scoreText.move((old_width - new_width) / 2.f, 0.f);
-
-	/*if (m_bestScore < m_score) {
-		sf::Vector2f old_pos = m_bestScoreText.getPosition();
-		m_bestScore = m_score;
-		m_bestScoreText = m_scoreText;
-		m_bestScoreText.setPosition(old_pos);
-
-		if (old_width != new_width)
-			m_bestScoreText.move((old_width - new_width) / 2.f, 0.f);
-	}*/
-}
-
-void GameViewGUI::setBestScore(int value)
-{
-	this->m_bestScore = value;
-	m_bestScoreText.setString(std::to_string(m_bestScore));
-	m_bestScoreText.setOrigin(m_bestScoreText.getLocalBounds().left + m_bestScoreText.getGlobalBounds().width / 2.f, m_bestScoreText.getLocalBounds().top + m_bestScoreText.getGlobalBounds().height / 2.f);
-	m_bestScoreText.setPosition(m_bestScoreHeaderText.getPosition().x, m_bestScoreHeaderText.getGlobalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height + 15.f);
-}
-
-GameViewGUI::~GameViewGUI()
-{
-
-}
-
+// = = = = = = Initialization functions = = = = = = //
 void GameViewGUI::initText()
 {
 	m_font = &AssetManager::GetFont("assets/Fonts/ClearSans-Bold.ttf");
@@ -165,41 +79,14 @@ void GameViewGUI::initText()
 	m_bestScoreText.setPosition(m_bestScoreHeaderText.getPosition().x, m_bestScoreHeaderText.getGlobalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height + 15.f);
 
 	std::wstring newGameTextPosition = std::to_wstring(m_newGameText.getPosition().x) + L" " + std::to_wstring(m_newGameText.getPosition().y);
-	OutputDebugString(L"New game text position: ");
-	OutputDebugString(newGameTextPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring leaderboardTextPosition = std::to_wstring(m_leaderboardText.getPosition().x) + L" " + std::to_wstring(m_leaderboardText.getPosition().y);
-	OutputDebugString(L"Leaderboard text position: ");
-	OutputDebugString(leaderboardTextPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring bestScoreHeaderTextPosition = std::to_wstring(m_bestScoreHeaderText.getPosition().x) + L" " + std::to_wstring(m_bestScoreHeaderText.getPosition().y);
-	OutputDebugString(L"Best score header text position: ");
-	OutputDebugString(bestScoreHeaderTextPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring scoreHeaderTextPosition = std::to_wstring(m_scoreHeaderText.getPosition().x) + L" " + std::to_wstring(m_scoreHeaderText.getPosition().y);
-	OutputDebugString(L"Score header text position: ");
-	OutputDebugString(scoreHeaderTextPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring titleTextPosition = std::to_wstring(m_titleText.getPosition().x) + L" " + std::to_wstring(m_titleText.getPosition().y);
-	OutputDebugString(L"Title text position: ");
-	OutputDebugString(titleTextPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring gameOverTextPosition = std::to_wstring(m_gameOverText.getPosition().x) + L" " + std::to_wstring(m_gameOverText.getPosition().y);
-	OutputDebugString(L"Game over text position: ");
-	OutputDebugString(gameOverTextPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring gameOverPressKeyTextPosition = std::to_wstring(m_gameOverPressKeyText.getPosition().x) + L" " + std::to_wstring(m_gameOverPressKeyText.getPosition().y);
-	OutputDebugString(L"Game over press key text position: ");
-	OutputDebugString(gameOverPressKeyTextPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring scoreTextPosition = std::to_wstring(m_scoreText.getPosition().x) + L" " + std::to_wstring(m_scoreText.getPosition().y);
-	OutputDebugString(L"Score text position: ");
-	OutputDebugString(scoreTextPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring bestScoreTextPosition = std::to_wstring(m_bestScoreText.getPosition().x) + L" " + std::to_wstring(m_bestScoreText.getPosition().y);
-	OutputDebugString(L"Best score text position: ");
-	OutputDebugString(bestScoreTextPosition.c_str());
-	OutputDebugString(L"\n");
 }
 
 void GameViewGUI::initSprites()
@@ -228,23 +115,110 @@ void GameViewGUI::initSprites()
 	m_scoreButtonSprite.setPosition(m_bestScoreButtonSprite.getPosition().x - m_scoreButtonSprite.getGlobalBounds().width - 10.f, m_bestScoreButtonSprite.getPosition().y);
 
 	std::wstring leadebroardButtonPosition = std::to_wstring(m_leaderboardButtonSprite.getPosition().x) + L" " + std::to_wstring(m_leaderboardButtonSprite.getPosition().y);
-	OutputDebugString(L"Leaderboard button position: ");
-	OutputDebugString(leadebroardButtonPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring newGameButtonPosition = std::to_wstring(m_newGameButtonSprite.getPosition().x) + L" " + std::to_wstring(m_newGameButtonSprite.getPosition().y);
-	OutputDebugString(L"New game button position: ");
-	OutputDebugString(newGameButtonPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring bestScoreButtonPosition = std::to_wstring(m_bestScoreButtonSprite.getPosition().x) + L" " + std::to_wstring(m_bestScoreButtonSprite.getPosition().y);
-	OutputDebugString(L"Best score button position: ");
-	OutputDebugString(bestScoreButtonPosition.c_str());
-	OutputDebugString(L"\n");
 	std::wstring scoreButtonPosition = std::to_wstring(m_scoreButtonSprite.getPosition().x) + L" " + std::to_wstring(m_scoreButtonSprite.getPosition().y);
-	OutputDebugString(L"Score button position: ");
-	OutputDebugString(scoreButtonPosition.c_str());
-	OutputDebugString(L"\n");
 }
 
+
+
+// = = = = = = Utility functions = = = = = = //
+void GameViewGUI::center_origin(sf::Sprite& sprite)
+{
+	sprite.setOrigin(sprite.getGlobalBounds().left + sprite.getGlobalBounds().width / 2.f,
+					 sprite.getGlobalBounds().top + sprite.getGlobalBounds().height / 2.f);
+}
+
+void GameViewGUI::justifyHorizontal(const sf::FloatRect& button, sf::Text& text)
+{
+	text.setOrigin(0.f, 0.f);
+	text.setPosition(button.left + (button.width - text.getGlobalBounds().width) / 2.f, text.getPosition().y);
+}
+
+
+
+// = = = = = = Constructors / Destructors = = = = = = //
+GameViewGUI::GameViewGUI(sf::Vector2f windowSize, sf::FloatRect playgroundRect) : m_windowSize(windowSize), m_playgroundRect(playgroundRect)
+{
+	initSprites();
+	initText();
+}
+
+GameViewGUI::~GameViewGUI() {}
+
+
+
+// = = = = = = Update functions = = = = = = //
+bool GameViewGUI::updateGameOver(const float dt)
+{
+	m_gameOverTime += dt;
+
+	if (m_gameOverTime < m_gameOverTimeMax) {
+
+		m_gameOverText.setFillColor(sf::Color(250, 248, 239, 255 * m_gameOverTime / m_gameOverTimeMax));
+		return false;
+	}
+	else if (m_gameOverTime < m_gameOverTimeMax * 2.f) {
+		return false;
+	}
+	else if (m_gameOverTime < m_gameOverTimeMax * 3.f) {
+		m_gameOverPressKeyText.setFillColor(sf::Color(250, 248, 239, 255 * (m_gameOverTime - 2.f * m_gameOverTimeMax) / m_gameOverTimeMax ));
+		return false;
+	}
+	else {
+		m_gameOverText.setFillColor(sf::Color(250, 248, 239, 255));
+		m_gameOverPressKeyText.setFillColor(sf::Color(250, 248, 239, 255));
+	}
+
+	return true;
+}
+
+
+
+// = = = = = = Public functions = = = = = = //
+void GameViewGUI::startGameOver()
+{
+	m_gameOverTime = 0.f;
+	m_isGameOver = true;
+}
+
+void GameViewGUI::stopGameOver()
+{
+	m_isGameOver = false;
+}
+
+
+
+// = = = = = = Accessors / Mutators = = = = = = //
+sf::FloatRect GameViewGUI::getNewGameButton()
+{
+	return m_newGameButtonSprite.getGlobalBounds();
+}
+
+sf::FloatRect GameViewGUI::getLeaderboardButton()
+{
+	return m_leaderboardButtonSprite.getGlobalBounds();
+}
+
+void GameViewGUI::setScore(int score)
+{
+	m_score = score;
+
+	const float old_width = m_scoreText.getGlobalBounds().width;
+	m_scoreText.setString(std::to_string(m_score));
+	const float new_width = m_scoreText.getGlobalBounds().width;
+
+	if (old_width != new_width)
+		m_scoreText.move((old_width - new_width) / 2.f, 0.f);
+}
+
+void GameViewGUI::setBestScore(int value)
+{
+	this->m_bestScore = value;
+	m_bestScoreText.setString(std::to_string(m_bestScore));
+	m_bestScoreText.setOrigin(m_bestScoreText.getLocalBounds().left + m_bestScoreText.getGlobalBounds().width / 2.f, m_bestScoreText.getLocalBounds().top + m_bestScoreText.getGlobalBounds().height / 2.f);
+	m_bestScoreText.setPosition(m_bestScoreHeaderText.getPosition().x, m_bestScoreHeaderText.getGlobalBounds().top + m_bestScoreHeaderText.getGlobalBounds().height + 15.f);
+}
 
 void GameViewGUI::addScore(int value_) {
 	m_score += value_;
@@ -264,6 +238,9 @@ void GameViewGUI::addScore(int value_) {
 	}
 }
 
+
+
+// = = = = = = Render functions = = = = = = //
 void GameViewGUI::render(sf::RenderTarget& target)
 {
 	// Drawing buttons

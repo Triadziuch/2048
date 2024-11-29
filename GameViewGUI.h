@@ -9,6 +9,7 @@
 
 class GameViewGUI {
 private:
+	// Private variables
 	int m_score{}, m_bestScore{};
 	float m_scale{ 0.25f };
 
@@ -34,31 +35,35 @@ private:
 	sf::Vector2f m_windowSize;
 	sf::FloatRect m_playgroundRect;
 
+	// Initialization functions
 	void initText();
 	void initSprites();
+
+	// Utility functions
 	void center_origin(sf::Sprite& sprite);
 	void justifyHorizontal(const sf::FloatRect& button, sf::Text& text);
 
 public:
 	// Constructors / Destructors
 	GameViewGUI(sf::Vector2f windowSize, sf::FloatRect playgroundRect);
-	virtual ~GameViewGUI();
+	~GameViewGUI();
 
-
+	// Update functions
 	bool updateGameOver(const float dt);
 
+	// Public functions
 	void startGameOver();
 	void stopGameOver();
 
-	// Mutators
+	// Accessors / Mutators
+	sf::FloatRect getNewGameButton();
+	sf::FloatRect getLeaderboardButton();
+
 	void setScore(int value);
 	void setBestScore(int value);
+
 	void addScore(int value);
 
-	// Accessors
-	sf::FloatRect getNewGameButton() { return m_newGameButtonSprite.getGlobalBounds(); }
-	sf::FloatRect getLeaderboardButton() { return m_leaderboardButtonSprite.getGlobalBounds(); }
-
-	// Render GUI
+	// Render functions
 	void render(sf::RenderTarget& target);
 };
